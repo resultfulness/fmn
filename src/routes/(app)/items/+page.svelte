@@ -13,6 +13,11 @@ import unfocusOnMobileKeyboardHidden from "$lib/mobile-unfocus";
 import type { LayoutHeader } from "../+layout.svelte";
 import app from "$lib/app.svelte";
 import Search from "$lib/components/search.svelte";
+import autofill_url from "$lib/autofill-url";
+import {
+    PUBLIC_ICON_URL_LEAD,
+    PUBLIC_ICON_URL_TRAIL,
+} from "$env/static/public";
 
 async function fetchItems() {
     app.state.isLoading++;
@@ -196,6 +201,14 @@ onMount(() => {
 
     unfocusOnMobileKeyboardHidden("items-search");
 });
+
+function autofill_url_staticicon() {
+    form.icon = autofill_url(
+        PUBLIC_ICON_URL_LEAD,
+        form.icon,
+        PUBLIC_ICON_URL_TRAIL
+    );
+}
 </script>
 
 {#if app.state.items}
@@ -213,7 +226,6 @@ onMount(() => {
                         <div class="item__edit-icon">
                             <Icon name="edit" size={28} />
                         </div>
-
                     </button>
                 </li>
             {/each}
@@ -222,7 +234,12 @@ onMount(() => {
         {/if}
     </ul>
 {/if}
-<Search id="items-search" bind:searchterm placeholder="search for items..." onadd={add} />
+<Search
+    id="items-search"
+    bind:searchterm
+    placeholder="search for items..."
+    onadd={add}
+/>
 <Drawer bind:ref={editDrawer} onclose={noedit}>
     <form class="form" onsubmit={handleEdit}>
         <header class="form__header">
@@ -271,6 +288,11 @@ onMount(() => {
             label="icon url:"
             bind:value={form.icon}
             error={form.error.icon}
+            action={{
+                iconName: "password_2",
+                title: "autofill icon url",
+                on: autofill_url_staticicon,
+            }}
         />
         <div class="form__submit">
             <Button fillwidth>add</Button>

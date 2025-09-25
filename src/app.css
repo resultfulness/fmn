@@ -1,0 +1,52 @@
+:root[data-theme="light"] {
+    --clr-prim: #dc8a78;
+    --clr-prim-hovr: #ca7663;
+    --clr-prim-text: #201b13;
+    --clr-text: #38322e;
+    --clr-text-mute: #5a5a5a;
+    --clr-dark: #b0a59b;
+    --clr-bcgr: #efeae6;
+    --clr-sfc0: #bfb6ae;
+    --clr-sfc1: #ccc6bc;
+    --clr-sfc2: #d9d2cc;
+    --clr-outl: #998e8b;
+    --clr-uhoh: #db7982;
+    --clr-yayy: #b2db79;
+    --clr-warn: #dbc879;
+}
+
+:root {
+    --clr-prim: #fab387;
+    --clr-prim-hovr: #fbc19d;
+    --clr-prim-text: #39332b;
+    --clr-text: #f4e2cd;
+    --clr-text-mute: #aaa;
+    --clr-dark: #252018;
+    --clr-bcgr: #453c32;
+    --clr-sfc0: #594f45;
+    --clr-sfc1: #706359;
+    --clr-sfc2: #80756b;
+    --clr-outl: #b3aca6;
+    --clr-uhoh: #fa8787;
+    --clr-yayy: #bdfa87;
+    --clr-warn: #fae587;
+}
+
+body {
+    color: var(--clr-text);
+    background-color: var(--clr-bcgr);
+    margin: 0;
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}

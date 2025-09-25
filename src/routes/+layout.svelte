@@ -7,7 +7,7 @@ import type { LayoutProps } from "./$types";
 let { children }: LayoutProps = $props();
 
 const navLinks = [
-    { title: "cart", href: "/", icon: "shopping_cart" },
+    { title: "cart", href: "/cart", icon: "shopping_cart" },
     { title: "items", href: "/items", icon: "nutrition" },
     { title: "recipes", href: "/recipes", icon: "chef_hat" },
 ];

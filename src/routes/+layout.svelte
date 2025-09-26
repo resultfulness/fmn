@@ -60,6 +60,7 @@ h1 {
 main {
     flex: 1;
     padding: 1rem;
+    overflow-y: auto;
 }
 
 footer {

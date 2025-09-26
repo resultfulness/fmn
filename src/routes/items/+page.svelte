@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import state from "./state.svelte";
+import data from "./data.svelte";
 import actions from "./actions";
 
 onMount(() => {
@@ -9,7 +9,16 @@ onMount(() => {
 });
 </script>
 
-items!
-{#each state.items as item}
-    {item.name}
-{/each}
+<ul>
+    {#each data.items.items as item}
+        <li>
+            {item.name}
+            <button onclick={() => actions.deleteItem(item.item_id)}>
+                delete test
+            </button>
+        </li>
+    {/each}
+</ul>
+<button onclick={() => actions.addItem({ name: "milk", icon: "" })}>
+    add test
+</button>

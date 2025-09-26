@@ -1,16 +1,19 @@
-import type { Item } from "$lib/types";
+import type { Item, ItemAdd } from "$lib/types";
+import { apiFetch } from "./fetch";
 
 const itemsApi = {
-    getAll() {
-        return new Promise<Item[]>(res => {
-            setTimeout(() => {
-                res([{
-                    id: 1,
-                    name: "burger",
-                    icon: "",
-                }]);
-            }, 2000)
-        });
+    async getAll() {
+        return await apiFetch("/items/search");
+    },
+    async add(newItem: ItemAdd) {
+        return await apiFetch(
+            "/items/new",
+            "POST",
+            { ...newItem }
+        );
+    },
+    async delete(id: number) {
+        return await apiFetch(`/items/${id}`, "DELETE");
     }
 };
 

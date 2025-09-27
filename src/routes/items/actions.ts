@@ -2,13 +2,13 @@ import data from "./data.svelte";
 import itemService from "$lib/services/item-service";
 import type { ItemAdd } from "$lib/types";
 import { toastStore } from "$lib/stores/toast-store.svelte";
+import { Errors } from "$lib/types/error";
 
 const actions = {
     async init() {
         try {
             await this.loadItems();
         } catch (e: any) {
-            toastStore.show(e.message, "uhoh");
             return;
         }
         this.deinit = itemService.subscribe(items => data.items = items);
@@ -24,18 +24,22 @@ const actions = {
             await itemService.fetchAll();
         }
     },
-    addItem(newItem: ItemAdd) {
+    async addItem(newItem: ItemAdd) {
         try {
-            itemService.add(newItem);
+            await itemService.add(newItem);
         } catch (e: any) {
-            toastStore.show(e.message, "uhoh");
+            if (e === Errors.Items.AlreadyExistsError) {
+                toastStore.show(e.message, "uhoh");
+            }
         }
     },
-    deleteItem(id: number) {
+    async deleteItem(id: number) {
         try {
-            itemService.delete(id);
+            await itemService.delete(id);
         } catch (e: any) {
-            toastStore.show(e.message, "uhoh");
+            if (e === Errors.Items.NotFoundError) {
+                toastStore.show(e.message, "uhoh");
+            }
         }
     }
 };

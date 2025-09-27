@@ -19,6 +19,6 @@ onMount(() => {
         </li>
     {/each}
 </ul>
-<button onclick={() => actions.addItem({ name: "milk", icon: "" })}>
+<button onclick={() => actions.addItem({ name: "milk2", icon: "" })}>
     add test
 </button>

@@ -22,4 +22,11 @@ export const toastStore = {
             toasts.splice(i, 1);
         }
     },
+    setInfinite(message: string, type: ToastType) {
+        this.clearInfinite();
+        toasts.unshift({ id: "infinite", message, type, duration: 0 });
+    },
+    clearInfinite() {
+        this.remove("infinite");
+    }
 }

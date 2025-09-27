@@ -30,6 +30,12 @@ const itemStore = (() => {
                 final.count--;
                 return final;
             })
+        },
+        containsItemId(id: number) {
+            return get(store).items.some(item => item.item_id === id);
+        },
+        containsItemName(itemName: string) {
+            return get(store).items.some(item => item.name === itemName);
         }
     }
 })();

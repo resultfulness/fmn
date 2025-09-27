@@ -1,23 +1,20 @@
+import { Errors } from "$lib/types/error";
 import itemRepository from "$lib/repositories/item-repository";
 import itemStore from "$lib/stores/item-store";
 import type { ItemAdd, Items } from "$lib/types";
 import { get, type Subscriber } from "svelte/store";
 
 const itemService = {
-    async getAll() {
-        const prev = get(itemStore);
-        if (prev) {
-            this.fetchAll();
-            return prev;
-        } else {
-            await this.fetchAll();
-            return get(itemStore);
-        }
+    getAll() {
+        return get(itemStore);
     },
     async fetchAll() {
         itemStore.set(await itemRepository.getAll());
     },
     async add(newItem: ItemAdd) {
+        if (itemStore.containsItemName(newItem.name)) {
+            throw Errors.Items.AlreadyExistsError;
+        }
         const prev = structuredClone(get(itemStore));
         itemStore.pushNewItem(newItem);
         try {
@@ -30,6 +27,9 @@ const itemService = {
         }
     },
     async delete(id: number) {
+        if (!itemStore.containsItemId(id)) {
+            throw Errors.Items.NotFoundError;
+        }
         const prev = structuredClone(get(itemStore));
         itemStore.deleteItem(id);
         try {

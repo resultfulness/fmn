@@ -1,21 +1,23 @@
 import itemsApi from "$lib/api/items";
-import { handleGenericErrors } from "$lib/error";
-import type { Item, ItemAdd } from "$lib/types";
+import { Errors } from "$lib/types/error";
+import type { Item, ItemAdd, Items } from "$lib/types";
 
 const itemRepository = {
-    async getAll() {
-        let res = await itemsApi.getAll();
-        res = await handleGenericErrors(res);
-        return await res.json();
+    async getAll(): Promise<Items> {
+        return await (await itemsApi.getAll()).json();
     },
     async add(newItem: ItemAdd): Promise<Item> {
-        let res = await itemsApi.add(newItem);
-        res = await handleGenericErrors(res);
+        const res = await itemsApi.add(newItem);
+        if (!res.ok && res.status === 409) {
+            throw Errors.Items.AlreadyExistsError;
+        }
         return await res.json();
     },
     async delete(id: number): Promise<Item> {
-        let res = await itemsApi.delete(id);
-        res = await handleGenericErrors(res);
+        const res = await itemsApi.delete(id);
+        if (!res.ok && res.status === 404) {
+            throw Errors.Items.NotFoundError;
+        }
         return await res.json();
     }
 }

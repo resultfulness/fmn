@@ -2,6 +2,7 @@
 import "../app.css";
 import { page } from "$app/state";
 import Icon from "$lib/components/icon.svelte";
+import Toast from "$lib/components/toast.svelte";
 
 import type { LayoutProps } from "./$types";
 let { children }: LayoutProps = $props();
@@ -38,6 +39,7 @@ let path = $derived(page.url.pathname);
         </nav>
     </footer>
 </div>
+<Toast />
 
 <style>
 .app {

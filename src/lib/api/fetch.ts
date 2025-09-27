@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL } from "$env/static/public";
+import { Errors } from "$lib/types/error";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export async function apiFetch(
@@ -6,14 +7,18 @@ export async function apiFetch(
     method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
     body?: object
 ): Promise<Response> {
-    return await fetch(`${PUBLIC_API_URL}${endpoint}`, {
-        method: method || "GET",
-        body: JSON.stringify(body) || undefined,
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        danger: {
-            acceptInvalidCerts: true,
-            acceptInvalidHostnames: false,
-        }
-    });
+    try {
+        return await fetch(`${PUBLIC_API_URL}${endpoint}`, {
+            method: method || "GET",
+            body: JSON.stringify(body) || undefined,
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            danger: {
+                acceptInvalidCerts: true,
+                acceptInvalidHostnames: false,
+            }
+        });
+    } catch (e) {
+        throw Errors.ApiAccessError;
+    }
 }

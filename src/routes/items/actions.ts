@@ -1,6 +1,6 @@
 import data from "./data.svelte";
 import itemService from "$lib/services/item-service";
-import type { ItemAdd } from "$lib/types";
+import type { ItemRequest } from "$lib/types";
 import { toastStore } from "$lib/stores/toast-store.svelte";
 import { Errors } from "$lib/types/error";
 
@@ -24,7 +24,14 @@ const actions = {
             await itemService.fetchAll();
         }
     },
-    async addItem(newItem: ItemAdd) {
+    async handleAddItem(e: SubmitEvent) {
+        e.preventDefault();
+        const data = new FormData(e.target as HTMLFormElement);
+        const newItem = {
+            name: data.get("item-name")!.toString(),
+            icon: data.get("item-icon")!.toString(),
+        };
+
         try {
             await itemService.add(newItem);
         } catch (e: any) {

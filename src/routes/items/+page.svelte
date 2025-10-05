@@ -14,11 +14,20 @@ onMount(() => {
         <li>
             {item.name}
             <button onclick={() => actions.deleteItem(item.item_id)}>
-                delete test
+                delete
             </button>
         </li>
     {/each}
 </ul>
-<button onclick={() => actions.addItem({ name: "milk2", icon: "" })}>
-    add test
-</button>
+<form onsubmit={actions.handleAddItem}>
+    <input type="text" name="item-name" />
+    <input type="text" name="item-icon" />
+    <button>add</button>
+</form>
+
+<style>
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+</style>

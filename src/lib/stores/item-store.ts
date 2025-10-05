@@ -1,4 +1,4 @@
-import type { Item, ItemAdd } from "$lib/types";
+import type { Item, ItemRequest } from "$lib/types";
 import { get, writable } from "svelte/store";
 
 const itemStore = (() => {
@@ -9,7 +9,7 @@ const itemStore = (() => {
         subscribe,
         set,
         update,
-        pushNewItem(newItem: ItemAdd) {
+        pushNewItem(newItem: ItemRequest) {
             this.pushItem({
                 item_id: get(store).length,
                 ...newItem

@@ -1,10 +1,16 @@
 <script>
-import { toastStore } from "$lib/stores/toast-store.svelte";
+import { onMount } from "svelte";
+import actions from "./actions";
+import data from "./data.svelte";
+
+onMount(() => {
+    actions.init();
+    return () => actions.deinit();
+})
 </script>
 
 carts!
 
-<button onclick={() => {
-    toastStore.show("lol", "uhoh", 5000);
-    toastStore.show("lol2", "yayy", 2500);
-}}>send</button>
+{#each data.cartItems as item}
+    {item.name}
+{/each}

@@ -1,12 +1,12 @@
-import type { Item, ItemAdd } from "$lib/types";
+import type { Item, ItemRequest } from "$lib/types";
 import { Errors } from "$lib/types/error";
 import { apiFetch } from "./fetch";
 
-const itemsApi = {
+const itemApi = {
     async getAll(): Promise<Item[]> {
         return await (await apiFetch("/items")).json();
     },
-    async add(newItem: ItemAdd): Promise<Item> {
+    async add(newItem: ItemRequest): Promise<Item> {
         const res = await apiFetch(
             "/items",
             "POST",
@@ -17,7 +17,7 @@ const itemsApi = {
         }
         return await res.json();
     },
-    async delete(id: number) {
+    async delete(id: number): Promise<Item> {
         const res = await apiFetch(`/items/${id}`, "DELETE");
         if (!res.ok && res.status === 404) {
             throw Errors.Items.NotFoundError;
@@ -26,4 +26,4 @@ const itemsApi = {
     }
 };
 
-export default itemsApi;
+export default itemApi;

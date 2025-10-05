@@ -4,7 +4,7 @@ export type Item = {
     icon: string;
 };
 
-export type ItemAdd = {
+export type ItemRequest = {
     name: string;
     icon: string;
-}
+};

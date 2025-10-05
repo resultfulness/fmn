@@ -5,8 +5,8 @@ import type { Subscriber } from "svelte/store";
 
 const cartService = {
     init() {
-        cartApi.openStream();
-        cartApi.subscribe(cartItems => cartStore.set(cartItems));
+        // cartApi.openStream();
+        // cartApi.subscribe(cartItems => cartStore.set(cartItems));
     },
     subscribe(callback: Subscriber<CartItem[]>) {
         return cartStore.subscribe(callback);

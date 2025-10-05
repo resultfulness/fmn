@@ -2,7 +2,7 @@ import type { Item, ItemRequest } from "$lib/types";
 import { get, writable } from "svelte/store";
 
 const itemStore = (() => {
-    const store = writable<Item[]>([]);
+    const store = writable<Item[]>();
     const { subscribe, set, update } = store;
 
     return {

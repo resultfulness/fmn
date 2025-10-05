@@ -1,8 +1,8 @@
-import type { Item, ItemAdd, Items } from "$lib/types";
+import type { Item, ItemAdd } from "$lib/types";
 import { get, writable } from "svelte/store";
 
 const itemStore = (() => {
-    const store = writable<Items>();
+    const store = writable<Item[]>([]);
     const { subscribe, set, update } = store;
 
     return {
@@ -11,31 +11,29 @@ const itemStore = (() => {
         update,
         pushNewItem(newItem: ItemAdd) {
             this.pushItem({
-                item_id: get(store).count,
+                item_id: get(store).length,
                 ...newItem
             })
         },
         pushItem(item: Item) {
             store.update(prev => {
                 const final = prev;
-                final.items.push(item);
-                final.count++;
+                final.push(item);
                 return final;
             });
         },
         deleteItem(id: number) {
             store.update(prev => {
-                const final = prev;
-                final.items = prev.items.filter(item => item.item_id !== id);
-                final.count--;
+                let final = prev;
+                final = prev.filter(item => item.item_id !== id);
                 return final;
             })
         },
         containsItemId(id: number) {
-            return get(store).items.some(item => item.item_id === id);
+            return get(store).some(item => item.item_id === id);
         },
         containsItemName(itemName: string) {
-            return get(store).items.some(item => item.name === itemName);
+            return get(store).some(item => item.name === itemName);
         }
     }
 })();

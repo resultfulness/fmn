@@ -1,12 +1,9 @@
-import type { Items } from "$lib/types";
+import type { Item } from "$lib/types";
 
 const data: {
-    items: Items
+    items: Item[]
 } = $state({
-    items: {
-        count: 0,
-        items: [],
-    }
+    items: [],
 });
 
 export default data;

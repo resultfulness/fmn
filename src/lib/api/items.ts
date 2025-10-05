@@ -1,19 +1,28 @@
 import type { Item, ItemAdd } from "$lib/types";
+import { Errors } from "$lib/types/error";
 import { apiFetch } from "./fetch";
 
 const itemsApi = {
-    async getAll() {
-        return await apiFetch("/items/search");
+    async getAll(): Promise<Item[]> {
+        return await (await apiFetch("/items")).json();
     },
-    async add(newItem: ItemAdd) {
-        return await apiFetch(
-            "/items/new",
+    async add(newItem: ItemAdd): Promise<Item> {
+        const res = await apiFetch(
+            "/items",
             "POST",
             { ...newItem }
         );
+        if (!res.ok && res.status === 409) {
+            throw Errors.Items.AlreadyExistsError;
+        }
+        return await res.json();
     },
     async delete(id: number) {
-        return await apiFetch(`/items/${id}`, "DELETE");
+        const res = await apiFetch(`/items/${id}`, "DELETE");
+        if (!res.ok && res.status === 404) {
+            throw Errors.Items.NotFoundError;
+        }
+        return await res.json();
     }
 };
 

@@ -1,15 +1,15 @@
 import { Errors } from "$lib/types/error";
-import itemRepository from "$lib/repositories/item-repository";
 import itemStore from "$lib/stores/item-store";
-import type { ItemAdd, Items } from "$lib/types";
+import type { Item, ItemAdd } from "$lib/types";
 import { get, type Subscriber } from "svelte/store";
+import itemsApi from "$lib/api/items";
 
 const itemService = {
     getAll() {
         return get(itemStore);
     },
     async fetchAll() {
-        itemStore.set(await itemRepository.getAll());
+        itemStore.set(await itemsApi.getAll());
     },
     async add(newItem: ItemAdd) {
         if (itemStore.containsItemName(newItem.name)) {
@@ -18,7 +18,7 @@ const itemService = {
         const prev = structuredClone(get(itemStore));
         itemStore.pushNewItem(newItem);
         try {
-            const addedItem = await itemRepository.add(newItem);
+            const addedItem = await itemsApi.add(newItem);
             itemStore.set(prev);
             itemStore.pushItem(addedItem);
         } catch (e) {
@@ -33,13 +33,13 @@ const itemService = {
         const prev = structuredClone(get(itemStore));
         itemStore.deleteItem(id);
         try {
-            const _deletedItem = await itemRepository.delete(id);
+            await itemsApi.delete(id);
         } catch (e) {
             itemStore.set(prev);
             throw e;
         }
     },
-    subscribe(callback: Subscriber<Items>) {
+    subscribe(callback: Subscriber<Item[]>) {
         return itemStore.subscribe(callback);
     },
 };

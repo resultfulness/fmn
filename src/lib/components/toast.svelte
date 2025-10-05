@@ -47,6 +47,7 @@ import { toastStore } from "$lib/stores/toast-store.svelte";
     top: 5rem;
     margin: 0 auto;
     list-style-type: none;
+    pointer-events: none;
     padding: 1rem;
 }
 
@@ -66,6 +67,7 @@ import { toastStore } from "$lib/stores/toast-store.svelte";
     background-color: black;
     opacity: 0.25;
     width: 0%;
+    pointer-events: none;
     animation: fillTimeout 0s linear;
 }
 
@@ -109,5 +111,6 @@ from {
     inset: 0;
     border: 0;
     background: 0;
+    pointer-events: all;
 }
 </style>

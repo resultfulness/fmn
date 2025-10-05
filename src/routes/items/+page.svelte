@@ -10,7 +10,7 @@ onMount(() => {
 </script>
 
 <ul>
-    {#each data.items.items as item}
+    {#each data.items as item}
         <li>
             {item.name}
             <button onclick={() => actions.deleteItem(item.item_id)}>

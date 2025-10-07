@@ -23,7 +23,7 @@ const itemApi = {
             throw Errors.Items.NotFoundError;
         }
         return await res.json();
-    }
+    },
 };
 
 export default itemApi;

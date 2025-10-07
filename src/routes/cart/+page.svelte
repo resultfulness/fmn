@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { onMount } from "svelte";
 import actions from "./actions";
 import data from "./data.svelte";

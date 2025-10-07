@@ -13,7 +13,7 @@ onMount(() => {
     {#each data.items as item}
         <li>
             {item.name}
-            <button onclick={() => actions.deleteItem(item.item_id)}>
+            <button onclick={() => actions.handleDeleteItem(item.item_id)}>
                 delete
             </button>
         </li>

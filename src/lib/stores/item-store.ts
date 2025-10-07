@@ -1,34 +1,17 @@
-import type { Item, ItemRequest } from "$lib/types";
-import { get, writable } from "svelte/store";
+import type { Item } from "$lib/types";
+import { get } from "svelte/store";
+import { optimisticStore } from "./optimistic-store";
 
 const itemStore = (() => {
-    const store = writable<Item[]>();
-    const { subscribe, set, update } = store;
+    const store = optimisticStore<Item[]>();
+    const { subscribe, set, update, updateOptimistic, undo } = store;
 
     return {
         subscribe,
         set,
         update,
-        pushNewItem(newItem: ItemRequest) {
-            this.pushItem({
-                item_id: get(store).length,
-                ...newItem
-            })
-        },
-        pushItem(item: Item) {
-            store.update(prev => {
-                const final = prev;
-                final.push(item);
-                return final;
-            });
-        },
-        deleteItem(id: number) {
-            store.update(prev => {
-                let final = prev;
-                final = prev.filter(item => item.item_id !== id);
-                return final;
-            })
-        },
+        updateOptimistic,
+        undo,
         containsItemId(id: number) {
             return get(store).some(item => item.item_id === id);
         },

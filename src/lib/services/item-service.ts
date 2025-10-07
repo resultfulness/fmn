@@ -5,42 +5,46 @@ import { get, type Subscriber } from "svelte/store";
 import itemApi from "$lib/api/item-api";
 
 const itemService = {
-    getAll() {
-        return get(itemStore);
-    },
-    async fetchAll() {
-        itemStore.set(await itemApi.getAll());
-    },
     async add(newItem: ItemRequest) {
         if (itemStore.containsItemName(newItem.name)) {
             throw Errors.Items.AlreadyExistsError;
         }
-        const prev = structuredClone(get(itemStore));
-        itemStore.pushNewItem(newItem);
-        try {
-            const addedItem = await itemApi.add(newItem);
-            itemStore.set(prev);
-            itemStore.pushItem(addedItem);
-        } catch (e) {
-            itemStore.set(prev);
-            throw e;
-        }
+
+        itemStore.updateOptimistic(
+            prev => {
+                const final = prev;
+                final.push({ item_id: get(itemStore).length, ...newItem });
+                return final;
+            },
+            async prev => {
+                const final = prev;
+                const addedItem = await itemApi.add(newItem);
+                final.push(addedItem);
+                return final;
+            }
+        );
     },
     async delete(id: number) {
         if (!itemStore.containsItemId(id)) {
             throw Errors.Items.NotFoundError;
         }
-        const prev = structuredClone(get(itemStore));
-        itemStore.deleteItem(id);
-        try {
-            await itemApi.delete(id);
-        } catch (e) {
-            itemStore.set(prev);
-            throw e;
-        }
+
+        itemStore.updateOptimistic(
+            prev => prev.filter(item => item.item_id !== id),
+            async prev => {
+                await itemApi.delete(id);
+                return prev.filter(item => item.item_id !== id);
+            }
+        );
     },
-    subscribe(callback: Subscriber<Item[]>) {
-        return itemStore.subscribe(callback);
+    async subscribe(callback: Subscriber<Item[]>) {
+        if (!get(itemStore)) {
+            itemStore.set(await itemApi.getAll());
+            return itemStore.subscribe(callback);
+        }
+        const unsubscribe = itemStore.subscribe(callback);
+        itemStore.set(await itemApi.getAll());
+        return unsubscribe;
     },
 };
 

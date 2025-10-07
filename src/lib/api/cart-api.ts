@@ -8,11 +8,13 @@ const cartApi = {
     async getAll(): Promise<CartItem[]> {
         return await (await apiFetch("/cart/items")).json();
     },
-    async addItem(id: number) {
-        await apiFetch(`/cart/items/${id}`, "PUT");
+    async addItem(id: number): Promise<CartItem[]> {
+        return await (await apiFetch(`/cart/items/${id}`, "PUT")).json();
     },
-    async deleteItem(id: number, origin: string) {
-        await apiFetch(`/cart/items/${id}?origin=${origin}`, "DELETE");
+    async deleteItem(id: number, origin: string): Promise<CartItem[]> {
+        return await (
+            await apiFetch(`/cart/items/${id}?origin=${origin}`, "DELETE")
+        ).json();
     },
     stream(callback: (data: CartItem[]) => void) {
         eventSource.addEventListener("cart", e => {

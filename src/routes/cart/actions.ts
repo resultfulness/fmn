@@ -1,23 +1,27 @@
 import cartService from "$lib/services/cart-service";
 import itemService from "$lib/services/item-service";
 import type { CartItem, Item } from "$lib/types";
+import type { Unsubscriber } from "svelte/store";
 import data from "./data.svelte";
 
+let unsubscribers: Unsubscriber[] = [];
 const actions = {
-    init() {
-        this.loadItems();
-        this.deinit = cartService.subscribe(
+    async init() {
+        unsubscribers.push(cartService.subscribe(
             cartItems => data.cartItems = cartItems
-        );
-    },
-    deinit() { },
-    async loadItems() {
-        const items = itemService.getAll();
-        if (items) {
-            data.items = items;
+        ));
+        try {
+            unsubscribers.push(await itemService.subscribe(
+                items => data.items = items
+            ));
+        } catch (e: any) {
+            return;
         }
-        await itemService.fetchAll();
-        data.items = itemService.getAll();
+    },
+    deinit() {
+        for (const unsub of unsubscribers) {
+            unsub();
+        }
     },
     async handleAddItem(item: Item) {
         try {

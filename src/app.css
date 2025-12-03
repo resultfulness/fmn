@@ -1,0 +1,35 @@
+:root {
+    --clr-primary: #fab387;
+    --clr-primary-shade: #fbc19d;
+    --clr-primary-text: #39332b;
+    --clr-text: #f4e2cd;
+    --clr-text-mute: #aaa;
+    --clr-dark: #252018;
+    --clr-base: #453c32;
+    --clr-s1: #594f45;
+    --clr-s2: #706359;
+    --clr-s3: #80756b;
+    --clr-outline: #b3aca6;
+    --clr-error: #fa8787;
+    --clr-success: #bdfa87;
+    --clr-warning: #fae587;
+}
+
+body {
+    color: var(--clr-text);
+    background-color: var(--clr-base);
+    margin: 0;
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}

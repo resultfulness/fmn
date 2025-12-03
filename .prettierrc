@@ -1,0 +1,4 @@
+svelteIndentScriptAndStyle: false
+tabWidth: 4
+arrowParens: "avoid"
+trailingComma: "es5"

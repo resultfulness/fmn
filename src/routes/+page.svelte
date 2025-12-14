@@ -65,8 +65,6 @@ function handleUpdateItem(e: SubmitEvent) {
 }
 </script>
 
-<h1>fmn2</h1>
-
 <form onsubmit={handleCreateItem}>
     <input type="text" name="name" />
     <input type="text" name="icon" />

@@ -21,15 +21,22 @@ const { href, label, icon }: NavbarLinkProps = $props();
 
 <style>
 a {
-    color: inherit;
+    background-color: var(--clr-s1);
+    color: var(--clr-text-mute);
     text-decoration: none;
     display: grid;
     place-items: center;
+    gap: 0.25rem;
     font-size: 0.875rem;
+    font-weight: 500;
     padding: 0.5rem;
 }
 
 .active {
+    color: var(--clr-primary);
+    position: relative;
+    top: -4px;
+    box-shadow: 0 4px 0 0 var(--clr-primary);
     background-color: var(--clr-s2);
 }
 </style>

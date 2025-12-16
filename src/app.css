@@ -15,11 +15,17 @@
     --clr-warning: #fae587;
 }
 
+*,
+*::after
+*::before {
+    box-sizing: border-box;
+}
+
 body {
     color: var(--clr-text);
     background-color: var(--clr-base);
     margin: 0;
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     line-height: 1.5;
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ChefHat, House, Salad, ShoppingCart } from "@lucide/svelte";
+import { ChefHat, Salad, ShoppingCart } from "@lucide/svelte";
 import NavbarLink from "./navbar-link.svelte";
 </script>
 

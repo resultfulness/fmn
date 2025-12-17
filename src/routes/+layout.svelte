@@ -25,6 +25,7 @@ let { children } = $props();
 }
 
 main {
+    position: relative;
     flex: 1;
     padding-inline: 1rem;
     overflow-y: auto;

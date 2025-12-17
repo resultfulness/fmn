@@ -9,9 +9,10 @@ interface NavbarLinkProps {
 }
 
 const { href, label, icon }: NavbarLinkProps = $props();
+const path = $derived(page.url.pathname);
 </script>
 
-<a {href} class:active={href === page.url.pathname}>
+<a {href} class:active={href === "/" ? href === path : path.startsWith(href)}>
     <svelte:boundary>
         {@const Icon = icon}
         <Icon />
@@ -21,6 +22,7 @@ const { href, label, icon }: NavbarLinkProps = $props();
 
 <style>
 a {
+    position: relative;
     background-color: var(--clr-s1);
     color: var(--clr-text-mute);
     text-decoration: none;
@@ -30,13 +32,23 @@ a {
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0.5rem;
+    top: 0px;
+    transition:
+        top 200ms,
+        background-color 200ms,
+        color 200ms;
 }
 
 .active {
     color: var(--clr-primary);
-    position: relative;
     top: -4px;
     box-shadow: 0 4px 0 0 var(--clr-primary);
     background-color: var(--clr-s2);
+}
+
+a:focus,
+a:hover {
+    outline: none;
+    top: -4px;
 }
 </style>

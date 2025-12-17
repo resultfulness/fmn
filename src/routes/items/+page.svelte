@@ -1,7 +1,10 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import api from "$lib/api";
-import { ItemCreate, ItemUpdate, type ItemShort } from "$lib/schemas/items";
+import { ItemUpdate, type ItemShort } from "$lib/schemas/items";
+import Button from "$lib/components/button.svelte";
+import ItemListRow from "$lib/components/item-list-row.svelte";
+import { Plus } from "@lucide/svelte";
 
 let items = $state<ItemShort[]>();
 
@@ -11,26 +14,6 @@ onMount(() => {
         .then(_items => (items = _items))
         .catch(e => alert(e));
 });
-
-function handleCreateItem(e: SubmitEvent) {
-    e.preventDefault();
-    const form = new FormData(e.target as HTMLFormElement);
-
-    const item = ItemCreate.safeParse({
-        name: form.get("name"),
-        icon: form.get("icon"),
-    });
-
-    if (!item.success) {
-        alert(item.error);
-        return;
-    }
-
-    api.items
-        .create(item.data)
-        .then(item => items?.push(item))
-        .catch(e => alert(e));
-}
 
 function handleDeleteItem(item_id: number) {
     api.items
@@ -65,37 +48,38 @@ function handleUpdateItem(e: SubmitEvent) {
 }
 </script>
 
-<form onsubmit={handleCreateItem}>
-    <input type="text" name="name" />
-    <input type="text" name="icon" />
-    <button>create</button>
-</form>
-
+<button
+    style="position: fixed; top: 0; right: 0;"
+    onclick={() => {
+        localStorage.removeItem("items");
+        window.location.reload();
+    }}
+>
+    clear ls
+</button>
 {#if items === undefined}
     loading...
+{:else if items.length <= 0}
+    no items... :&lt;
 {:else}
-    <form onsubmit={handleUpdateItem}>
-        editing
-        <select name="id">
-            {#each items as item}
-                <option value={item.item_id}>
-                    {item.name} (id: {item.item_id})
-                </option>
-            {/each}
-        </select>
-        <input type="text" name="name" />
-        <input type="text" name="icon" />
-        <button>update</button>
-    </form>
-
     <ul>
         {#each items as item}
-            <li>
-                {item.name}
-                <button onclick={() => handleDeleteItem(item.item_id)}>
-                    delete
-                </button>
-            </li>
+            <ItemListRow {item} handleDelete={handleDeleteItem} />
         {/each}
     </ul>
 {/if}
+<Button fab href="/items/new">
+    <Plus size={40} />
+</Button>
+
+<style>
+ul {
+    list-style-type: none;
+    background-color: var(--clr-outline);
+    display: grid;
+    gap: 1px;
+    padding: 1px;
+    margin: 0;
+    margin-bottom: 6rem;
+}
+</style>

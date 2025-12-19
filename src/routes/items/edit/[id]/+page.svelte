@@ -13,20 +13,15 @@ let icon = $derived(item?.icon ?? "");
 
 function handleUpdateItem(e: SubmitEvent) {
     e.preventDefault();
-    const form = new FormData(e.target as HTMLFormElement);
+    const itemUpdate = ItemUpdate.safeParse({ name, icon });
 
-    const item = ItemUpdate.safeParse({
-        name: form.get("name"),
-        icon: form.get("icon"),
-    });
-
-    if (!item.success) {
-        alert(item.error);
+    if (!itemUpdate.success) {
+        alert(itemUpdate.error);
         return;
     }
 
     api.items
-        .update(+form.get("id")!, item.data)
+        .update(item.item_id, itemUpdate.data)
         .then(() => goto("/items"))
         .catch(e => alert(e));
 }
@@ -37,8 +32,8 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <form onsubmit={handleUpdateItem}>
-        <Input type="text" name="name" bind:value={name} placeholder="item name" />
-        <Input type="text" name="icon" bind:value={icon} placeholder="item icon" />
+        <Input type="text" bind:value={name} placeholder="item name" />
+        <Input type="text" bind:value={icon} placeholder="item icon" />
         <Button variant="primary">update</Button>
     </form>
 

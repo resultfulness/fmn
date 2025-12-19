@@ -4,8 +4,8 @@ import api from "$lib/api";
 import { type ItemShort } from "$lib/schemas/items";
 import Button from "$lib/components/button.svelte";
 import ItemListRow from "$lib/components/item-list-row.svelte";
-import { Plus, Search } from "@lucide/svelte";
-import Input from "$lib/components/input.svelte";
+import { Plus } from "@lucide/svelte";
+import Search from "$lib/components/search.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
 
 let items = $state<ItemShort[]>();
@@ -40,14 +40,7 @@ HeaderState.title = "items";
 >
     clear ls
 </button>
-<div class="search">
-    <Input
-        icon={Search}
-        clearable
-        placeholder="search for items..."
-        bind:value={searchterm}
-    />
-</div>
+<Search bind:searchterm padding="0 1rem"/>
 <div class="items">
     {#if itemsFiltered === undefined}
         loading...
@@ -68,10 +61,6 @@ HeaderState.title = "items";
 </div>
 
 <style>
-.search {
-    padding-inline: 1rem;
-}
-
 .items {
     flex: 1;
     overflow-y: auto;

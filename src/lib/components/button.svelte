@@ -8,8 +8,7 @@ interface ButtonProps {
     type?: "button" | "submit" | "reset";
     variant?: "primary" | "secondary" | "alert" | "empty";
     disabled?: boolean;
-    icon?: boolean;
-    fab?: boolean;
+    square?: boolean;
     ariaLabel?: string;
     href?: string;
 }
@@ -20,8 +19,7 @@ let {
     type = "submit",
     variant = "primary",
     disabled,
-    icon,
-    fab,
+    square,
     href,
     ariaLabel,
 }: ButtonProps = $props();
@@ -37,8 +35,7 @@ let {
     class:button--secondary={variant === "secondary"}
     class:button--alert={variant === "alert"}
     class:button--empty={variant === "empty"}
-    class:button--icon={icon}
-    class:button--fab={fab}
+    class:button--square={square}
 >
     {#if href}
         <a
@@ -79,12 +76,12 @@ let {
 }
 
 .button--secondary {
-    background-color: var(--clr-s1);
+    background-color: var(--clr-s2);
     color: var(--clr-text);
 }
 
 .button--secondary:hover {
-    background-color: var(--clr-s2);
+    background-color: var(--clr-s3);
 }
 
 .button--empty {
@@ -93,7 +90,7 @@ let {
     padding: 0;
 }
 
-.button--icon {
+.button--square {
     padding: 0.5rem;
 }
 
@@ -105,12 +102,5 @@ let {
 .button--alert {
     background-color: var(--clr-error);
     color: var(--clr-base);
-}
-
-.button--fab {
-    position: fixed;
-    padding: 0.5rem;
-    bottom: 5.5rem;
-    right: 1.5rem;
 }
 </style>

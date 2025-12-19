@@ -1,5 +1,5 @@
 <script lang="ts">
-import { X } from "@lucide/svelte";
+import { X, type Icon as IconType } from "@lucide/svelte";
 
 interface InputProps {
     value: string;
@@ -12,6 +12,7 @@ interface InputProps {
     error?: string;
     ariaLabel?: string;
     clearable?: boolean;
+    icon?: typeof IconType;
 }
 
 const uid = $props.id();
@@ -27,6 +28,7 @@ let {
     error,
     ariaLabel,
     clearable,
+    icon,
 }: InputProps = $props();
 </script>
 
@@ -37,6 +39,14 @@ let {
         </label>
     {/if}
     <div class="input-field">
+        {#if icon}
+            <div class="input-icon">
+                <svelte:boundary>
+                    {@const Icon = icon}
+                    <Icon />
+                </svelte:boundary>
+            </div>
+        {/if}
         <input
             {type}
             {name}
@@ -46,6 +56,7 @@ let {
             aria-label={ariaLabel}
             bind:value
             class="input"
+            class:input--icon={icon !== undefined}
             class:input--error={error}
         />
         {#if clearable && value.length > 0}
@@ -77,7 +88,7 @@ let {
     padding: 0.5rem 0.5rem;
     border-radius: 0.5rem;
     border: 0.1rem solid var(--clr-outline);
-    background-color: var(--clr-surface0);
+    background-color: var(--clr-s1);
     color: inherit;
     font: inherit;
 }
@@ -95,8 +106,24 @@ let {
     border-color: var(--clr-error) !important;
 }
 
+.input--icon {
+    padding-left: 2.5rem;
+}
+
 .input-group-error {
     color: var(--color-error);
+}
+
+.input-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: transparent;
+    border: 0;
+    display: grid;
+    place-items: center;
+    padding-inline: 0.5rem;
 }
 
 .input-clear {
@@ -109,5 +136,6 @@ let {
     display: grid;
     place-items: center;
     padding-inline: 0.5rem;
+    cursor: pointer;
 }
 </style>

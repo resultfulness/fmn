@@ -4,13 +4,21 @@ import api from "$lib/api";
 import Button from "$lib/components/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
 import Input from "$lib/components/input.svelte";
-import { ItemCreate } from "$lib/schemas/items";
+import { ItemUpdate } from "$lib/schemas/items";
 
-let name = $state("");
-let icon = $state("");
+let { data } = $props();
+let { item } = $derived(data);
+let name = $derived(item?.name ?? "");
+let icon = $derived(item?.icon ?? "");
 
-function createItem() {
-    const item = ItemCreate.safeParse({ name, icon });
+function handleUpdateItem(e: SubmitEvent) {
+    e.preventDefault();
+    const form = new FormData(e.target as HTMLFormElement);
+
+    const item = ItemUpdate.safeParse({
+        name: form.get("name"),
+        icon: form.get("icon"),
+    });
 
     if (!item.success) {
         alert(item.error);
@@ -18,42 +26,20 @@ function createItem() {
     }
 
     api.items
-        .create(item.data)
-        .then(() => {
-            name = "";
-            icon = "";
-        })
+        .update(+form.get("id")!, item.data)
+        .then(() => goto("/items"))
         .catch(e => alert(e));
 }
 
-function handleCreateItem(e: SubmitEvent) {
-    e.preventDefault();
-    createItem();
-}
-
-function handleCreateItemAndGoBack() {
-    createItem();
-    goto("/items");
-}
-
-HeaderState.title = "new item";
+HeaderState.title = "editing item ";
 HeaderState.backUrl = "/items";
 </script>
 
 <div class="page">
-    <form onsubmit={handleCreateItem}>
+    <form onsubmit={handleUpdateItem}>
         <Input type="text" name="name" bind:value={name} placeholder="item name" />
         <Input type="text" name="icon" bind:value={icon} placeholder="item icon" />
-        <div>
-            <Button variant="secondary">create & stay</Button>
-            <Button
-                variant="primary"
-                onclick={handleCreateItemAndGoBack}
-                type="button"
-            >
-                create
-            </Button>
-        </div>
+        <Button variant="primary">update</Button>
     </form>
 
     <h2>icon preview</h2>
@@ -68,12 +54,6 @@ HeaderState.backUrl = "/items";
 form {
     display: grid;
     gap: 0.25rem;
-}
-
-form div {
-    display: grid;
-    gap: 0.25rem;
-    grid-template-columns: repeat(2, 1fr);
 }
 
 img {

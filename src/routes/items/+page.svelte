@@ -1,12 +1,18 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import api from "$lib/api";
-import { ItemUpdate, type ItemShort } from "$lib/schemas/items";
+import { type ItemShort } from "$lib/schemas/items";
 import Button from "$lib/components/button.svelte";
 import ItemListRow from "$lib/components/item-list-row.svelte";
-import { Plus } from "@lucide/svelte";
+import { Plus, Search } from "@lucide/svelte";
+import Input from "$lib/components/input.svelte";
+import { HeaderState } from "$lib/components/header.svelte";
 
 let items = $state<ItemShort[]>();
+let searchterm = $state("");
+const itemsFiltered = $derived(
+    items?.filter(({ name }) => name.includes(searchterm))
+);
 
 onMount(() => {
     api.items
@@ -22,30 +28,7 @@ function handleDeleteItem(item_id: number) {
         .catch(e => alert(e));
 }
 
-function handleUpdateItem(e: SubmitEvent) {
-    e.preventDefault();
-    const form = new FormData(e.target as HTMLFormElement);
-
-    const item = ItemUpdate.safeParse({
-        name: form.get("name"),
-        icon: form.get("icon"),
-    });
-
-    if (!item.success) {
-        alert(item.error);
-        return;
-    }
-
-    api.items
-        .update(+form.get("id")!, item.data)
-        .then(
-            item =>
-                (items![
-                    items?.findIndex(_item => _item.item_id === item.item_id)!
-                ] = item)
-        )
-        .catch(e => alert(e));
-}
+HeaderState.title = "items";
 </script>
 
 <button
@@ -57,22 +40,44 @@ function handleUpdateItem(e: SubmitEvent) {
 >
     clear ls
 </button>
-{#if items === undefined}
-    loading...
-{:else if items.length <= 0}
-    no items... :&lt;
-{:else}
-    <ul>
-        {#each items as item}
-            <ItemListRow {item} handleDelete={handleDeleteItem} />
-        {/each}
-    </ul>
-{/if}
-<Button fab href="/items/new">
-    <Plus size={40} />
-</Button>
+<div class="search">
+    <Input
+        icon={Search}
+        clearable
+        placeholder="search for items..."
+        bind:value={searchterm}
+    />
+</div>
+<div class="items">
+    {#if itemsFiltered === undefined}
+        loading...
+    {:else if itemsFiltered.length <= 0}
+        no items{#if searchterm}&nbsp;containing '{searchterm}'{/if}... :&lt;
+    {:else}
+        <ul>
+            {#each itemsFiltered as item}
+                <ItemListRow {item} handleDelete={handleDeleteItem} />
+            {/each}
+        </ul>
+    {/if}
+</div>
+<div class="actions">
+    <Button square href="/items/new">
+        <Plus size={40} />
+    </Button>
+</div>
 
 <style>
+.search {
+    padding-inline: 1rem;
+}
+
+.items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
 ul {
     list-style-type: none;
     background-color: var(--clr-outline);
@@ -80,6 +85,11 @@ ul {
     gap: 1px;
     padding: 1px;
     margin: 0;
-    margin-bottom: 6rem;
+}
+
+.actions {
+    background-color: var(--clr-base);
+    display: grid;
+    padding: 0.5rem;
 }
 </style>

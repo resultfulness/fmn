@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
-import { Trash } from "@lucide/svelte";
+import { Pencil, Trash } from "@lucide/svelte";
 import Button from "./button.svelte";
 
 const {
@@ -12,8 +12,11 @@ const {
 <li class="item-row">
     <img class="item-row-icon" src={item.icon} alt={item.name + " icon"} />
     <span class="item-row-label">{item.name}</span>
-    <Button onclick={() => handleDelete(item.item_id)} variant="alert" icon>
+    <Button onclick={() => handleDelete(item.item_id)} variant="alert" square>
         <Trash />
+    </Button>
+    <Button href={`/items/edit/${item.item_id}`} variant="secondary" square>
+        <Pencil />
     </Button>
 </li>
 

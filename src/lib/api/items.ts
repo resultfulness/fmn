@@ -10,6 +10,11 @@ const items = {
         localStorage.setItem("items", JSON.stringify(this.items));
         return new Promise(res => res(ItemShort.parse(newItem)));
     },
+    read(id: number): Promise<ItemShort | undefined> {
+        return new Promise(res =>
+            res(this.items.find(({ item_id }) => item_id === id))
+        );
+    },
     readAll(): Promise<ItemShort[]> {
         return new Promise(res => setTimeout(() => res(
             this.items.map(item => ItemShort.parse(item))

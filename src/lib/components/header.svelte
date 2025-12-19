@@ -25,7 +25,7 @@ beforeNavigate(() => {
 <header>
     <div>
         {#if backUrl}
-            <Button icon variant="empty" href={backUrl}>
+            <Button square variant="empty" href={backUrl}>
                 <ArrowLeft size={30} />
             </Button>
         {/if}

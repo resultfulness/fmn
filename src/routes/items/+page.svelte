@@ -7,6 +7,7 @@ import ItemListRow from "$lib/components/item-list-row.svelte";
 import { Plus } from "@lucide/svelte";
 import Search from "$lib/components/search.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
+import { showConfirmationDialog } from "$lib/components/confirm.svelte";
 
 let items = $state<ItemShort[]>();
 let searchterm = $state("");
@@ -21,7 +22,16 @@ onMount(() => {
         .catch(e => alert(e));
 });
 
-function handleDeleteItem(item_id: number) {
+async function handleDeleteItem(item_id: number) {
+    const deleteConfirmed = await showConfirmationDialog(
+        "delete confirmation",
+        "are you sure you want to delete this item?",
+    );
+
+    if (!deleteConfirmed) {
+        return;
+    }
+
     api.items
         .delete(item_id)
         .then(() => (items = items?.filter(item => item.item_id !== item_id)))
@@ -40,7 +50,7 @@ HeaderState.title = "items";
 >
     clear ls
 </button>
-<Search bind:searchterm padding="0 1rem"/>
+<Search bind:searchterm padding="0 1rem" />
 <div class="items">
     {#if itemsFiltered === undefined}
         loading...

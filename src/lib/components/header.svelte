@@ -12,22 +12,25 @@ export const HeaderState = $state<HeaderState>({
 <script lang="ts">
 import { beforeNavigate } from "$app/navigation";
 import { ArrowLeft } from "@lucide/svelte";
-import Button from "./button.svelte";
+import IconButton from "./icon-button.svelte";
 
 const { title, backUrl } = $derived(HeaderState);
 
 beforeNavigate(() => {
     HeaderState.title = "forget me not";
     HeaderState.backUrl = undefined;
-})
+});
 </script>
 
 <header>
     <div>
         {#if backUrl}
-            <Button square variant="empty" href={backUrl}>
-                <ArrowLeft size={30} />
-            </Button>
+            <IconButton
+                variant="secondary"
+                href={backUrl}
+                icon={ArrowLeft}
+                size={32}
+            />
         {/if}
     </div>
     <h1>{title}</h1>
@@ -36,11 +39,16 @@ beforeNavigate(() => {
 
 <style>
 header {
-    padding-inline: 1rem;
     display: grid;
-    grid-template-columns: 32px 1fr 32px;
+    grid-template-columns: 48px 1fr 48px;
     align-items: center;
     gap: 0.25rem;
     text-align: center;
+    padding: 0.5rem;
+}
+
+h1 {
+    font: var(--font-header);
+    margin: 0;
 }
 </style>

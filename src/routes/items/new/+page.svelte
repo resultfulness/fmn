@@ -1,16 +1,18 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import Button from "$lib/components/button.svelte";
+import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
-import Input from "$lib/components/input.svelte";
+import Input from "$lib/components/atoms/input.svelte";
 import { ItemCreate } from "$lib/schemas/items";
+import InputField from "$lib/components/input-field.svelte";
 
 let name = $state("");
 let icon = $state("");
+let unit = $state("");
 
 function createItem() {
-    const item = ItemCreate.safeParse({ name, icon });
+    const item = ItemCreate.safeParse({ name, icon, unit });
 
     if (!item.success) {
         alert(item.error);
@@ -36,14 +38,32 @@ function handleCreateItemAndGoBack() {
     goto("/items");
 }
 
-HeaderState.title = "new item";
+HeaderState.title = "";
 HeaderState.backUrl = "/items";
 </script>
 
 <div class="page">
+    <img src={icon} alt="" />
+    <h1>{name.length > 0 ? name : "new item"}</h1>
     <form onsubmit={handleCreateItem}>
-        <Input type="text" name="name" bind:value={name} placeholder="item name" />
-        <Input type="text" name="icon" bind:value={icon} placeholder="item icon" />
+        <InputField
+            type="text"
+            name="name"
+            bind:value={name}
+            label="Name"
+        />
+        <InputField
+            type="text"
+            name="icon"
+            bind:value={icon}
+            label="Icon"
+        />
+        <InputField
+            type="text"
+            name="unit"
+            bind:value={unit}
+            label="Unit"
+        />
         <div>
             <Button variant="secondary">create & stay</Button>
             <Button
@@ -55,32 +75,39 @@ HeaderState.backUrl = "/items";
             </Button>
         </div>
     </form>
-
-    <h2>icon preview</h2>
-    <img src={icon} alt="couldn't load preview" />
 </div>
 
 <style>
 .page {
     padding: 1rem;
+    padding-top: 2rem;
+    display: grid;
+    gap: 1rem;
+}
+
+h1 {
+    font: var(--font-title);
+    margin: 0;
+    text-align: center;
 }
 
 form {
     display: grid;
-    gap: 0.25rem;
+    gap: 1rem;
 }
 
 form div {
     display: grid;
-    gap: 0.25rem;
+    gap: 1rem;
+    padding-top: 1rem;
     grid-template-columns: repeat(2, 1fr);
 }
 
 img {
-    border: 1px solid var(--clr-primary);
-    width: calc(100% - 8rem);
+    position: relative;
+    width: 128px;
+    aspect-ratio: 1;
+    object-fit: cover;
     margin-inline: auto;
-    display: block;
-    text-align: center;
 }
 </style>

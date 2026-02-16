@@ -1,9 +1,9 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import Button from "$lib/components/button.svelte";
+import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
-import Input from "$lib/components/input.svelte";
+import Input from "$lib/components/atoms/input.svelte";
 import { ItemUpdate } from "$lib/schemas/items";
 
 let { data } = $props();

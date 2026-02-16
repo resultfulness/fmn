@@ -2,16 +2,18 @@
 import { onMount } from "svelte";
 import api from "$lib/api";
 import { type ItemShort } from "$lib/schemas/items";
-import Button from "$lib/components/button.svelte";
-import ItemListRow from "$lib/components/item-list-row.svelte";
 import { Plus } from "@lucide/svelte";
 import Search from "$lib/components/search.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
 import { showConfirmationDialog } from "$lib/components/confirm.svelte";
+import IconButton from "$lib/components/icon-button.svelte";
+import FooterExtension from "$lib/components/footer-extension.svelte";
+import ItemList from "$lib/components/item-list.svelte";
 
 let items = $state<ItemShort[]>();
 let searchterm = $state("");
-const itemsFiltered = $derived(
+
+const itemsSearched = $derived(
     items?.filter(({ name }) => name.includes(searchterm))
 );
 
@@ -22,73 +24,21 @@ onMount(() => {
         .catch(e => alert(e));
 });
 
-async function handleDeleteItem(item_id: number) {
-    const deleteConfirmed = await showConfirmationDialog(
-        "delete confirmation",
-        "are you sure you want to delete this item?",
-    );
-
-    if (!deleteConfirmed) {
-        return;
-    }
-
-    api.items
-        .delete(item_id)
-        .then(() => (items = items?.filter(item => item.item_id !== item_id)))
-        .catch(e => alert(e));
-}
-
 HeaderState.title = "items";
 </script>
 
-<button
-    style="position: fixed; top: 0; right: 0;"
-    onclick={() => {
-        localStorage.removeItem("items");
-        window.location.reload();
-    }}
->
-    clear ls
-</button>
-<Search bind:searchterm padding="0 1rem" />
 <div class="items">
-    {#if itemsFiltered === undefined}
-        loading...
-    {:else if itemsFiltered.length <= 0}
-        no items{#if searchterm}&nbsp;containing '{searchterm}'{/if}... :&lt;
-    {:else}
-        <ul>
-            {#each itemsFiltered as item}
-                <ItemListRow {item} handleDelete={handleDeleteItem} />
-            {/each}
-        </ul>
-    {/if}
+    <ItemList items={itemsSearched} />
 </div>
-<div class="actions">
-    <Button square href="/items/new">
-        <Plus size={40} />
-    </Button>
-</div>
+<FooterExtension>
+    <Search bind:searchterm />
+    <IconButton href="/items/new" icon={Plus} size={32} />
+</FooterExtension>
 
 <style>
 .items {
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
-}
-
-ul {
-    list-style-type: none;
-    background-color: var(--clr-outline);
-    display: grid;
-    gap: 1px;
-    padding: 1px;
-    margin: 0;
-}
-
-.actions {
-    background-color: var(--clr-base);
-    display: grid;
-    padding: 0.5rem;
 }
 </style>

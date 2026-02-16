@@ -1,5 +1,5 @@
 <script module lang="ts">
-import Button from "./button.svelte";
+import Button from "$lib/components/atoms/button.svelte";
 
 let dialog: HTMLDialogElement = $state()!;
 let dialogTitle: string = $state("");
@@ -21,15 +21,15 @@ export function showConfirmationDialog(
 }
 </script>
 
-<dialog class="confirmation-dialog" bind:this={dialog}>
-    <h2 class="confirmation-dialog-title">{dialogTitle}</h2>
-    <p class="confirmation-dialog-subtitle">{dialogMessage}</p>
-    <div class="confirmation-dialog-submit">
+<dialog class="confirmation-dialog" bind:this={dialog} closedby="any">
+    <h2 class="title">{dialogTitle}</h2>
+    <p class="subtitle">{dialogMessage}</p>
+    <div class="submit">
         <form method="dialog" onsubmit={cancel}>
             <Button variant="secondary">cancel</Button>
         </form>
         <form method="dialog" onsubmit={confirm}>
-            <Button>confirm</Button>
+            <Button variant="danger">confirm</Button>
         </form>
     </div>
 </dialog>
@@ -39,39 +39,41 @@ export function showConfirmationDialog(
     position: fixed;
     border: 0;
     inset: 0;
-    border-radius: 0.5rem;
-    background-color: var(--clr-s1);
+    border-radius: var(--rounding);
+    background-color: var(--clr-base);
     color: var(--clr-text);
-    box-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.1);
+    box-shadow: var(--shadow);
     padding: 1rem;
     max-width: 33ch;
+    gap: 1rem;
+}
+
+.confirmation-dialog[open] {
+    display: grid;
 }
 
 .confirmation-dialog::backdrop {
     background-color: rgba(0 0 0 / 0.5);
 }
 
-.confirmation-dialog-title {
+.confirmation-dialog .title {
     text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
+    font: var(--font-heading);
     margin: 0;
-    margin-bottom: 0.5rem;
 }
 
-.confirmation-dialog-subtitle {
+.confirmation-dialog .subtitle {
     text-align: center;
     margin: 0;
-    margin-bottom: 1rem;
 }
 
-.confirmation-dialog-submit {
+.confirmation-dialog .submit {
     display: grid;
-    gap: 0.5rem;
+    gap: 1rem;
     grid-template-columns: 1fr 1fr;
 }
 
-.confirmation-dialog-submit > * {
+.confirmation-dialog .submit > * {
     display: grid;
 }
 </style>

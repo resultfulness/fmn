@@ -1,18 +1,29 @@
 :root {
-    --clr-primary: #fab387;
-    --clr-primary-shade: #fbc19d;
-    --clr-primary-text: #39332b;
-    --clr-text: #f4e2cd;
-    --clr-text-mute: #aaa;
-    --clr-dark: #252018;
-    --clr-base: #453c32;
-    --clr-s1: #594f45;
-    --clr-s2: #706359;
-    --clr-s3: #80756b;
-    --clr-outline: #b3aca6;
-    --clr-error: #fa8787;
-    --clr-success: #bdfa87;
-    --clr-warning: #fae587;
+    --clr-primary: oklch(0.8 0.1 60);
+    --clr-primary-shade: oklch(0.85 0.1 60);
+
+    --clr-danger: oklch(0.7 0.15 20);
+
+    --clr-text: oklch(0.925 0.03 85);
+    --clr-text-bright: oklch(0.97 0.03 85);
+    --clr-text-dim: oklch(0.75 0.03 85);
+
+    --clr-dark: oklch(0.25 0.02 70);
+    --clr-base: oklch(0.35 0.02 70);
+    --clr-surface: oklch(0.40 0.02 70);
+    --clr-overlay: oklch(0.375 0.02 70);
+
+    --ff: Fredoka, sans-serif;
+    --font-title: 500 3rem var(--ff);
+    --font-header: 500 2rem var(--ff);
+    --font-heading: 500 1.5rem var(--ff);
+    --font-content: 400 1rem/1.5 var(--ff);
+    --font-label: 400 1rem var(--ff);
+    --font-subtitle: 400 0.875rem var(--ff);
+    --font-emph: 500 1rem var(--ff);
+
+    --shadow: 0 2px 4px 0 rgb(0 0 0 / 0.1);
+    --rounding: 1rem;
 }
 
 *,
@@ -25,9 +36,7 @@ body {
     color: var(--clr-text);
     background-color: var(--clr-base);
     margin: 0;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
+    font: var(--font-content);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

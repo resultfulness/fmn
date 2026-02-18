@@ -3,9 +3,10 @@ import { goto } from "$app/navigation";
 import api from "$lib/api";
 import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
-import Input from "$lib/components/atoms/input.svelte";
 import { ItemCreate } from "$lib/schemas/items";
 import InputField from "$lib/components/input-field.svelte";
+import DropdownField from "$lib/components/dropdown-field.svelte";
+import Title from "$lib/components/atoms/title.svelte";
 
 let name = $state("");
 let icon = $state("");
@@ -44,25 +45,27 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <img src={icon} alt="" />
-    <h1>{name.length > 0 ? name : "new item"}</h1>
+    <Title>{name.length > 0 ? name : "new item"}</Title>
     <form onsubmit={handleCreateItem}>
         <InputField
             type="text"
             name="name"
             bind:value={name}
             label="Name"
+            placeholder="enter name..."
         />
         <InputField
             type="text"
             name="icon"
             bind:value={icon}
-            label="Icon"
+            label="Icon URL"
+            placeholder="enter url..."
         />
-        <InputField
-            type="text"
-            name="unit"
+        <DropdownField
+            options={["tbsp", "pcs", "g"]}
             bind:value={unit}
             label="Unit"
+            placeholder="pick a unit..."
         />
         <div>
             <Button variant="secondary">create & stay</Button>
@@ -83,12 +86,6 @@ HeaderState.backUrl = "/items";
     padding-top: 2rem;
     display: grid;
     gap: 1rem;
-}
-
-h1 {
-    font: var(--font-title);
-    margin: 0;
-    text-align: center;
 }
 
 form {

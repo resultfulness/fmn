@@ -71,7 +71,7 @@ let {
     border: none;
 }
 
-.input:focus {
+.input-wrapper:focus-within {
     outline: 2px solid var(--clr-primary);
 }
 

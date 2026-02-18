@@ -5,7 +5,6 @@ import { type ItemShort } from "$lib/schemas/items";
 import { Plus } from "@lucide/svelte";
 import Search from "$lib/components/search.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
-import { showConfirmationDialog } from "$lib/components/confirm.svelte";
 import IconButton from "$lib/components/icon-button.svelte";
 import FooterExtension from "$lib/components/footer-extension.svelte";
 import ItemList from "$lib/components/item-list.svelte";

@@ -18,7 +18,7 @@ const items = {
     readAll(): Promise<ItemShort[]> {
         return new Promise(res => setTimeout(() => res(
             this.items.map(item => ItemShort.parse(item))
-        ), 1000));
+        ), 100));
     },
     update(id: number, item: ItemUpdate): Promise<ItemShort> {
         return new Promise(res => {

@@ -58,15 +58,15 @@ import { Check, CircleAlert } from "@lucide/svelte";
     align-items: center;
     gap: 0.5rem;
     border: none;
-}
 
-.toast.success {
-    background-color: var(--clr-success);
-    color: var(--clr-dark);
-}
+    &.success {
+        background-color: var(--clr-success);
+        color: var(--clr-dark);
+    }
 
-.toast.error {
-    background-color: var(--clr-danger);
-    color: var(--clr-dark);
+    &.error {
+        background-color: var(--clr-danger);
+        color: var(--clr-dark);
+    }
 }
 </style>

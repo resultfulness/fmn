@@ -4,8 +4,19 @@ import Footer from "$lib/components/footer.svelte";
 import "../app.css";
 import Confirm from "$lib/components/confirm.svelte";
 import Toast from "$lib/components/toast.svelte";
+import { onNavigate } from "$app/navigation";
 
 let { children } = $props();
+onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
 </script>
 
 <Confirm />

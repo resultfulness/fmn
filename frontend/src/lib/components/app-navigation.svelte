@@ -25,6 +25,7 @@ const path = $derived(page.url.pathname);
 </script>
 
 <nav style:grid-template-columns={`repeat(${linkProps.length}, 1fr)`}>
+    <div class="highlight"></div>
     {#each linkProps as props}
         <AppNavigationLink
             {...props}
@@ -41,5 +42,20 @@ nav {
     display: grid;
     padding: 0.5rem;
     gap: 0.5rem;
+    position: relative;
+}
+.highlight {
+    background-color: oklch(from var(--clr-primary) l c h / 0.2);
+    position: absolute;
+    position-anchor: --highlight-anchor;
+    bottom: anchor(bottom);
+    left: anchor(left);
+    right: anchor(right);
+    top: anchor(top);
+    view-transition-name: --highlight;
+    border-radius: var(--rounding);
+}
+::view-transition-group(--highlight) {
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 </style>

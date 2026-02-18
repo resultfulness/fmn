@@ -24,7 +24,6 @@ a {
     padding: 0.5rem;
     color: var(--clr-text-dim);
     font: var(--font-label);
-    border-radius: var(--rounding);
     display: grid;
     justify-items: center;
     text-decoration: none;
@@ -32,6 +31,6 @@ a {
 
 a.active {
     color: var(--clr-primary);
-    background-color: oklch(from var(--clr-primary) l c h / 0.2);
+    anchor-name: --highlight-anchor;
 }
 </style>

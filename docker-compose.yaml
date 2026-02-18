@@ -1,0 +1,38 @@
+services:
+  fmn-backend:
+    build: ./backend
+    container_name: fmn-backend
+    volumes:
+      - ./backend:/app
+      - /app/target
+    # depends_on:
+      # - fmn-db
+  fmn-frontend:
+    build: ./frontend
+    container_name: fmn-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - fmn-backend
+  fmn-proxy:
+    image: nginx:mainline
+    container_name: fmn-proxy
+    ports:
+      - 443:443
+      - 3000:3000
+    env_file: .env
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf.tmp
+      - ./ssl:/etc/nginx/ssl
+    command: /bin/bash -c "envsubst '$${SERVER_NAME}' < /etc/nginx/nginx.conf.tmp > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    depends_on:
+      - fmn-backend
+      - fmn-frontend
+  # fmn-db:
+  #   image: postgres:18
+  #   container_name: fmn-db
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - ./database:/docker-entrypoint-initdb.d

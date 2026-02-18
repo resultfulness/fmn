@@ -22,7 +22,7 @@ let { children } = $props();
 .app {
     width: min(800px, 100%);
     height: 100vh;
-    height: 100svh;
+    height: 100dvh;
     margin-inline: auto;
     display: flex;
     flex-direction: column;

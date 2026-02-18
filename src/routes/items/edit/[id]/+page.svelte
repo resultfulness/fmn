@@ -83,6 +83,7 @@ HeaderState.backUrl = "/items";
     padding-top: 2rem;
     display: grid;
     gap: 1rem;
+    overflow-y: auto;
 }
 
 form {

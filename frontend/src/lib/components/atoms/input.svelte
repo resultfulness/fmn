@@ -3,7 +3,7 @@ import { X, type Icon as IconType } from "@lucide/svelte";
 import type { HTMLInputTypeAttribute } from "svelte/elements";
 
 export interface InputProps {
-    value: string;
+    value?: string;
     type?: HTMLInputTypeAttribute;
     id?: string;
     name?: string;
@@ -46,7 +46,7 @@ let {
         bind:value
         class="input"
     />
-    {#if clearable && value.length > 0}
+    {#if clearable && value && value.length > 0}
         <button class="clear" onclick={() => (value = "")} type="button">
             <X color="var(--clr-text)" strokeWidth={1.5} />
         </button>

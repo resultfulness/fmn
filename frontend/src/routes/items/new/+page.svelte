@@ -1,42 +1,38 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
 import { ItemCreate } from "$lib/schemas/items";
-import InputField from "$lib/components/input-field.svelte";
-import DropdownField from "$lib/components/dropdown-field.svelte";
 import Title from "$lib/components/atoms/title.svelte";
+import ItemForm from "$lib/components/item-form.svelte";
+import Button from "$lib/components/atoms/button.svelte";
 
-let name = $state("");
-let icon = $state("");
-let unit = $state("");
+let item: ItemCreate = $state({ name: "", icon: "", unit: "" });
 
-function createItem() {
-    const item = ItemCreate.safeParse({ name, icon, unit });
+async function createItem() {
+    const itemCreate = ItemCreate.safeParse(item);
 
-    if (!item.success) {
-        alert(item.error);
-        return;
+    if (!itemCreate.success) {
+        throw itemCreate.error;
     }
 
     api.items
-        .create(item.data)
-        .then(() => {
-            name = "";
-            icon = "";
-        })
-        .catch(e => alert(e));
+        .create(itemCreate.data)
+        .then(() => (item = { name: "", icon: "", unit: "" }))
+        .catch(e => {
+            throw e;
+        });
 }
 
 function handleCreateItem(e: SubmitEvent) {
     e.preventDefault();
-    createItem();
+    createItem()
+        .then(() => goto("/items"))
+        .catch(e => alert(e));
 }
 
-function handleCreateItemAndGoBack() {
-    createItem();
-    goto("/items");
+function handleCreateItemAndStay() {
+    createItem().catch(e => alert(e));
 }
 
 HeaderState.title = "";
@@ -44,40 +40,20 @@ HeaderState.backUrl = "/items";
 </script>
 
 <div class="page">
-    <img src={icon} alt="" />
-    <Title>{name.length > 0 ? name : "new item"}</Title>
-    <form onsubmit={handleCreateItem}>
-        <InputField
-            type="text"
-            name="name"
-            bind:value={name}
-            label="Name"
-            placeholder="enter name..."
-        />
-        <InputField
-            type="text"
-            name="icon"
-            bind:value={icon}
-            label="Icon URL"
-            placeholder="enter url..."
-        />
-        <DropdownField
-            options={["tbsp", "pcs", "g"]}
-            bind:value={unit}
-            label="Unit"
-            placeholder="pick a unit..."
-        />
-        <div>
-            <Button variant="secondary">create & stay</Button>
+    <img src={item.icon} alt="" />
+    <Title>{item.name.length > 0 ? item.name : "new item"}</Title>
+    <ItemForm onsubmit={handleCreateItem} bind:item>
+        {#snippet actions()}
             <Button
-                variant="primary"
-                onclick={handleCreateItemAndGoBack}
+                variant="secondary"
                 type="button"
+                onclick={handleCreateItemAndStay}
             >
-                create
+                create & stay
             </Button>
-        </div>
-    </form>
+            <Button>create</Button>
+        {/snippet}
+    </ItemForm>
 </div>
 
 <style>
@@ -87,18 +63,6 @@ HeaderState.backUrl = "/items";
     display: grid;
     gap: 1rem;
     overflow-y: auto;
-}
-
-form {
-    display: grid;
-    gap: 1rem;
-}
-
-form div {
-    display: grid;
-    gap: 1rem;
-    padding-top: 1rem;
-    grid-template-columns: repeat(2, 1fr);
 }
 
 img {

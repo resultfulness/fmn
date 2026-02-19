@@ -1,6 +1,7 @@
 <script lang="ts">
 export interface DropdownProps {
     options: string[];
+    labels?: string[];
     placeholder: string;
     id?: string;
     required?: boolean;
@@ -11,6 +12,7 @@ export interface DropdownProps {
 let {
     id,
     options,
+    labels = [],
     placeholder,
     required,
     name,
@@ -20,8 +22,8 @@ let {
 
 <select {id} {required} {name} bind:value>
     <option value="" disabled selected hidden>{placeholder}</option>
-    {#each options as option}
-        <option value={option}>{option}</option>
+    {#each options as option, i}
+        <option value={option}>{labels[i] ?? option}</option>
     {/each}
 </select>
 

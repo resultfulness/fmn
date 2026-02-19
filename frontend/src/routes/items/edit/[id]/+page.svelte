@@ -1,20 +1,20 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/header.svelte";
 import { ItemUpdate } from "$lib/schemas/items";
-import DropdownField from "$lib/components/dropdown-field.svelte";
-import InputField from "$lib/components/input-field.svelte";
 import Title from "$lib/components/atoms/title.svelte";
+import { proxify } from "$lib/reactivity.svelte";
+import ItemForm from "$lib/components/item-form.svelte";
+import Button from "$lib/components/atoms/button.svelte";
+import { askForConfirmation } from "$lib/components/confirm.svelte";
 
 let { data } = $props();
-let { item } = $derived(data);
-let { name, unit, icon } = $derived(item);
+let item = $derived(proxify(data.item));
 
 function handleUpdateItem(e: SubmitEvent) {
     e.preventDefault();
-    const itemUpdate = ItemUpdate.safeParse({ name, icon, unit });
+    const itemUpdate = ItemUpdate.safeParse(item);
 
     if (!itemUpdate.success) {
         alert(itemUpdate.error);
@@ -46,42 +46,22 @@ HeaderState.backUrl = "/items";
 </script>
 
 <div class="page">
-    <img src={icon} alt="" />
+    <img src={item.icon} alt="" />
     <Title>
-        {#if name.length > 0}
-            {name}
+        {#if item.name.length > 0}
+            {item.name}
         {:else}
             &nbsp;
         {/if}
     </Title>
-    <form onsubmit={handleUpdateItem}>
-        <InputField
-            type="text"
-            name="name"
-            bind:value={name}
-            label="Name"
-            placeholder="enter name..."
-        />
-        <InputField
-            type="text"
-            name="icon"
-            bind:value={icon}
-            label="Icon URL"
-            placeholder="enter url..."
-        />
-        <DropdownField
-            options={["tbsp", "pcs", "pkgs"]}
-            bind:value={unit}
-            label="Unit"
-            placeholder="pick a unit..."
-        />
-        <div>
+    <ItemForm onsubmit={handleUpdateItem} bind:item>
+        {#snippet actions()}
             <Button variant="danger" type="button" onclick={handleDeleteItem}>
                 delete
             </Button>
-            <Button variant="primary">save</Button>
-        </div>
-    </form>
+            <Button>save</Button>
+        {/snippet}
+    </ItemForm>
 </div>
 
 <style>
@@ -91,18 +71,6 @@ HeaderState.backUrl = "/items";
     display: grid;
     gap: 1rem;
     overflow-y: auto;
-}
-
-form {
-    display: grid;
-    gap: 1rem;
-}
-
-form div {
-    display: grid;
-    gap: 1rem;
-    padding-top: 1rem;
-    grid-template-columns: repeat(2, 1fr);
 }
 
 img {

@@ -27,6 +27,11 @@ a {
     display: grid;
     justify-items: center;
     text-decoration: none;
+    border-radius: var(--rounding);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--clr-primary);
 }
 
 a.active {

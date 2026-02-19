@@ -5,9 +5,3 @@ import AppNavigation from "./app-navigation.svelte";
 <footer>
     <AppNavigation />
 </footer>
-
-<style>
-footer {
-    background-color: var(--clr-s1);
-}
-</style>

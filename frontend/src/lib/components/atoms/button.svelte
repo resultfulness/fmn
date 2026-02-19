@@ -23,22 +23,31 @@ let {
 }: ButtonProps = $props();
 </script>
 
-<button
-    {onclick}
-    {type}
-    {disabled}
-    aria-label={ariaLabel}
-    class="button"
-    class:primary={variant === "primary"}
-    class:secondary={variant === "secondary"}
-    class:danger={variant === "danger"}
->
-    {#if href}
-        <a {href} aria-label={ariaLabel} style="position: absolute; inset: 0;"
-        ></a>
-    {/if}
-    {@render children()}
-</button>
+{#if href}
+    <a
+        {href}
+        aria-label={ariaLabel}
+        class="button"
+        class:primary={variant === "primary"}
+        class:secondary={variant === "secondary"}
+        class:danger={variant === "danger"}
+    >
+        {@render children()}
+    </a>
+{:else}
+    <button
+        {onclick}
+      {type}
+        {disabled}
+        aria-label={ariaLabel}
+        class="button"
+        class:primary={variant === "primary"}
+        class:secondary={variant === "secondary"}
+        class:danger={variant === "danger"}
+    >
+        {@render children()}
+    </button>
+{/if}
 
 <style>
 .button {
@@ -52,6 +61,7 @@ let {
     font: var(--font-emph);
     display: grid;
     place-items: center;
+    text-decoration: none;
 }
 
 .button.primary {
@@ -63,7 +73,7 @@ let {
     background-color: var(--clr-primary-shade);
 }
 
-.button:focus {
+.button:focus-visible {
     outline: 2px solid var(--clr-primary);
     outline-offset: 2px;
 }

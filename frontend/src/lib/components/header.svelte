@@ -10,16 +10,10 @@ export const HeaderState = $state<HeaderState>({
 </script>
 
 <script lang="ts">
-import { beforeNavigate } from "$app/navigation";
 import { ArrowLeft } from "@lucide/svelte";
 import IconButton from "./icon-button.svelte";
 
 const { title, backUrl } = $derived(HeaderState);
-
-beforeNavigate(() => {
-    HeaderState.title = "forget me not";
-    HeaderState.backUrl = undefined;
-});
 </script>
 
 <header>

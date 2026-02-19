@@ -7,7 +7,7 @@ let dialogMessage: string = $state("");
 let confirm: (() => void) | undefined = $state();
 let cancel: (() => void) | undefined = $state();
 
-export function showConfirmationDialog(
+export function askForConfirmation(
     title: string,
     message: string
 ): Promise<boolean> {
@@ -23,7 +23,7 @@ export function showConfirmationDialog(
 
 <dialog class="confirmation-dialog" bind:this={dialog} closedby="any">
     <h2 class="title">{dialogTitle}</h2>
-    <p class="subtitle">{dialogMessage}</p>
+    <p class="message">{dialogMessage}</p>
     <div class="submit">
         <form method="dialog" onsubmit={cancel}>
             <Button variant="secondary">cancel</Button>
@@ -46,34 +46,34 @@ export function showConfirmationDialog(
     padding: 1rem;
     max-width: 33ch;
     gap: 1rem;
-}
 
-.confirmation-dialog[open] {
-    display: grid;
-}
+    &[open] {
+        display: grid;
+    }
 
-.confirmation-dialog::backdrop {
-    background-color: rgba(0 0 0 / 0.5);
-}
+    &::backdrop {
+        background-color: rgba(0 0 0 / 0.5);
+    }
 
-.confirmation-dialog .title {
-    text-align: center;
-    font: var(--font-heading);
-    margin: 0;
-}
+    .title {
+        text-align: center;
+        font: var(--font-heading);
+        margin: 0;
+    }
 
-.confirmation-dialog .subtitle {
-    text-align: center;
-    margin: 0;
-}
+    .message {
+        text-align: center;
+        margin: 0;
+    }
 
-.confirmation-dialog .submit {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr 1fr;
-}
+    .submit {
+        display: flex;
+        gap: 1rem;
+    }
 
-.confirmation-dialog .submit > * {
-    display: grid;
+    .submit > form {
+        flex: 1;
+        display: grid;
+    }
 }
 </style>

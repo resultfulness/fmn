@@ -27,11 +27,18 @@ function handleUpdateItem(e: SubmitEvent) {
         .catch(e => alert(e));
 }
 
-function handleDeleteItem() {
-    api.items
-        .delete(item.item_id)
-        .then(() => goto("/items"))
-        .catch(e => alert(e));
+async function handleDeleteItem() {
+    askForConfirmation(
+        `deleting ${item.name}`,
+        "are you sure you want to remove this item?"
+    ).then(yes => {
+        if (yes) {
+            api.items
+                .delete(item.item_id)
+                .then(() => goto("/items"))
+                .catch(e => alert(e));
+        }
+    });
 }
 
 HeaderState.title = "";

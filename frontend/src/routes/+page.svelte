@@ -3,23 +3,23 @@ import api from "$lib/api";
 import CartGrid from "$lib/components/organisms/cart-grid.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import type { CartItem } from "$lib/schemas/cart";
-import { Unit } from "$lib/schemas/items";
 import { onMount } from "svelte";
 
-HeaderState.title = "shopping";
-
-let items = $state<CartItem[]>();
+let cart = $state<CartItem[]>();
 
 onMount(() => {
     api.cart
         .readAll()
-        .then(_items => (items = _items))
+        .then(_cart => (cart = _cart))
         .catch(e => alert(e));
 });
+
+HeaderState.title = "shopping";
+delete HeaderState.backUrl;
 </script>
 
 <div class="page">
-    <CartGrid {items} />
+    <CartGrid items={cart} />
 </div>
 
 <style>

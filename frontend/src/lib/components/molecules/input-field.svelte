@@ -10,7 +10,7 @@ const id = $props.id();
 </script>
 
 <div class="input-field">
-    <label for={id}>{label}</label>
+    <label for={id} class="text-label">{label}</label>
     <Input {...props} bind:value {id} />
 </div>
 
@@ -18,9 +18,5 @@ const id = $props.id();
 .input-field {
     display: grid;
     gap: 0.5rem;
-}
-
-label {
-    font: var(--font-label);
 }
 </style>

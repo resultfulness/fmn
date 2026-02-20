@@ -5,7 +5,6 @@ import api from "$lib/api";
 import { ItemUpdate } from "$lib/schemas/items";
 import { askForConfirmation } from "$lib/components/confirm.svelte";
 import Button from "$lib/components/atoms/button.svelte";
-import Title from "$lib/components/atoms/title.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 
@@ -47,13 +46,13 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <img src={item.icon} alt="" />
-    <Title>
+    <h2 class="text-title">
         {#if item.name.length > 0}
             {item.name}
         {:else}
             &nbsp;
         {/if}
-    </Title>
+    </h2>
     <ItemForm onsubmit={handleUpdateItem} bind:item>
         {#snippet actions()}
             <Button variant="danger" type="button" onclick={handleDeleteItem}>
@@ -71,6 +70,11 @@ HeaderState.backUrl = "/items";
     display: grid;
     gap: 1rem;
     overflow-y: auto;
+}
+
+h2 {
+    text-align: center;
+    margin: 0;
 }
 
 img {

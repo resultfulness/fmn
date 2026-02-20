@@ -40,7 +40,7 @@ let {
       {type}
         {disabled}
         aria-label={ariaLabel}
-        class="button"
+        class="button text-emph"
         class:primary={variant === "primary"}
         class:secondary={variant === "secondary"}
         class:danger={variant === "danger"}
@@ -58,7 +58,6 @@ let {
     border: 0;
     cursor: pointer;
     transition: background-color 200ms;
-    font: var(--font-emph);
     display: grid;
     place-items: center;
     text-decoration: none;

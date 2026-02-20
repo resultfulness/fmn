@@ -3,7 +3,6 @@ import { goto } from "$app/navigation";
 import api from "$lib/api";
 import { ItemCreate } from "$lib/schemas/items";
 import Button from "$lib/components/atoms/button.svelte";
-import Title from "$lib/components/atoms/title.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 
@@ -41,7 +40,7 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <img src={item.icon} alt="" />
-    <Title>{item.name.length > 0 ? item.name : "new item"}</Title>
+    <h2 class="text-title">{item.name.length > 0 ? item.name : "new item"}</h2>
     <ItemForm onsubmit={handleCreateItem} bind:item>
         {#snippet actions()}
             <Button
@@ -63,6 +62,11 @@ HeaderState.backUrl = "/items";
     display: grid;
     gap: 1rem;
     overflow-y: auto;
+}
+
+h2 {
+    text-align: center;
+    margin: 0;
 }
 
 img {

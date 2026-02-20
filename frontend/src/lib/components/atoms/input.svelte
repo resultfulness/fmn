@@ -44,7 +44,7 @@ let {
         {required}
         aria-label={ariaLabel}
         bind:value
-        class="input"
+        class="input text-content"
     />
     {#if clearable && value && value.length > 0}
         <button class="clear" onclick={() => (value = "")} type="button">
@@ -66,7 +66,6 @@ let {
 .input {
     padding: 0.5rem 1rem;
     background-color: var(--clr-surface);
-    font: var(--font-content);
     color: var(--clr-text);
     border: none;
 }

@@ -11,7 +11,7 @@ interface AppNavigationLinkProps {
 const { href, label, icon, active }: AppNavigationLinkProps = $props();
 </script>
 
-<a {href} class:active>
+<a {href} class:active class="text-subtitle">
     <svelte:boundary>
         {@const Icon = icon}
         <Icon size={32} />
@@ -22,8 +22,6 @@ const { href, label, icon, active }: AppNavigationLinkProps = $props();
 <style>
 a {
     padding: 0.5rem;
-    color: var(--clr-text-dim);
-    font: var(--font-label);
     display: grid;
     justify-items: center;
     text-decoration: none;

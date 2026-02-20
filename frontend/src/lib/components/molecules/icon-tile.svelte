@@ -11,8 +11,8 @@ const { iconUrl, label, subtitle }: IconTileProps = $props();
 <div class="icon-tile">
     <div class="image" style:background-image={`url(${iconUrl})`}></div>
     {#if label}
-        <span class="label">{label}</span>
-        <span class="subtitle">
+        <span class="text-label">{label}</span>
+        <span class="text-subtitle">
             {#if subtitle}{subtitle}{:else}&nbsp;{/if}
         </span>
     {/if}
@@ -41,14 +41,5 @@ const { iconUrl, label, subtitle }: IconTileProps = $props();
     background-size: cover;
     border-radius: var(--rounding);
     overflow: hidden;
-}
-
-.label {
-    font: var(--font-label);
-}
-
-.subtitle {
-    font: var(--font-subtitle);
-    color: var(--clr-text-dim);
 }
 </style>

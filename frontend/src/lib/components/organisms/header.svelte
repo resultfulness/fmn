@@ -27,7 +27,7 @@ const { title, backUrl } = $derived(HeaderState);
             />
         {/if}
     </div>
-    <h1>{title}</h1>
+    <h1 class="text-header">{title}</h1>
     <div></div>
 </header>
 
@@ -42,7 +42,6 @@ header {
 }
 
 h1 {
-    font: var(--font-header);
     margin: 0;
 }
 </style>

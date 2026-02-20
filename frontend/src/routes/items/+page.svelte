@@ -24,6 +24,7 @@ onMount(() => {
 });
 
 HeaderState.title = "items";
+delete HeaderState.backUrl;
 </script>
 
 <div class="items">

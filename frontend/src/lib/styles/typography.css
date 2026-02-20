@@ -1,0 +1,34 @@
+.text-title {
+    font: var(--font-title);
+    color: var(--clr-text-bright);
+}
+
+.text-header {
+    font: var(--font-header);
+    color: var(--clr-text-bright);
+}
+
+.text-heading {
+    font: var(--font-heading);
+    color: var(--clr-text-bright);
+}
+
+.text-content {
+    font: var(--font-content);
+    color: var(--clr-text);
+}
+
+.text-label {
+    font: var(--font-label);
+    color: var(--clr-text);
+}
+
+.text-subtitle {
+    font: var(--font-subtitle);
+    color: var(--clr-text-dim);
+}
+
+.text-emph {
+    font: var(--font-emph);
+    color: var(--clr-text);
+}

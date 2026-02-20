@@ -1,5 +1,6 @@
 <script lang="ts">
 import "../app.css";
+import "$lib/styles/typography.css";
 import { onNavigate } from "$app/navigation";
 import Confirm from "$lib/components/confirm.svelte";
 import Toast from "$lib/components/toast.svelte";

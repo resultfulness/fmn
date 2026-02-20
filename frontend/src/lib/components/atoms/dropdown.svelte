@@ -20,7 +20,7 @@ let {
 }: DropdownProps = $props();
 </script>
 
-<select {id} {required} {name} bind:value>
+<select {id} {required} {name} bind:value class="text-content">
     <option value="" disabled selected hidden>{placeholder}</option>
     {#each options as option, i}
         <option value={option}>{labels[i] ?? option}</option>
@@ -34,7 +34,6 @@ select {
     border-radius: var(--rounding);
     padding: 0.5rem 1rem;
     box-shadow: var(--shadow);
-    font: var(--font-content);
     color: var(--clr-text);
 }
 

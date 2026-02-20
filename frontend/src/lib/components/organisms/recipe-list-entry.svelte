@@ -11,8 +11,8 @@ const { recipe }: { recipe: RecipeShort } = $props();
     >
         <img class="icon" src={recipe.icon} alt={recipe.name + " icon"} />
         <div class="details">
-            <span class="label">{recipe.name}</span>
-            <span class="servings">{recipe.servings} servings</span>
+            <span class="text-label">{recipe.name}</span>
+            <span class="text-subtitle">{recipe.servings} servings</span>
         </div>
     </a>
 </li>
@@ -48,13 +48,6 @@ const { recipe }: { recipe: RecipeShort } = $props();
         height: fit-content;
         align-self: center;
         gap: 0.25rem;
-    }
-    .label {
-        font: var(--font-heading);
-    }
-    .servings {
-        color: var(--clr-text-dim);
-        font: var(--font-subtitle);
     }
 }
 </style>

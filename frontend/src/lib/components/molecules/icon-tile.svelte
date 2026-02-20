@@ -9,7 +9,7 @@ const { iconUrl, label, subtitle }: IconTileProps = $props();
 </script>
 
 <div class="icon-tile">
-    <img src={iconUrl} alt="" style:max-width={label ? "64px" : "100px"} />
+    <div class="image" style:background-image={`url(${iconUrl})`}></div>
     {#if label}
         <span class="label">{label}</span>
         <span class="subtitle">
@@ -24,14 +24,23 @@ const { iconUrl, label, subtitle }: IconTileProps = $props();
     background-color: var(--clr-surface);
     padding: 0.5rem;
     display: grid;
+    grid-template-rows: 1fr auto auto;
+    grid-template-columns: 1fr;
     gap: 0.25rem;
-    justify-content: center;
+    justify-items: center;
     text-align: center;
+    aspect-ratio: 1;
 }
 
-img {
+.image {
+    width: fit-content;
     aspect-ratio: 1;
-    object-fit: cover;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: var(--rounding);
+    overflow: hidden;
 }
 
 .label {

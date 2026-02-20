@@ -20,7 +20,7 @@ const { items }: { items: CartItem[] | undefined } = $props();
 <style>
 .cart-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(104px, 100%), 1fr));
     gap: 0.5rem;
     margin-inline: auto;
 }

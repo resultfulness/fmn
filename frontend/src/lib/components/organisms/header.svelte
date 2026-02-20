@@ -11,7 +11,7 @@ export const HeaderState = $state<HeaderState>({
 
 <script lang="ts">
 import { ArrowLeft } from "@lucide/svelte";
-import IconButton from "./icon-button.svelte";
+import IconButton from "$lib/components/molecules/icon-button.svelte";
 
 const { title, backUrl } = $derived(HeaderState);
 </script>

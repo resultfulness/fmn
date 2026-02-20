@@ -1,13 +1,13 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
-import api from "$lib/api";
-import { HeaderState } from "$lib/components/header.svelte";
-import { ItemUpdate } from "$lib/schemas/items";
-import Title from "$lib/components/atoms/title.svelte";
 import { proxify } from "$lib/reactivity.svelte";
-import ItemForm from "$lib/components/item-form.svelte";
-import Button from "$lib/components/atoms/button.svelte";
+import api from "$lib/api";
+import { ItemUpdate } from "$lib/schemas/items";
 import { askForConfirmation } from "$lib/components/confirm.svelte";
+import Button from "$lib/components/atoms/button.svelte";
+import Title from "$lib/components/atoms/title.svelte";
+import { HeaderState } from "$lib/components/organisms/header.svelte";
+import ItemForm from "$lib/components/organisms/item-form.svelte";
 
 let { data } = $props();
 let item = $derived(proxify(data.item));

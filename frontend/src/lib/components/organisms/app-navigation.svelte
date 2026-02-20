@@ -1,7 +1,7 @@
 <script lang="ts">
 import { page } from "$app/state";
 import { ChefHat, Salad, ShoppingBasket } from "@lucide/svelte";
-import AppNavigationLink from "./app-navigation-link.svelte";
+import AppNavigationLink from "$lib/components/molecules/app-navigation-link.svelte";
 
 const linkProps = [
     {

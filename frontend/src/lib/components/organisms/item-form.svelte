@@ -1,9 +1,9 @@
 <script lang="ts">
-import { Unit, unitPretty, UNITS, type ItemShort } from "$lib/schemas/items";
+import { unitPretty, UNITS, type ItemShort } from "$lib/schemas/items";
 import type { Snippet } from "svelte";
 import type { EventHandler } from "svelte/elements";
-import DropdownField from "./dropdown-field.svelte";
-import InputField from "./input-field.svelte";
+import DropdownField from "$lib/components/molecules/dropdown-field.svelte";
+import InputField from "$lib/components/molecules/input-field.svelte";
 
 interface ItemFormProps {
     onsubmit: EventHandler<SubmitEvent, HTMLFormElement>;

@@ -1,5 +1,5 @@
 <script lang="ts">
-import Input, { type InputProps } from "./atoms/input.svelte";
+import Input, { type InputProps } from "$lib/components/atoms/input.svelte";
 
 interface InputFieldProps extends InputProps {
     label: string;

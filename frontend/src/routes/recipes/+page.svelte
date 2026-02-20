@@ -3,11 +3,11 @@ import { onMount } from "svelte";
 import api from "$lib/api";
 import { type RecipeShort } from "$lib/schemas/recipes";
 import { Plus } from "@lucide/svelte";
-import Search from "$lib/components/search.svelte";
-import { HeaderState } from "$lib/components/header.svelte";
-import IconButton from "$lib/components/icon-button.svelte";
-import FooterExtension from "$lib/components/footer-extension.svelte";
-import RecipeList from "$lib/components/recipe-list.svelte";
+import Search from "$lib/components/molecules/search.svelte";
+import { HeaderState } from "$lib/components/organisms/header.svelte";
+import IconButton from "$lib/components/molecules/icon-button.svelte";
+import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
+import RecipeList from "$lib/components/organisms/recipe-list.svelte";
 
 let recipes = $state<RecipeShort[]>();
 let searchterm = $state("");

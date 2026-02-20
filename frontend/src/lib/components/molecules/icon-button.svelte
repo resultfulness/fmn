@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { Icon as IconType } from "@lucide/svelte";
-import type { ButtonProps } from "./atoms/button.svelte";
-import Button from "$lib/components/atoms/button.svelte";
+import Button, { type ButtonProps } from "$lib/components/atoms/button.svelte";
 
 interface IconButtonProps extends Omit<ButtonProps, "children"> {
     icon: typeof IconType;

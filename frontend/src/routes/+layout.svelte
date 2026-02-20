@@ -1,10 +1,10 @@
 <script lang="ts">
-import Header from "$lib/components/header.svelte";
-import Footer from "$lib/components/footer.svelte";
 import "../app.css";
+import { onNavigate } from "$app/navigation";
 import Confirm from "$lib/components/confirm.svelte";
 import Toast from "$lib/components/toast.svelte";
-import { onNavigate } from "$app/navigation";
+import Header from "$lib/components/organisms/header.svelte";
+import Footer from "$lib/components/organisms/footer.svelte";
 
 let { children } = $props();
 onNavigate((navigation) => {

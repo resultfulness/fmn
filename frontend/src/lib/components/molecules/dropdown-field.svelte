@@ -1,6 +1,7 @@
 <script lang="ts">
-import type { DropdownProps } from "./atoms/dropdown.svelte";
-import Dropdown from "./atoms/dropdown.svelte";
+import Dropdown, {
+    type DropdownProps,
+} from "$lib/components/atoms/dropdown.svelte";
 
 interface DropdownFieldProps extends DropdownProps {
     label: string;

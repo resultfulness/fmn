@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
-import ItemListEntry from "./item-list-entry.svelte";
+import ItemListEntry from "$lib/components/organisms/item-list-entry.svelte";
 
 const { items }: { items?: ItemShort[] } = $props();
 </script>

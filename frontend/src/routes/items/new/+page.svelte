@@ -40,7 +40,9 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <img src={item.icon} alt="" />
-    <h2 class="text-title">{item.name.length > 0 ? item.name : "new item"}</h2>
+    <h2 class="text-title line-clamp-2">
+        {item.name.length > 0 ? item.name : "new item"}
+    </h2>
     <ItemForm onsubmit={handleCreateItem} bind:item>
         {#snippet actions()}
             <Button
@@ -58,15 +60,17 @@ HeaderState.backUrl = "/items";
 <style>
 .page {
     padding: 1rem;
-    padding-top: 2rem;
-    display: grid;
-    gap: 1rem;
     overflow-y: auto;
+
+    > :global(* + *) {
+        margin-top: 1rem;
+    }
 }
 
 h2 {
     text-align: center;
     margin: 0;
+    flex: 1;
 }
 
 img {
@@ -75,5 +79,6 @@ img {
     aspect-ratio: 1;
     object-fit: cover;
     margin-inline: auto;
+    display: block;
 }
 </style>

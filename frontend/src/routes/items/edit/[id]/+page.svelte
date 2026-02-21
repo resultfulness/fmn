@@ -46,7 +46,7 @@ HeaderState.backUrl = "/items";
 
 <div class="page">
     <img src={item.icon} alt="" />
-    <h2 class="text-title">
+    <h2 class="text-title line-clamp-2">
         {#if item.name.length > 0}
             {item.name}
         {:else}
@@ -66,10 +66,11 @@ HeaderState.backUrl = "/items";
 <style>
 .page {
     padding: 1rem;
-    padding-top: 2rem;
-    display: grid;
-    gap: 1rem;
     overflow-y: auto;
+
+    > :global(* + *) {
+        margin-top: 1rem;
+    }
 }
 
 h2 {

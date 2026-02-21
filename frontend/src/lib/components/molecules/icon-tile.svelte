@@ -41,6 +41,7 @@ const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    align-content: center;
 }
 
 .center-label {
@@ -50,7 +51,6 @@ const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
     -webkit-line-clamp: 2;
     line-clamp: 2;
     height: 2lh;
-    align-content: center;
 }
 
 .subtitle {

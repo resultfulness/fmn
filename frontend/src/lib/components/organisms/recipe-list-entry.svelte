@@ -12,7 +12,7 @@ const { recipe }: { recipe: RecipeShort } = $props();
     <div class="layout">
         <img class="icon" src={recipe.icon} alt={recipe.name + " icon"} />
         <div class="details">
-            <span class="text-heading">{recipe.name}</span>
+            <span class="text-heading name">{recipe.name}</span>
             <span class="text-subtitle">{recipe.servings} servings</span>
         </div>
     </div>
@@ -31,6 +31,12 @@ const { recipe }: { recipe: RecipeShort } = $props();
     aspect-ratio: 1;
     object-fit: cover;
     border-radius: var(--rounding);
+}
+
+.name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .details {

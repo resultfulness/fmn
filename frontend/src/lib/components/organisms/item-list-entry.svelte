@@ -18,7 +18,8 @@ const { item }: { item: ItemShort } = $props();
 
 <style>
 .layout {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 0.5rem;
 }
@@ -31,7 +32,9 @@ const { item }: { item: ItemShort } = $props();
 }
 
 .label {
-    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .unit {

@@ -1,12 +1,13 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import { ItemCreate } from "$lib/schemas/items";
+import { ItemCreate, ItemUpdate } from "$lib/schemas/items";
 import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
+import FormPage from "$lib/components/templates/form-page.svelte";
 
-let item: ItemCreate = $state({ name: "", icon: "", unit: "" });
+let item = $state<ItemUpdate>({});
 
 async function createItem() {
     const itemCreate = ItemCreate.safeParse(item);
@@ -17,7 +18,7 @@ async function createItem() {
 
     api.items
         .create(itemCreate.data)
-        .then(() => (item = { name: "", icon: "", unit: "" }))
+        .then(() => (item = {}))
         .catch(e => {
             throw e;
         });
@@ -38,11 +39,10 @@ HeaderState.title = "";
 HeaderState.backUrl = "/items";
 </script>
 
-<div class="page">
-    <img src={item.icon} alt="" />
-    <h2 class="text-title line-clamp-2">
-        {item.name.length > 0 ? item.name : "new item"}
-    </h2>
+<FormPage
+    icon={item.icon}
+    title={item.name && item.name.length > 0 ? item.name : "new item"}
+>
     <ItemForm onsubmit={handleCreateItem} bind:item>
         {#snippet actions()}
             <Button
@@ -55,30 +55,4 @@ HeaderState.backUrl = "/items";
             <Button>create</Button>
         {/snippet}
     </ItemForm>
-</div>
-
-<style>
-.page {
-    padding: 1rem;
-    overflow-y: auto;
-
-    > :global(* + *) {
-        margin-top: 1rem;
-    }
-}
-
-h2 {
-    text-align: center;
-    margin: 0;
-    flex: 1;
-}
-
-img {
-    position: relative;
-    width: 128px;
-    aspect-ratio: 1;
-    object-fit: cover;
-    margin-inline: auto;
-    display: block;
-}
-</style>
+</FormPage>

@@ -1,20 +1,25 @@
 <script lang="ts">
-interface IconTileProps {
+export interface IconTileProps {
     iconUrl: string;
     label?: string;
     subtitle?: string;
+    centerLabel?: boolean;
 }
 
-const { iconUrl, label, subtitle }: IconTileProps = $props();
+const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
 </script>
 
 <div class="icon-tile">
     <div class="image" style:background-image={`url(${iconUrl})`}></div>
     {#if label}
-        <span class="text-label">{label}</span>
-        <span class="text-subtitle">
-            {#if subtitle}{subtitle}{:else}&nbsp;{/if}
+        <span class="text-label label" class:center-label={centerLabel}>
+            {label}
         </span>
+        {#if !centerLabel}
+            <span class="text-subtitle subtitle">
+                {#if subtitle}{subtitle}{:else}&nbsp;{/if}
+            </span>
+        {/if}
     {/if}
 </div>
 
@@ -30,6 +35,28 @@ const { iconUrl, label, subtitle }: IconTileProps = $props();
     justify-items: center;
     text-align: center;
     aspect-ratio: 1;
+}
+
+.label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.center-label {
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    height: 2lh;
+    align-content: center;
+}
+
+.subtitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .image {

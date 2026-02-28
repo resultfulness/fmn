@@ -7,7 +7,7 @@ import Search from "$lib/components/molecules/search.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
 import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
-import ItemList from "$lib/components/organisms/item-list.svelte";
+import ItemLinkList from "$lib/components/organisms/item-link-list.svelte";
 
 let items = $state<ItemShort[]>();
 let searchterm = $state("");
@@ -28,7 +28,7 @@ delete HeaderState.backUrl;
 </script>
 
 <div class="items">
-    <ItemList items={itemsSearched} />
+    <ItemLinkList items={itemsSearched} />
 </div>
 <FooterExtension>
     <Search bind:searchterm />

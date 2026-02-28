@@ -1,27 +1,30 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
+import type { MouseEventHandler } from "svelte/elements";
 
-interface LinkedListEntryProps {
+interface ListItemButtonProps {
     children: Snippet;
-    href: string;
+    onclick?: MouseEventHandler<HTMLButtonElement> | null;
     ariaLabel?: string;
 }
 
-const { children, href, ariaLabel }: LinkedListEntryProps = $props();
+const { children, onclick, ariaLabel }: ListItemButtonProps = $props();
 </script>
 
 <li>
-    <a {href} aria-label={ariaLabel} class="text-content">
+    <button {onclick} aria-label={ariaLabel} class="text-content">
         {@render children()}
-    </a>
+    </button>
 </li>
 
 <style>
-a {
+button {
     background-color: var(--clr-surface);
     border-radius: var(--rounding);
     padding: 0.5rem;
-    text-decoration: none;
+    border: none;
+    width: 100%;
+    text-align: left;
     display: block;
 
     &:focus-visible {

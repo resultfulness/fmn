@@ -1,20 +1,14 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
-import LinkedListEntry from "$lib/components/molecules/linked-list-entry.svelte";
 
 const { item }: { item: ItemShort } = $props();
 </script>
 
-<LinkedListEntry
-    href={`/items/edit/${item.item_id}`}
-    ariaLabel={`edit item ${item.name}`}
->
-    <div class="layout">
-        <img class="icon" src={item.icon} alt={item.name + " icon"} />
-        <span class="label">{item.name}</span>
-        <span class="unit">{item.unit}</span>
-    </div>
-</LinkedListEntry>
+<div class="layout">
+    <img class="icon" src={item.icon} alt="" />
+    <span class="label">{item.name}</span>
+    <span class="unit">{item.unit}</span>
+</div>
 
 <style>
 .layout {
@@ -39,5 +33,6 @@ const { item }: { item: ItemShort } = $props();
 
 .unit {
     color: var(--clr-text-dim);
+    margin-right: 0.25rem;
 }
 </style>

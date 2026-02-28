@@ -1,14 +1,9 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
-import ListItemButton from "../molecules/list-item-button.svelte";
+import ListItemLink from "../molecules/list-item-link.svelte";
 import ItemListItem from "./item-list-item.svelte";
 
-interface ItemListProps {
-    items?: ItemShort[];
-    onclick: (id: number) => void;
-}
-
-const { items, onclick }: ItemListProps = $props();
+const { items }: { items?: ItemShort[] } = $props();
 </script>
 
 {#if items === undefined}
@@ -18,9 +13,12 @@ const { items, onclick }: ItemListProps = $props();
 {:else}
     <ul>
         {#each items as item}
-            <ListItemButton onclick={() => onclick(item.item_id)}>
+            <ListItemLink
+                href={`/items/edit/${item.item_id}`}
+                ariaLabel={`edit item ${item.name}`}
+            >
                 <ItemListItem {item} />
-            </ListItemButton>
+            </ListItemLink>
         {/each}
     </ul>
 {/if}

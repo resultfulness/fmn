@@ -1,22 +1,16 @@
 <script lang="ts">
 import type { RecipeShort } from "$lib/schemas/recipes";
-import LinkedListEntry from "../molecules/linked-list-entry.svelte";
 
 const { recipe }: { recipe: RecipeShort } = $props();
 </script>
 
-<LinkedListEntry
-    href={`/recipes/edit/${recipe.recipe_id}`}
-    ariaLabel={`edit recipe ${recipe.name}`}
->
-    <div class="layout">
-        <img class="icon" src={recipe.icon} alt={recipe.name + " icon"} />
-        <div class="details">
-            <span class="text-heading name">{recipe.name}</span>
-            <span class="text-subtitle">{recipe.servings} servings</span>
-        </div>
+<div class="layout">
+    <img class="icon" src={recipe.icon} alt={recipe.name + " icon"} />
+    <div class="details">
+        <span class="text-heading name">{recipe.name}</span>
+        <span class="text-subtitle">{recipe.servings} servings</span>
     </div>
-</LinkedListEntry>
+</div>
 
 <style>
 .layout {

@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
-import ListItemButton from "../molecules/list-item-button.svelte";
+import ListItemButton from "$lib/components/molecules/list-item-button.svelte";
 import ItemListItem from "./item-list-item.svelte";
 
 interface ItemListProps {

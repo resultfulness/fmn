@@ -1,11 +1,12 @@
 <script lang="ts">
 import type { ItemShort } from "$lib/schemas/items";
+import Image from "$lib/components/atoms/image.svelte";
 
 const { item }: { item: ItemShort } = $props();
 </script>
 
 <div class="layout">
-    <img class="icon" src={item.icon} alt="" />
+    <Image src={item.icon} alt="" width={48} />
     <span class="label">{item.name}</span>
     <span class="unit">{item.unit}</span>
 </div>
@@ -16,13 +17,6 @@ const { item }: { item: ItemShort } = $props();
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 0.5rem;
-}
-
-.icon {
-    width: 48px;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: var(--rounding);
 }
 
 .label {

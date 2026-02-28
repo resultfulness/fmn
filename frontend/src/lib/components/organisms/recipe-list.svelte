@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { RecipeShort } from "$lib/schemas/recipes";
-import ListItemLink from "../molecules/list-item-link.svelte";
+import ListItemLink from "$lib/components/molecules/list-item-link.svelte";
 import RecipeListItem from "./recipe-list-item.svelte";
 
 const { recipes }: { recipes?: RecipeShort[] } = $props();

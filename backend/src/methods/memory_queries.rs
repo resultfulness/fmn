@@ -6,7 +6,8 @@ use crate::{
     methods::queries::Queries,
     models::{
         requests::{ItemCreateRequest, ItemUpdateRequest},
-        responses::ItemResponse,
+        responses::{CartItemResponse, ItemResponse},
+        schema::CartEvent,
     },
 };
 
@@ -14,6 +15,9 @@ use crate::{
 pub struct MemoryQueries {
     max_item_id: usize,
     items: HashMap<usize, ItemResponse>,
+
+    cart_items: Option<Vec<CartItemResponse>>,
+    cart_events: Vec<CartEvent>,
 }
 
 impl Queries for MemoryQueries {
@@ -78,5 +82,77 @@ impl Queries for MemoryQueries {
             self.items.values().into_iter().map(|v| v.clone()).collect();
         v.sort_by(|a, b| a.item_id.cmp(&b.item_id));
         Ok(v)
+    }
+
+    async fn cart_add_item(&mut self, item_id: usize) -> Result<(), String> {
+        self.cart_events.push(CartEvent::AddItem { item_id });
+        self.cart_items = None;
+        Ok(())
+    }
+    async fn cart_remove_item(&mut self, item_id: usize) -> Result<(), String> {
+        self.cart_events.push(CartEvent::RemoveItem { item_id });
+        self.cart_items = None;
+        Ok(())
+    }
+    async fn cart_undo(&mut self) -> Result<(), String> {
+        self.cart_events.push(CartEvent::Undo);
+        self.cart_items = None;
+        Ok(())
+    }
+    async fn cart_redo(&mut self) -> Result<(), String> {
+        self.cart_events.push(CartEvent::Redo);
+        self.cart_items = None;
+        Ok(())
+    }
+    async fn cart_select_actions(
+        &self,
+    ) -> Result<(Vec<CartEvent>, Vec<CartEvent>), String> {
+        let mut actions: Vec<CartEvent> = vec![];
+        let mut actions_undone: Vec<CartEvent> = vec![];
+
+        for event in &self.cart_events {
+            match event {
+                CartEvent::Undo => {
+                    actions_undone.push(actions.pop().ok_or("can't undo")?)
+                }
+                CartEvent::Redo => {
+                    actions.push(actions_undone.pop().ok_or("can't redo")?)
+                }
+                v => actions.push(v.clone()),
+            }
+        }
+        Ok((actions, actions_undone))
+    }
+    async fn cart_item_select_all(
+        &mut self,
+    ) -> Result<Vec<CartItemResponse>, String> {
+        if let Some(cart_items) = &self.cart_items {
+            return Ok(cart_items.clone());
+        }
+        let (actions, _) = self.cart_select_actions().await?;
+
+        let mut items: Vec<CartItemResponse> = vec![];
+        for action in actions {
+            match action {
+                CartEvent::AddItem { item_id } => {
+                    items.push(CartItemResponse {
+                        item_id: item_id,
+                        description: None,
+                        quantity: None,
+                    })
+                }
+                CartEvent::RemoveItem { item_id } => {
+                    let item_idx = items
+                        .iter()
+                        .position(|v| v.item_id == item_id)
+                        .ok_or("not found")?;
+                    items.remove(item_idx);
+                }
+                _ => unreachable!(),
+            }
+        }
+        self.cart_items = Some(items.clone());
+
+        Ok(items)
     }
 }

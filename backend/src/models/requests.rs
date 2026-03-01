@@ -1,15 +1,8 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EchoRequest {
     pub message: String,
-}
-impl EchoRequest {
-    pub fn new(message: &str) -> Self {
-        Self {
-            message: message.into(),
-        }
-    }
 }
 
 #[derive(Deserialize, Debug, Clone)]

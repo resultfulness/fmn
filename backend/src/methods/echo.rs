@@ -30,14 +30,31 @@ mod tests {
     #[tokio::test]
     async fn returns_foo_when_foo() {
         let mut queries = MemoryQueries::default();
-        let result = get_root(&mut queries, EchoRequest::new("foo")).await;
-        assert_eq!(result, Ok(EchoResponse::new("foo")));
+        let result = get_root(
+            &mut queries,
+            EchoRequest {
+                message: "foo".into(),
+            },
+        )
+        .await;
+        assert_eq!(
+            result,
+            Ok(EchoResponse {
+                message: "foo".into()
+            })
+        );
     }
 
     #[tokio::test]
     async fn returns_error_when_error() {
         let mut queries = MemoryQueries::default();
-        let result = get_root(&mut queries, EchoRequest::new("error")).await;
+        let result = get_root(
+            &mut queries,
+            EchoRequest {
+                message: "error".into(),
+            },
+        )
+        .await;
         assert_eq!(result, Err(APIError::InternalError));
     }
 }

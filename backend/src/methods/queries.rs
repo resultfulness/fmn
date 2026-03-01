@@ -1,6 +1,7 @@
 use crate::models::{
     requests::{ItemCreateRequest, ItemUpdateRequest},
-    responses::ItemResponse,
+    responses::{CartItemResponse, ItemResponse},
+    schema::CartEvent,
 };
 
 pub trait Queries {
@@ -33,4 +34,26 @@ pub trait Queries {
     fn item_select_many(
         &self,
     ) -> impl Future<Output = Result<Vec<ItemResponse>, String>>;
+
+    fn cart_add_item(
+        &mut self,
+        item_id: usize,
+    ) -> impl Future<Output = Result<(), String>>;
+
+    fn cart_remove_item(
+        &mut self,
+        item_id: usize,
+    ) -> impl Future<Output = Result<(), String>>;
+
+    fn cart_undo(&mut self) -> impl Future<Output = Result<(), String>>;
+
+    fn cart_redo(&mut self) -> impl Future<Output = Result<(), String>>;
+
+    fn cart_select_actions(
+        &self,
+    ) -> impl Future<Output = Result<(Vec<CartEvent>, Vec<CartEvent>), String>>;
+
+    fn cart_item_select_all(
+        &mut self,
+    ) -> impl Future<Output = Result<Vec<CartItemResponse>, String>>;
 }

@@ -10,6 +10,7 @@ services:
   fmn-frontend:
     build: ./frontend
     container_name: fmn-frontend
+    env_file: .env
     volumes:
       - ./frontend:/app
       - /app/node_modules

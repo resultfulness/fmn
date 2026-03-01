@@ -1,21 +1,27 @@
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use axum::{
     Router,
     http::{Request, Response},
     routing::get,
 };
+use tokio::sync::Mutex;
 use tower_http::trace::TraceLayer;
 use tracing::Span;
 use tracing_subscriber::{
     layer::SubscriberExt as _, util::SubscriberInitExt as _,
 };
 
-use crate::endpoints::echo::get_root_endpoint;
+use crate::{
+    endpoints::{echo::get_root_endpoint, items::get_items_router},
+    methods::memory_queries::MemoryQueries,
+    state::AppState,
+};
 
 pub mod endpoints;
 pub mod methods;
 pub mod models;
+pub mod state;
 
 pub async fn run() {
     tracing_subscriber::registry()
@@ -47,8 +53,14 @@ pub async fn run() {
             },
         );
 
+    let queries = MemoryQueries::default();
+    let state = AppState {
+        queries: Arc::new(Mutex::new(queries)),
+    };
     let app = Router::new()
         .route("/", get(get_root_endpoint))
+        .nest("/items", get_items_router())
+        .with_state(state)
         .layer(trace_layer);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();

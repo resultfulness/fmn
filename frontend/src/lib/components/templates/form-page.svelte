@@ -1,9 +1,11 @@
 <script lang="ts">
+import Image from "$lib/components/atoms/image.svelte";
+
 let { children, icon, title } = $props();
 </script>
 
 <div class="page">
-    <img src={icon} alt="" />
+    <Image src={icon} alt="" width={128} />
     <h2 class="text-title line-clamp-2">
         {#if title.length > 0}
             {title}
@@ -27,13 +29,5 @@ let { children, icon, title } = $props();
 h2 {
     text-align: center;
     margin: 0;
-}
-
-img {
-    width: 128px;
-    aspect-ratio: 1;
-    object-fit: cover;
-    margin-inline: auto;
-    display: block;
 }
 </style>

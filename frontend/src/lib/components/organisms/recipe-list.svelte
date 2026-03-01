@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { RecipeShort } from "$lib/schemas/recipes";
-import RecipeListEntry from "./recipe-list-entry.svelte";
+import ListItemLink from "$lib/components/molecules/list-item-link.svelte";
+import RecipeListItem from "./recipe-list-item.svelte";
 
 const { recipes }: { recipes?: RecipeShort[] } = $props();
 </script>
@@ -12,7 +13,12 @@ const { recipes }: { recipes?: RecipeShort[] } = $props();
 {:else}
     <ul>
         {#each recipes as recipe}
-            <RecipeListEntry {recipe} />
+            <ListItemLink
+                href={`/recipes/edit/${recipe.recipe_id}`}
+                ariaLabel={`edit recipe ${recipe.name}`}
+            >
+                <RecipeListItem {recipe} />
+            </ListItemLink>
         {/each}
     </ul>
 {/if}

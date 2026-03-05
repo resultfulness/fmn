@@ -1,6 +1,6 @@
 use crate::models::{
-    requests::{ItemCreateRequest, ItemUpdateRequest},
-    responses::{CartItemResponse, ItemResponse},
+    requests::{ItemCreateRequest, ItemUpdateRequest, RecipeCreateRequest, RecipeUpdateRequest},
+    responses::{CartItemResponse, ItemResponse, RecipeResponse},
     schema::CartEvent,
 };
 
@@ -56,4 +56,34 @@ pub trait Queries {
     fn cart_item_select_all(
         &mut self,
     ) -> impl Future<Output = Result<Vec<CartItemResponse>, String>>;
+
+    fn recipe_insert_one(
+        &mut self,
+        recipe: RecipeCreateRequest,
+    ) -> impl Future<Output = Result<usize, String>>;
+
+    fn recipe_update_one(
+        &mut self,
+        recipe_id: usize,
+        recipe: RecipeUpdateRequest,
+    ) -> impl Future<Output = Result<(), String>>;
+
+    fn recipe_select_one(
+        &self,
+        recipe_id: usize,
+    ) -> impl Future<Output = Result<Option<RecipeResponse>, String>>;
+
+    fn recipe_select_one_by_name(
+        &self,
+        name: &str,
+    ) -> impl Future<Output = Result<Option<usize>, String>>;
+
+    fn recipe_delete_one(
+        &mut self,
+        recipe_id: usize,
+    ) -> impl Future<Output = Result<(), String>>;
+
+    fn recipe_select_many(
+        &self,
+    ) -> impl Future<Output = Result<Vec<RecipeResponse>, String>>;
 }

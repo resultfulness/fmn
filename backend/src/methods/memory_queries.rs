@@ -5,8 +5,11 @@ use chrono::Utc;
 use crate::{
     methods::queries::Queries,
     models::{
-        requests::{ItemCreateRequest, ItemUpdateRequest},
-        responses::{CartItemResponse, ItemResponse},
+        requests::{
+            ItemCreateRequest, ItemUpdateRequest, RecipeCreateRequest,
+            RecipeUpdateRequest,
+        },
+        responses::{CartItemResponse, ItemResponse, RecipeResponse},
         schema::CartEvent,
     },
 };
@@ -15,6 +18,8 @@ use crate::{
 pub struct MemoryQueries {
     max_item_id: usize,
     items: HashMap<usize, ItemResponse>,
+    max_recipe_id: usize,
+    recipes: HashMap<usize, RecipeResponse>,
 
     cart_items: Option<Vec<CartItemResponse>>,
     cart_events: Vec<CartEvent>,
@@ -154,5 +159,84 @@ impl Queries for MemoryQueries {
         self.cart_items = Some(items.clone());
 
         Ok(items)
+    }
+
+    async fn recipe_insert_one(
+        &mut self,
+        recipe: RecipeCreateRequest,
+    ) -> Result<usize, String> {
+        self.max_recipe_id += 1;
+        self.recipes.insert(
+            self.max_recipe_id,
+            RecipeResponse {
+                recipe_id: self.max_recipe_id,
+                name: recipe.name,
+                icon: recipe.icon,
+                description: recipe.description,
+                servings: recipe.servings,
+                items: vec![],
+                created_at: Utc::now(),
+                updated_at: Utc::now(),
+            },
+        );
+        Ok(self.max_recipe_id)
+    }
+    async fn recipe_update_one(
+        &mut self,
+        recipe_id: usize,
+        recipe: RecipeUpdateRequest,
+    ) -> Result<(), String> {
+        let inner_recipe =
+            self.recipes.get_mut(&recipe_id).ok_or("not found")?;
+        if let Some(name) = recipe.name {
+            inner_recipe.name = name;
+        }
+        if let Some(icon) = recipe.icon {
+            inner_recipe.icon = icon;
+        }
+        if let Some(description) = recipe.description {
+            inner_recipe.description = description;
+        }
+        if let Some(servings) = recipe.servings {
+            inner_recipe.servings = servings;
+        }
+        if let Some(items) = recipe.items {
+            inner_recipe.items = items;
+        }
+        Ok(())
+    }
+    async fn recipe_select_one(
+        &self,
+        recipe_id: usize,
+    ) -> Result<Option<RecipeResponse>, String> {
+        Ok(self.recipes.get(&recipe_id).map(|v| v.clone()))
+    }
+    async fn recipe_select_one_by_name(
+        &self,
+        name: &str,
+    ) -> Result<Option<usize>, String> {
+        Ok(self
+            .recipes
+            .iter()
+            .filter(|(_, recipe)| recipe.name == name)
+            .map(|(recipe_id, _)| *recipe_id)
+            .next())
+    }
+    async fn recipe_delete_one(
+        &mut self,
+        recipe_id: usize,
+    ) -> Result<(), String> {
+        self.recipes.remove(&recipe_id).ok_or("not found")?;
+        Ok(())
+    }
+    async fn recipe_select_many(&self) -> Result<Vec<RecipeResponse>, String> {
+        let mut v: Vec<RecipeResponse> = self
+            .recipes
+            .values()
+            .into_iter()
+            .map(|v| v.clone())
+            .collect();
+        v.sort_by(|a, b| a.recipe_id.cmp(&b.recipe_id));
+        Ok(v)
     }
 }

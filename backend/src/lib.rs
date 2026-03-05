@@ -13,7 +13,10 @@ use tracing_subscriber::{
 };
 
 use crate::{
-    endpoints::{cart::get_cart_router, echo::get_root_endpoint, items::get_items_router},
+    endpoints::{
+        cart::get_cart_router, echo::get_root_endpoint,
+        items::get_items_router, recipes::get_recipes_router,
+    },
     methods::memory_queries::MemoryQueries,
     state::AppState,
 };
@@ -60,6 +63,7 @@ pub async fn run() {
     let app = Router::new()
         .route("/", get(get_root_endpoint))
         .nest("/items", get_items_router())
+        .nest("/recipes", get_recipes_router())
         .nest("/cart", get_cart_router())
         .with_state(state)
         .layer(trace_layer);

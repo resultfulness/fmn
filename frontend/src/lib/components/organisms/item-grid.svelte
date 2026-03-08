@@ -1,8 +1,13 @@
 <script lang="ts">
 import IconTileGrid from "$lib/components/molecules/icon-tile-grid.svelte";
-import type { ItemShort } from "$lib/schemas/items";
+import type { Item } from "$lib/schemas/items";
 
-const { items }: { items: ItemShort[] | undefined } = $props();
+interface ItemGridProps {
+    items?: Item[];
+    addItem: (item_id: number) => void;
+}
+
+const { items, addItem }: ItemGridProps = $props();
 </script>
 
 {#if items === undefined}
@@ -12,9 +17,10 @@ const { items }: { items: ItemShort[] | undefined } = $props();
 {:else}
     <IconTileGrid
         centerLabels
-        tiles={items.map(({ icon, name }) => ({
+        tiles={items.map(({ item_id, icon, name }) => ({
             iconUrl: icon,
             label: name,
+            onclick: () => addItem(item_id),
         }))}
     />
 {/if}

@@ -8,6 +8,7 @@ import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 import FormPage from "$lib/components/templates/form-page.svelte";
+import { pushToast } from "$lib/components/toast.svelte";
 
 let { data } = $props();
 let item = $derived(proxify(data.item));
@@ -17,14 +18,14 @@ function handleUpdateItem(e: SubmitEvent) {
     const itemUpdate = ItemUpdate.safeParse(item);
 
     if (!itemUpdate.success) {
-        alert(itemUpdate.error);
+        pushToast(itemUpdate.error.message, "error");
         return;
     }
 
     api.items
         .update(item.item_id, itemUpdate.data)
         .then(invalidateAll)
-        .catch(e => alert(e));
+        .catch(e => pushToast(e, "error"));
 }
 
 async function handleDeleteItem() {
@@ -36,7 +37,7 @@ async function handleDeleteItem() {
             api.items
                 .delete(item.item_id)
                 .then(() => goto("/items"))
-                .catch(e => alert(e));
+                .catch(e => pushToast(e, "error"));
         }
     });
 }

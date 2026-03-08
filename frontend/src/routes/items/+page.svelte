@@ -8,6 +8,7 @@ import IconButton from "$lib/components/molecules/icon-button.svelte";
 import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemLinkList from "$lib/components/organisms/item-link-list.svelte";
+import { pushToast } from "$lib/components/toast.svelte";
 
 let items = $state<ItemShort[]>();
 let searchterm = $state("");
@@ -20,7 +21,7 @@ onMount(() => {
     api.items
         .readAll()
         .then(_items => (items = _items))
-        .catch(e => alert(e));
+        .catch(e => pushToast(e, "error"));
 });
 
 HeaderState.title = "items";

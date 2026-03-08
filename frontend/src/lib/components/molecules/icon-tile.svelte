@@ -1,15 +1,19 @@
 <script lang="ts">
+import type { MouseEventHandler } from "svelte/elements";
+
 export interface IconTileProps {
     iconUrl: string;
     label?: string;
     subtitle?: string;
     centerLabel?: boolean;
+    onclick: MouseEventHandler<HTMLButtonElement> | null;
 }
 
-const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
+const { iconUrl, label, subtitle, centerLabel, onclick }: IconTileProps =
+    $props();
 </script>
 
-<div class="icon-tile">
+<button class="icon-tile" {onclick}>
     <div class="image" style:background-image={`url(${iconUrl})`}></div>
     {#if label}
         <span class="text-label label" class:center-label={centerLabel}>
@@ -21,7 +25,7 @@ const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
             </span>
         {/if}
     {/if}
-</div>
+</button>
 
 <style>
 .icon-tile {
@@ -35,6 +39,7 @@ const { iconUrl, label, subtitle, centerLabel }: IconTileProps = $props();
     justify-items: center;
     text-align: center;
     aspect-ratio: 1;
+    border: none;
 }
 
 .label {

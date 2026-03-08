@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL } from "$env/static/public";
+import { pushToast } from "$lib/components/toast.svelte";
 
 const API_URL = PUBLIC_API_URL;
 
@@ -34,7 +35,8 @@ async function apiFetch(endpoint: string, options: RequestInit = {}) {
                 throw new APIError(data.error, res.status);
             }
             return data;
-        });
+        })
+        .catch(e => pushToast(e, "error"));
 }
 
 const request = {

@@ -8,6 +8,7 @@ import { HeaderState } from "$lib/components/organisms/header.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
 import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import RecipeList from "$lib/components/organisms/recipe-list.svelte";
+import { pushToast } from "$lib/components/toast.svelte";
 
 let recipes = $state<RecipeShort[]>();
 let searchterm = $state("");
@@ -20,7 +21,7 @@ onMount(() => {
     api.recipes
         .readAll()
         .then(_recipes => (recipes = _recipes))
-        .catch(e => alert(e));
+        .catch(e => pushToast(e, "error"));
 });
 
 HeaderState.title = "recipes";

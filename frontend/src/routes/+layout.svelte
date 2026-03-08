@@ -3,21 +3,22 @@ import "../app.css";
 import "$lib/styles/typography.css";
 import { onNavigate } from "$app/navigation";
 import Confirm from "$lib/components/confirm.svelte";
-import Toast from "$lib/components/toast.svelte";
+import Toast, { pushToast } from "$lib/components/toast.svelte";
 import Header from "$lib/components/organisms/header.svelte";
 import Footer from "$lib/components/organisms/footer.svelte";
+import { onMount } from "svelte";
 
 let { children } = $props();
-onNavigate((navigation) => {
+onNavigate(navigation => {
     if (!document.startViewTransition) return;
 
-    return new Promise((resolve) => {
-      document.startViewTransition(async () => {
-        resolve();
-        await navigation.complete;
-      });
+    return new Promise(resolve => {
+        document.startViewTransition(async () => {
+            resolve();
+            await navigation.complete;
+        });
     });
-  });
+});
 </script>
 
 <Confirm />

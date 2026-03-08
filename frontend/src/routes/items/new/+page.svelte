@@ -6,6 +6,7 @@ import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 import FormPage from "$lib/components/templates/form-page.svelte";
+import { pushToast } from "$lib/components/toast.svelte";
 
 let item = $state<ItemUpdate>({});
 
@@ -28,11 +29,11 @@ function handleCreateItem(e: SubmitEvent) {
     e.preventDefault();
     createItem()
         .then(() => goto("/items"))
-        .catch(e => alert(e));
+        .catch(e => pushToast(e, "error"));
 }
 
 function handleCreateItemAndStay() {
-    createItem().catch(e => alert(e));
+    createItem().catch(e => pushToast(e, "error"));
 }
 
 HeaderState.title = "";

@@ -1,12 +1,21 @@
 import type { CartItem } from "$lib/schemas/cart";
-
-let lsCart = localStorage.getItem("cart");
-let items = JSON.parse(lsCart ?? "[]") as CartItem[];
-let maxId = items.length;
+import request from "./request";
 
 const cart = {
     readAll(): Promise<CartItem[]> {
-        return new Promise(res => setTimeout(() => res(items), 100));
+        return request.get("/cart");
+    },
+    addItem(item_id: number): Promise<CartItem[]> {
+        return request.post(`/cart/item/${item_id}`, {});
+    },
+    removeItem(item_id: number): Promise<CartItem[]> {
+        return request.delete(`/cart/item/${item_id}`);
+    },
+    undo(): Promise<CartItem[]> {
+        return request.post("/cart/undo", {});
+    },
+    redo(): Promise<CartItem[]> {
+        return request.post("/cart/redo", {});
     },
 };
 

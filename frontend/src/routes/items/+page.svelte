@@ -9,6 +9,7 @@ import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemLinkList from "$lib/components/organisms/item-link-list.svelte";
 import { pushToast } from "$lib/components/toast.svelte";
+import ListPage from "$lib/components/templates/list-page.svelte";
 
 let items = $state<Item[]>();
 let searchterm = $state("");
@@ -28,18 +29,10 @@ HeaderState.title = "items";
 delete HeaderState.backUrl;
 </script>
 
-<div class="items">
+<ListPage>
     <ItemLinkList items={itemsSearched} />
-</div>
+</ListPage>
 <FooterExtension>
     <Search bind:searchterm placeholder="search for items..." />
     <IconButton href="/items/new" icon={Plus} size={32} />
 </FooterExtension>
-
-<style>
-.items {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-}
-</style>

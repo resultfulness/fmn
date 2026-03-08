@@ -6,10 +6,10 @@ import Search from "$lib/components/molecules/search.svelte";
 import CartGrid from "$lib/components/organisms/cart-grid.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemGrid from "$lib/components/organisms/item-grid.svelte";
-import { pushToast } from "$lib/components/toast.svelte";
+import ListPage from "$lib/components/templates/list-page.svelte";
 import type { CartItem } from "$lib/schemas/cart";
 import type { Item } from "$lib/schemas/items";
-import { EllipsisVertical, ListFilter, Redo, Undo } from "@lucide/svelte";
+import { ListFilter, Redo, Undo } from "@lucide/svelte";
 import { onMount } from "svelte";
 
 let cart = $state<CartItem[]>();
@@ -41,14 +41,14 @@ HeaderState.title = "shopping";
 delete HeaderState.backUrl;
 </script>
 
-<div class="page">
+<ListPage>
     <CartGrid {cart} {items} {removeItem} />
     <div class="grid-separator">
         <h2 class="text-heading">Add</h2>
         <IconButton variant="secondary" icon={ListFilter} />
     </div>
     <ItemGrid items={itemsFiltered} {addItem} />
-</div>
+</ListPage>
 <FooterExtension>
     <IconButton variant="secondary" icon={Undo} onclick={undo} />
     <IconButton variant="secondary" icon={Redo} onclick={redo} />
@@ -56,12 +56,6 @@ delete HeaderState.backUrl;
 </FooterExtension>
 
 <style>
-.page {
-    padding: 1rem;
-    overflow-y: auto;
-    flex: 1;
-}
-
 .grid-separator {
     display: flex;
     align-items: center;

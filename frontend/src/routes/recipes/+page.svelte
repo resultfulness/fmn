@@ -9,6 +9,7 @@ import IconButton from "$lib/components/molecules/icon-button.svelte";
 import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import RecipeList from "$lib/components/organisms/recipe-list.svelte";
 import { pushToast } from "$lib/components/toast.svelte";
+import ListPage from "$lib/components/templates/list-page.svelte";
 
 let recipes = $state<Recipe[]>();
 let searchterm = $state("");
@@ -28,18 +29,10 @@ HeaderState.title = "recipes";
 delete HeaderState.backUrl;
 </script>
 
-<div class="recipes">
+<ListPage>
     <RecipeList recipes={recipesSearched} />
-</div>
+</ListPage>
 <FooterExtension>
     <Search bind:searchterm placeholder="search for recipes..." />
     <IconButton href="/recipes/new" icon={Plus} size={32} />
 </FooterExtension>
-
-<style>
-.recipes {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-}
-</style>

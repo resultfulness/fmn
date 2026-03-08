@@ -1,8 +1,8 @@
 import { error } from "@sveltejs/kit";
-import type { PageLoad } from "./$types";
+import type { LayoutLoad } from "./$types";
 import api from "$lib/api";
 
-export const load: PageLoad = async ({ params }) => {
+export const load: LayoutLoad = async ({ params }) => {
     if (!Number.isInteger(+params.id)) {
         error(422, `recipe id '${params.id}' not a number`);
     }

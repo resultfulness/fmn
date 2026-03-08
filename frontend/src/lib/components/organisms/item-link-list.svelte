@@ -14,7 +14,7 @@ const { items }: { items?: Item[] } = $props();
     <ul>
         {#each items as item}
             <ListItemLink
-                href={`/items/edit/${item.item_id}`}
+                href={`/items/${item.item_id}/edit`}
                 ariaLabel={`edit item ${item.name}`}
             >
                 <ItemListItem {item} />

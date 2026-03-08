@@ -1,17 +1,17 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import { ItemCreate, ItemUpdate } from "$lib/schemas/items";
+import { ItemCreate } from "$lib/schemas/items";
 import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 import FormPage from "$lib/components/templates/form-page.svelte";
 import { pushToast } from "$lib/components/toast.svelte";
 
-let item = $state<ItemUpdate>({});
+let maybeItem: Partial<ItemCreate> = $state({});
 
 async function createItem() {
-    const itemCreate = ItemCreate.safeParse(item);
+    const itemCreate = ItemCreate.safeParse(maybeItem);
 
     if (!itemCreate.success) {
         throw itemCreate.error;
@@ -19,7 +19,7 @@ async function createItem() {
 
     api.items
         .create(itemCreate.data)
-        .then(() => (item = {}))
+        .then(() => (maybeItem = {}))
         .catch(e => {
             throw e;
         });
@@ -41,10 +41,12 @@ HeaderState.backUrl = "/items";
 </script>
 
 <FormPage
-    icon={item.icon}
-    title={item.name && item.name.length > 0 ? item.name : "new item"}
+    icon={maybeItem.icon}
+    title={maybeItem.name && maybeItem.name.length > 0
+        ? maybeItem.name
+        : "new item"}
 >
-    <ItemForm onsubmit={handleCreateItem} bind:item>
+    <ItemForm onsubmit={handleCreateItem} bind:item={maybeItem}>
         {#snippet actions()}
             <Button
                 variant="secondary"

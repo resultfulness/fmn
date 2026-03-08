@@ -1,5 +1,10 @@
 <script lang="ts">
-import { type ItemUpdate, unitPretty, UNITS } from "$lib/schemas/items";
+import {
+    type ItemUpdate,
+    type ItemCreate,
+    unitPretty,
+    UNITS,
+} from "$lib/schemas/items";
 import type { Snippet } from "svelte";
 import type { EventHandler } from "svelte/elements";
 import Form from "$lib/components/atoms/form.svelte";
@@ -9,7 +14,7 @@ import InputField from "$lib/components/molecules/input-field.svelte";
 interface ItemFormProps {
     onsubmit: EventHandler<SubmitEvent, HTMLFormElement>;
     actions: Snippet;
-    item: ItemUpdate;
+    item: ItemUpdate | Partial<ItemCreate>;
 }
 
 let { onsubmit, actions, item = $bindable() }: ItemFormProps = $props();

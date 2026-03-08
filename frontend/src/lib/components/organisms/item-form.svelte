@@ -2,6 +2,7 @@
 import { type ItemUpdate, unitPretty, UNITS } from "$lib/schemas/items";
 import type { Snippet } from "svelte";
 import type { EventHandler } from "svelte/elements";
+import Form from "$lib/components/atoms/form.svelte";
 import DropdownField from "$lib/components/molecules/dropdown-field.svelte";
 import InputField from "$lib/components/molecules/input-field.svelte";
 
@@ -14,7 +15,7 @@ interface ItemFormProps {
 let { onsubmit, actions, item = $bindable() }: ItemFormProps = $props();
 </script>
 
-<form {onsubmit}>
+<Form {onsubmit} {actions}>
     <InputField
         type="text"
         name="name"
@@ -37,22 +38,4 @@ let { onsubmit, actions, item = $bindable() }: ItemFormProps = $props();
         placeholder="pick a unit..."
         required
     />
-    <div class="actions">{@render actions()}</div>
-</form>
-
-<style>
-form {
-    display: grid;
-    gap: 1rem;
-
-    .actions {
-        padding-top: 1rem;
-        display: flex;
-        gap: 1rem;
-
-        :global(> *) {
-            flex: 1;
-        }
-    }
-}
-</style>
+</Form>

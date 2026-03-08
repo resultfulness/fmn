@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import api from "$lib/api";
-import { type ItemShort } from "$lib/schemas/items";
+import { type Item } from "$lib/schemas/items";
 import { Plus } from "@lucide/svelte";
 import Search from "$lib/components/molecules/search.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
@@ -10,7 +10,7 @@ import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemLinkList from "$lib/components/organisms/item-link-list.svelte";
 import { pushToast } from "$lib/components/toast.svelte";
 
-let items = $state<ItemShort[]>();
+let items = $state<Item[]>();
 let searchterm = $state("");
 
 const itemsSearched = $derived(
@@ -32,7 +32,7 @@ delete HeaderState.backUrl;
     <ItemLinkList items={itemsSearched} />
 </div>
 <FooterExtension>
-    <Search bind:searchterm />
+    <Search bind:searchterm placeholder="search for items..." />
     <IconButton href="/items/new" icon={Plus} size={32} />
 </FooterExtension>
 

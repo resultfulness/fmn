@@ -1,9 +1,9 @@
 <script lang="ts">
-import type { ItemShort } from "$lib/schemas/items";
+import type { Item } from "$lib/schemas/items";
 import ListItemLink from "$lib/components/molecules/list-item-link.svelte";
 import ItemListItem from "./item-list-item.svelte";
 
-const { items }: { items?: ItemShort[] } = $props();
+const { items }: { items?: Item[] } = $props();
 </script>
 
 {#if items === undefined}

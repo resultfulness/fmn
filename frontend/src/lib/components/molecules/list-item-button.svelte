@@ -12,7 +12,7 @@ const { children, onclick, ariaLabel }: ListItemButtonProps = $props();
 </script>
 
 <li>
-    <button {onclick} aria-label={ariaLabel} class="text-content">
+    <button {onclick} aria-label={ariaLabel} class="text-content" type="button">
         {@render children()}
     </button>
 </li>

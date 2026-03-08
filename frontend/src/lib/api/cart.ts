@@ -1,7 +1,7 @@
 import type { CartItem } from "$lib/schemas/cart";
 import request from "./request";
 
-const cart = {
+export default {
     readAll(): Promise<CartItem[]> {
         return request.get("/cart");
     },
@@ -18,5 +18,3 @@ const cart = {
         return request.post("/cart/redo", {});
     },
 };
-
-export default cart;

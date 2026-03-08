@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { ItemShort } from "$lib/schemas/items";
+import type { Item } from "$lib/schemas/items";
 import ListItemButton from "$lib/components/molecules/list-item-button.svelte";
 import ItemListItem from "./item-list-item.svelte";
 
 interface ItemListProps {
-    items?: ItemShort[];
+    items?: Item[];
     onclick: (id: number) => void;
 }
 

@@ -18,7 +18,7 @@ let { children, icon, title } = $props();
 
 <style>
 .page {
-    padding: 1rem;
+    padding: 1rem 1rem 0;
     overflow-y: auto;
 
     > :global(* + *) {

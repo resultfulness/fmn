@@ -4,14 +4,15 @@ import { Search } from "@lucide/svelte";
 
 interface SearchProps {
     searchterm: string;
+    placeholder: string;
 }
 
-let { searchterm = $bindable() }: SearchProps = $props();
+let { searchterm = $bindable(), placeholder }: SearchProps = $props();
 </script>
 
 <Input
     icon={Search}
     clearable
-    placeholder="search for items..."
+    {placeholder}
     bind:value={searchterm}
 />

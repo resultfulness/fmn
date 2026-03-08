@@ -1,8 +1,8 @@
 <script lang="ts">
-import type { ItemShort } from "$lib/schemas/items";
+import type { Item } from "$lib/schemas/items";
 import Image from "$lib/components/atoms/image.svelte";
 
-const { item }: { item: ItemShort } = $props();
+const { item }: { item: Item } = $props();
 </script>
 
 <div class="layout">

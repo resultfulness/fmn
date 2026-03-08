@@ -1,8 +1,8 @@
 <script lang="ts">
-import type { RecipeShort } from "$lib/schemas/recipes";
+import type { Recipe } from "$lib/schemas/recipes";
 import Image from "$lib/components/atoms/image.svelte";
 
-const { recipe }: { recipe: RecipeShort } = $props();
+const { recipe }: { recipe: Recipe } = $props();
 </script>
 
 <div class="layout">

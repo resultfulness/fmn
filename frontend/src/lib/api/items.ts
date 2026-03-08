@@ -1,7 +1,7 @@
 import type { Item, ItemUpdate, ItemCreate } from "$lib/schemas/items";
 import request from "./request";
 
-const items = {
+export default {
     create(item: ItemCreate): Promise<Item> {
         return request.post("/items", item);
     },
@@ -18,5 +18,3 @@ const items = {
         return request.delete(`/items/${id}`);
     },
 };
-
-export default items;

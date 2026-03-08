@@ -52,7 +52,7 @@ delete HeaderState.backUrl;
 <FooterExtension>
     <IconButton variant="secondary" icon={Undo} onclick={undo} />
     <IconButton variant="secondary" icon={Redo} onclick={redo} />
-    <Search bind:searchterm />
+    <Search bind:searchterm placeholder="search for items..." />
 </FooterExtension>
 
 <style>

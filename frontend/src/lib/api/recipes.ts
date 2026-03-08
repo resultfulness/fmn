@@ -1,16 +1,20 @@
-import { Recipe, RecipeShort } from "$lib/schemas/recipes";
-
-let lsRecipes = localStorage.getItem("recipes");
-let recipes = JSON.parse(lsRecipes ?? "[]") as Recipe[];
-let maxId = recipes.length;
+import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/schemas/recipes";
+import request from "./request";
 
 export default {
-    readAll(): Promise<RecipeShort[]> {
-        return new Promise(res =>
-            setTimeout(
-                () => res(recipes.map(recipe => RecipeShort.parse(recipe))),
-                100
-            )
-        );
+    create(recipe: RecipeCreate): Promise<Recipe> {
+        return request.post("/recipes", recipe);
+    },
+    read(id: number): Promise<Recipe> {
+        return request.get(`/recipes/${id}`);
+    },
+    readAll(): Promise<Recipe[]> {
+        return request.get("/recipes");
+    },
+    update(id: number, recipe: RecipeUpdate): Promise<Recipe> {
+        return request.patch(`/recipes/${id}`, recipe);
+    },
+    delete(id: number): Promise<Recipe> {
+        return request.delete(`/recipes/${id}`);
     },
 };

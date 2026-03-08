@@ -10,26 +10,28 @@ interface CartGridProps {
 }
 
 const { cart, items, removeItem }: CartGridProps = $props();
+
+const tiles = $derived(
+    cart
+        ?.map(({ item_id, description, quantity }) => {
+            const item = items?.find(item => item.item_id === item_id);
+            if (!item) return;
+            const { icon, name, unit } = item;
+            return {
+                iconUrl: icon,
+                label: name,
+                subtitle: quantity ? `${quantity} ${unit}` : description,
+                onclick: () => removeItem(item_id),
+            };
+        })
+        .filter(v => v !== undefined)
+);
 </script>
 
-{#if cart === undefined}
+{#if tiles === undefined}
     loading...
-{:else if cart.length <= 0}
+{:else if tiles.length <= 0}
     cart is empty
 {:else}
-    <IconTileGrid
-        tiles={cart
-            .map(({ item_id, description, quantity }) => {
-                const item = items?.find(item => item.item_id === item_id);
-                if (!item) return;
-                const { icon, name, unit } = item;
-                return {
-                    iconUrl: icon,
-                    label: name,
-                    subtitle: quantity ? `${quantity} ${unit}` : description,
-                    onclick: () => removeItem(item_id),
-                };
-            })
-            .filter(v => v !== undefined)}
-    />
+    <IconTileGrid {tiles} />
 {/if}

@@ -10,10 +10,20 @@ interface RecipeIngredientsEditorProps {
     items?: Item[];
 }
 
-const { recipeItems = $bindable(), items }: RecipeIngredientsEditorProps =
+let { recipeItems = $bindable(), items }: RecipeIngredientsEditorProps =
     $props();
 
 let searchterm = $state("");
+let itemsFiltered = $derived(
+    items?.filter(
+        item =>
+            item.name.includes(searchterm) &&
+            !recipeItems?.some(
+                recipeItem => recipeItem.item_id === item.item_id
+            )
+    )
+);
+let expanded = $state(-1);
 
 function getItemDetail(id: number) {
     return items?.find(({ item_id }) => item_id === id);
@@ -22,34 +32,37 @@ function getItemDetail(id: number) {
 function addToRecipe(id: number) {
     recipeItems?.push({ item_id: id, quantity: 1 });
 }
+
+function removeFromRecipe(id: number) {
+    recipeItems = recipeItems?.filter(({ item_id }) => item_id !== id);
+    expanded = -1;
+}
 </script>
 
 <div>
     <span>Ingredients</span>
-    <ul>
-        {#if recipeItems === undefined}
-            loading...
-        {:else if recipeItems.length <= 0}
-            no ingredients
-        {:else}
-            {#each recipeItems as { quantity, item_id }}
+    {#if recipeItems === undefined}
+        loading...
+    {:else if recipeItems.length <= 0}
+        no ingredients
+    {:else}
+        <ul>
+            {#each recipeItems as { item_id }, i}
                 {@const item = getItemDetail(item_id)}
-                <Ingredient {item} {quantity} />
+                <Ingredient
+                    {item}
+                    bind:quantity={recipeItems[i].quantity}
+                    expanded={expanded === i}
+                    onexpand={() => (expanded = i)}
+                    ondelete={() => removeFromRecipe(item_id)}
+                />
             {/each}
-        {/if}
-    </ul>
+        </ul>
+    {/if}
     <div class="add-ingredients">
         <span>Add ingredients</span>
         <Search bind:searchterm placeholder="search for ingredients..." />
-        <ItemList
-            items={items
-                ?.filter(
-                    ({ item_id }) =>
-                        !recipeItems?.some(item => item.item_id === item_id)
-                )
-                .filter(item => item.name.includes(searchterm))}
-            onclick={id => addToRecipe(id)}
-        />
+        <ItemList items={itemsFiltered} onclick={id => addToRecipe(id)} />
     </div>
 </div>
 

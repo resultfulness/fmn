@@ -18,7 +18,7 @@ let {
 }: TextareaProps = $props();
 </script>
 
-<div class="textarea-wrapper">
+<div class="textarea-wrapper" class:readonly>
     {#if !readonly}
         <div class="resize-handle">
             <div class="handle-part-1"></div>
@@ -44,6 +44,32 @@ let {
     box-shadow: var(--shadow);
     border-radius: var(--rounding);
     overflow: hidden;
+
+    &:focus-within {
+        outline: 2px solid var(--clr-primary);
+    }
+
+    &.readonly:focus-within {
+        outline: none;
+    }
+}
+
+.textarea {
+    background-color: var(--clr-surface);
+    color: var(--clr-text);
+    padding: 0.5rem 1rem;
+    border: none;
+    resize: vertical;
+    max-height: 10lh;
+    min-height: 1lh;
+
+    &::placeholder {
+        color: var(--clr-text-dim);
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
 }
 
 .resize-handle {
@@ -75,27 +101,5 @@ let {
 .handle-part-2 {
     width: 8px;
     height: 2px;
-}
-
-.textarea {
-    background-color: var(--clr-surface);
-    color: var(--clr-text);
-    padding: 0.5rem 1rem;
-    border: none;
-    resize: vertical;
-    max-height: 10lh;
-    min-height: 1lh;
-}
-
-.textarea::placeholder {
-    color: var(--clr-text-dim);
-}
-
-.textarea:focus-visible {
-    outline: none;
-}
-
-.textarea-wrapper:focus-within {
-    outline: 2px solid var(--clr-primary);
 }
 </style>

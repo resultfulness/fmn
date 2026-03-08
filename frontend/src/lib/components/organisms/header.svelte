@@ -27,7 +27,7 @@ const { title, backUrl } = $derived(HeaderState);
             />
         {/if}
     </div>
-    <h1 class="text-header">{title}</h1>
+    <h1 class="text-header text-center">{title}</h1>
     <div></div>
 </header>
 
@@ -37,7 +37,6 @@ header {
     grid-template-columns: 48px 1fr 48px;
     align-items: center;
     gap: 0.25rem;
-    text-align: center;
     padding: 0.5rem;
 }
 

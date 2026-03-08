@@ -12,6 +12,7 @@ export interface InputProps {
     ariaLabel?: string;
     clearable?: boolean;
     icon?: typeof IconType;
+    endText?: string;
 }
 
 let {
@@ -24,6 +25,7 @@ let {
     ariaLabel,
     clearable,
     icon,
+    endText,
 }: InputProps = $props();
 </script>
 
@@ -50,6 +52,9 @@ let {
         <button class="clear" onclick={() => (value = "")} type="button">
             <X color="var(--clr-text)" strokeWidth={1.5} />
         </button>
+    {/if}
+    {#if endText}
+        <span class="end-text text-subtitle">{endText}</span>
     {/if}
 </div>
 
@@ -113,5 +118,26 @@ let {
     place-items: center;
     padding-inline: 0.5rem;
     cursor: pointer;
+}
+
+.input-wrapper .end-text {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: right;
+    display: grid;
+    place-items: center;
+    padding-inline: 0.5rem;
+}
+
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input[type="number"] {
+  -moz-appearance: textfield;
 }
 </style>

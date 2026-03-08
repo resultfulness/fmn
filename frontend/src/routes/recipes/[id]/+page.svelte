@@ -29,15 +29,17 @@ HeaderState.backUrl = "/recipes";
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>
-    <div class="text-subtitle">{data.recipe.servings} servings</div>
+    <div class="text-content text-center">{data.recipe.servings} servings</div>
     <h3 class="text-heading">Ingredients</h3>
     {#if data.recipe.items.length <= 0}
         <div class="text-subtitle">no ingredients</div>
     {:else}
-        {#each data.recipe.items as { item_id, quantity }}
-            {@const item = getItemDetail(item_id)}
-            <Ingredient {item} {quantity} displayOnly />
-        {/each}
+        <ul>
+            {#each data.recipe.items as { item_id, quantity }}
+                {@const item = getItemDetail(item_id)}
+                <Ingredient {item} {quantity} displayOnly />
+            {/each}
+        </ul>
     {/if}
     <h3 class="text-heading">Description</h3>
     <Textarea readonly value={data.recipe.description} />
@@ -52,6 +54,16 @@ HeaderState.backUrl = "/recipes";
 <style>
 h3 {
     margin: 0;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    display: grid;
+    gap: 0.25rem;
+    border-radius: calc(var(--rounding) / 2);
+    overflow: hidden;
 }
 
 .fab {

@@ -53,7 +53,7 @@ async function handleDeleteRecipe() {
 }
 
 HeaderState.title = "";
-HeaderState.backUrl = "/recipes";
+HeaderState.backUrl = `/recipes/${data.recipe.recipe_id}`;
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>

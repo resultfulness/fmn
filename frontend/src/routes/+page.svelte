@@ -20,7 +20,7 @@ let itemsFiltered = $derived(
     items?.filter(
         item =>
             item.name.includes(searchterm) &&
-            !cart?.some(({ item_id }) => item.item_id === item_id)
+            !cart?.some(cartItem => cartItem.item_id === item.item_id)
     )
 );
 

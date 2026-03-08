@@ -6,7 +6,7 @@ let { children, icon, title } = $props();
 
 <div class="page">
     <Image src={icon} alt="" width={128} />
-    <h2 class="text-title line-clamp-2">
+    <h2 class="text-title line-clamp-2 text-center">
         {#if title.length > 0}
             {title}
         {:else}
@@ -27,7 +27,6 @@ let { children, icon, title } = $props();
 }
 
 h2 {
-    text-align: center;
     margin: 0;
 }
 </style>

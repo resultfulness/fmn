@@ -33,6 +33,10 @@
     color: var(--clr-text);
 }
 
+.text-center {
+    text-align: center;
+}
+
 .line-clamp-2 {
     overflow: hidden;
     overflow-wrap: break-word;

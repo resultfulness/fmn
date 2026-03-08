@@ -22,8 +22,8 @@ export function askForConfirmation(
 </script>
 
 <dialog class="confirmation-dialog" bind:this={dialog} closedby="any">
-    <h2 class="text-header">{dialogTitle}</h2>
-    <p class="message text-content">{dialogMessage}</p>
+    <h2 class="text-header text-center">{dialogTitle}</h2>
+    <p class="message text-content text-center">{dialogMessage}</p>
     <div class="submit">
         <form method="dialog" onsubmit={cancel}>
             <Button variant="secondary">cancel</Button>
@@ -56,12 +56,10 @@ export function askForConfirmation(
     }
 
     h2 {
-        text-align: center;
         margin: 0;
     }
 
     .message {
-        text-align: center;
         margin: 0;
     }
 

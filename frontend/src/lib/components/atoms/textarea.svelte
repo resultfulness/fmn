@@ -5,6 +5,7 @@ export interface TextareaProps {
     name?: string;
     placeholder?: string;
     rows?: number;
+    readonly?: boolean;
 }
 
 let {
@@ -13,14 +14,17 @@ let {
     name,
     placeholder,
     rows = 2,
+    readonly,
 }: TextareaProps = $props();
 </script>
 
 <div class="textarea-wrapper">
-    <div class="resize-handle">
-        <div class="handle-part-1"></div>
-        <div class="handle-part-2"></div>
-    </div>
+    {#if !readonly}
+        <div class="resize-handle">
+            <div class="handle-part-1"></div>
+            <div class="handle-part-2"></div>
+        </div>
+    {/if}
     <textarea
         class="textarea text-content"
         bind:value
@@ -28,6 +32,8 @@ let {
         {name}
         {placeholder}
         {rows}
+        {readonly}
+        tabindex={readonly ? -1 : 0}
     ></textarea>
 </div>
 

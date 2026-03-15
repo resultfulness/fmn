@@ -130,6 +130,7 @@ function toggleExpanded() {
 .ingredient-display {
     padding: 0.5rem;
     background-color: var(--clr-surface);
+    box-shadow: var(--shadow);
     display: flex;
     align-items: center;
 }

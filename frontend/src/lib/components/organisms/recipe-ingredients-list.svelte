@@ -24,5 +24,6 @@ ul {
     gap: 0.25rem;
     border-radius: calc(var(--rounding) / 2);
     overflow: hidden;
+    box-shadow: var(--shadow)
 }
 </style>

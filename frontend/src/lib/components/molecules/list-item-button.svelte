@@ -21,6 +21,7 @@ const { children, onclick, ariaLabel }: ListItemButtonProps = $props();
 button {
     background-color: var(--clr-surface);
     border-radius: var(--rounding);
+    box-shadow: var(--shadow);
     padding: 0.5rem;
     border: none;
     width: 100%;

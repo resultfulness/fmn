@@ -31,6 +31,7 @@ const { iconUrl, label, subtitle, centerLabel, onclick }: IconTileProps =
 .icon-tile {
     border-radius: var(--rounding);
     background-color: var(--clr-surface);
+    box-shadow: var(--shadow);
     padding: 0.5rem;
     display: grid;
     grid-template-rows: 1fr auto auto;

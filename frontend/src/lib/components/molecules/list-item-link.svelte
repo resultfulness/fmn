@@ -20,6 +20,7 @@ const { children, href, ariaLabel }: ListItemLinkProps = $props();
 a {
     background-color: var(--clr-surface);
     border-radius: var(--rounding);
+    box-shadow: var(--shadow);
     padding: 0.5rem;
     text-decoration: none;
     display: block;

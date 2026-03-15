@@ -7,7 +7,7 @@ import ItemList from "./item-list.svelte";
 
 interface RecipeIngredientsEditorProps {
     recipeItems?: RecipeItem[];
-    items?: Item[];
+    items: Item[];
 }
 
 let { recipeItems = $bindable(), items }: RecipeIngredientsEditorProps =
@@ -15,7 +15,7 @@ let { recipeItems = $bindable(), items }: RecipeIngredientsEditorProps =
 
 let searchterm = $state("");
 let itemsFiltered = $derived(
-    items?.filter(
+    items.filter(
         item =>
             item.name.includes(searchterm) &&
             !recipeItems?.some(
@@ -24,10 +24,6 @@ let itemsFiltered = $derived(
     )
 );
 let expanded = $state(-1);
-
-function getItemDetail(id: number) {
-    return items?.find(({ item_id }) => item_id === id);
-}
 
 function addToRecipe(id: number) {
     recipeItems?.push({ item_id: id, quantity: 1 });
@@ -41,14 +37,10 @@ function removeFromRecipe(id: number) {
 
 <div>
     <span>Ingredients</span>
-    {#if recipeItems === undefined}
-        loading...
-    {:else if recipeItems.length <= 0}
-        no ingredients
-    {:else}
+    {#if recipeItems && recipeItems.length > 0}
         <ul>
             {#each recipeItems as { item_id }, i}
-                {@const item = getItemDetail(item_id)}
+                {@const item = items.find(item => item.item_id === item_id)}
                 <Ingredient
                     {item}
                     bind:quantity={recipeItems[i].quantity}

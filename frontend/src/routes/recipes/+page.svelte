@@ -30,7 +30,11 @@ delete HeaderState.backUrl;
 </script>
 
 <ListPage>
-    <RecipeList recipes={recipesSearched} />
+    {#if recipesSearched && recipesSearched.length > 0}
+        <RecipeList recipes={recipesSearched} />
+    {:else}
+        no recipes!
+    {/if}
 </ListPage>
 <FooterExtension>
     <Search bind:searchterm placeholder="search for recipes..." />

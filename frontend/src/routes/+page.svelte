@@ -42,12 +42,18 @@ delete HeaderState.backUrl;
 </script>
 
 <ListPage>
-    <CartGrid {cart} {items} {removeItem} />
+    {#if items && cart && cart.length > 0}
+        <CartGrid {cart} {items} {removeItem} />
+    {:else}
+        cart empty!
+    {/if}
     <div class="grid-separator">
         <h2 class="text-heading">Add</h2>
         <IconButton variant="secondary" icon={ListFilter} />
     </div>
-    <ItemGrid items={itemsFiltered} {addItem} />
+    {#if itemsFiltered && itemsFiltered.length > 0}
+        <ItemGrid items={itemsFiltered} {addItem} />
+    {/if}
 </ListPage>
 <FooterExtension>
     <IconButton variant="secondary" icon={Undo} onclick={undo} />

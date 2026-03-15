@@ -12,7 +12,7 @@ interface RecipeUpdateFormProps {
     onsubmit: EventHandler<SubmitEvent, HTMLFormElement>;
     actions: Snippet;
     recipe: RecipeUpdate;
-    items?: Item[];
+    items: Item[];
 }
 
 const {

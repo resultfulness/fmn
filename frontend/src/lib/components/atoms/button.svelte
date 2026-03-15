@@ -58,8 +58,10 @@ let {
     border: 0;
     cursor: pointer;
     transition: background-color 200ms;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
     text-decoration: none;
 }
 

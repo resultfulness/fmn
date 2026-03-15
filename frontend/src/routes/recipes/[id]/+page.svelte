@@ -9,6 +9,8 @@ import Textarea from "$lib/components/atoms/textarea.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
 import { Pencil } from "@lucide/svelte";
 import RecipeIngredientsList from "$lib/components/organisms/recipe-ingredients-list.svelte";
+import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
+import Button from "$lib/components/atoms/button.svelte";
 
 let { data } = $props();
 let items: Item[] | undefined = $state();
@@ -25,7 +27,9 @@ HeaderState.backUrl = "/recipes";
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>
-    <div class="text-content text-center">{data.recipe.servings} servings</div>
+    <div class="text-content text-center">
+        {data.recipe.servings} servings
+    </div>
     <h3 class="text-heading">Ingredients</h3>
     {#if items && data.recipe.items.length > 0}
         <RecipeIngredientsList
@@ -37,11 +41,10 @@ HeaderState.backUrl = "/recipes";
     {/if}
     <h3 class="text-heading">Description</h3>
     <Textarea readonly value={data.recipe.description} />
-    <div class="fab">
-        <IconButton
-            icon={Pencil}
-            href={`/recipes/${data.recipe.recipe_id}/edit`}
-        />
+    <div class="edit">
+        <Button href={`/recipes/${data.recipe.recipe_id}/edit`}>
+            <Pencil /> edit recipe
+        </Button>
     </div>
 </FormPage>
 
@@ -50,11 +53,8 @@ h3 {
     margin: 0;
 }
 
-.fab {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    bottom: 1rem;
-    right: 1rem;
+.edit {
+    display: grid;
+    margin-bottom: 1rem;
 }
 </style>

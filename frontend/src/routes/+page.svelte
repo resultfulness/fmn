@@ -45,7 +45,9 @@ delete HeaderState.backUrl;
     {#if items && cart && cart.length > 0}
         <CartGrid {cart} {items} {removeItem} />
     {:else}
-        cart empty!
+        <div class="text-subtitle text-center" style:margin-block="2rem">
+            cart empty!
+        </div>
     {/if}
     <div class="grid-separator">
         <h2 class="text-heading">Add</h2>
@@ -53,6 +55,10 @@ delete HeaderState.backUrl;
     </div>
     {#if itemsFiltered && itemsFiltered.length > 0}
         <ItemGrid items={itemsFiltered} {addItem} />
+    {:else if searchterm}
+        <div class="text-subtitle text-center">
+            no items matching {searchterm}
+        </div>
     {/if}
 </ListPage>
 <FooterExtension>

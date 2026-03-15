@@ -56,6 +56,7 @@ function toggleExpanded() {
                         icon={Trash}
                         variant="danger"
                         onclick={ondelete}
+                        type="button"
                     />
                     <Input
                         placeholder="edit quantity..."

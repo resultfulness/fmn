@@ -33,7 +33,13 @@ delete HeaderState.backUrl;
     {#if itemsSearched && itemsSearched.length > 0}
         <ItemLinkList items={itemsSearched} />
     {:else}
-        no items!
+        <div class="text-subtitle text-center">
+            {#if searchterm}
+                no items matching {searchterm}
+            {:else}
+                no items!
+            {/if}
+        </div>
     {/if}
 </ListPage>
 <FooterExtension>

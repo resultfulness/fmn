@@ -33,7 +33,13 @@ delete HeaderState.backUrl;
     {#if recipesSearched && recipesSearched.length > 0}
         <RecipeList recipes={recipesSearched} />
     {:else}
-        no recipes!
+        <div class="text-subtitle text-center">
+            {#if searchterm}
+                no recipes matching {searchterm}
+            {:else}
+                no recipes!
+            {/if}
+        </div>
     {/if}
 </ListPage>
 <FooterExtension>

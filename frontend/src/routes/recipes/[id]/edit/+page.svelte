@@ -57,12 +57,18 @@ HeaderState.backUrl = `/recipes/${data.recipe.recipe_id}`;
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>
-    <RecipeUpdateForm onsubmit={handleUpdateRecipe} bind:recipe {items}>
-        {#snippet actions()}
-            <Button variant="danger" type="button" onclick={handleDeleteRecipe}>
-                delete
-            </Button>
-            <Button>save</Button>
-        {/snippet}
-    </RecipeUpdateForm>
+    {#if items}
+        <RecipeUpdateForm onsubmit={handleUpdateRecipe} bind:recipe {items}>
+            {#snippet actions()}
+                <Button
+                    variant="danger"
+                    type="button"
+                    onclick={handleDeleteRecipe}
+                >
+                    delete
+                </Button>
+                <Button>save</Button>
+            {/snippet}
+        </RecipeUpdateForm>
+    {/if}
 </FormPage>

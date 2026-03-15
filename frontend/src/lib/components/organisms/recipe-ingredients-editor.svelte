@@ -27,6 +27,7 @@ let expanded = $state(-1);
 
 function addToRecipe(id: number) {
     recipeItems?.push({ item_id: id, quantity: 1 });
+    expanded = recipeItems ? recipeItems.length - 1 : -1;
 }
 
 function removeFromRecipe(id: number) {
@@ -50,11 +51,21 @@ function removeFromRecipe(id: number) {
                 />
             {/each}
         </ul>
+    {:else}
+        <div class="text-subtitle text-center" style:margin-block="1rem">
+            no ingredients
+        </div>
     {/if}
     <div class="add-ingredients">
         <span>Add ingredients</span>
         <Search bind:searchterm placeholder="search for ingredients..." />
-        <ItemList items={itemsFiltered} onclick={id => addToRecipe(id)} />
+        {#if itemsFiltered.length > 0}
+            <ItemList items={itemsFiltered} onclick={id => addToRecipe(id)} />
+        {:else}
+            <div class="text-subtitle text-center">
+                no items matching {searchterm}
+            </div>
+        {/if}
     </div>
 </div>
 

@@ -7,14 +7,14 @@ type Toast = {
     severity: ToastSeverity;
 };
 
-let toasts: SvelteMap<number, Toast> = $state(new SvelteMap());
+let toasts: SvelteMap<string, Toast> = $state(new SvelteMap());
 
 export function pushToast(
     message: string,
     severity: ToastSeverity,
     delay: number = 5000
 ) {
-    const timestamp = +new Date();
+    const timestamp = crypto.randomUUID().toString();
     toasts.set(timestamp, { message, severity });
     setTimeout(() => toasts.delete(timestamp), delay);
 }
@@ -42,6 +42,7 @@ import { Check, CircleAlert } from "@lucide/svelte";
     position: fixed;
     top: 0.75rem;
     right: 0.75rem;
+    margin-left: 0.75rem;
     display: grid;
     justify-items: end;
     gap: 0.5rem;

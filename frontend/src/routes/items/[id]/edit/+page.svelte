@@ -9,6 +9,7 @@ import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 import FormPage from "$lib/components/templates/form-page.svelte";
 import { pushToast } from "$lib/components/toast.svelte";
+import { printIssues } from "$lib/error.js";
 
 let { data } = $props();
 let item = $derived(proxify(data.item));
@@ -18,7 +19,7 @@ function handleUpdateItem(e: SubmitEvent) {
     const itemUpdate = ItemUpdate.safeParse(item);
 
     if (!itemUpdate.success) {
-        pushToast(itemUpdate.error.message, "error");
+        printIssues(itemUpdate.error.issues);
         return;
     }
 

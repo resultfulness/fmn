@@ -11,6 +11,7 @@ import { RecipeUpdate } from "$lib/schemas/recipes.js";
 import RecipeUpdateForm from "$lib/components/organisms/recipe-update-form.svelte";
 import { onMount } from "svelte";
 import type { Item } from "$lib/schemas/items.js";
+import { printIssues } from "$lib/error.js";
 
 let { data } = $props();
 let recipe = $derived(proxify(data.recipe));
@@ -28,7 +29,7 @@ function handleUpdateRecipe(e: SubmitEvent) {
     const recipeUpdate = RecipeUpdate.safeParse(recipe);
 
     if (!recipeUpdate.success) {
-        pushToast(recipeUpdate.error.message, "error");
+        printIssues(recipeUpdate.error.issues);
         return;
     }
 

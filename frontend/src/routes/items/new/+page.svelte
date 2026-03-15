@@ -6,6 +6,7 @@ import Button from "$lib/components/atoms/button.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemForm from "$lib/components/organisms/item-form.svelte";
 import FormPage from "$lib/components/templates/form-page.svelte";
+import { printIssues } from "$lib/error";
 import { pushToast } from "$lib/components/toast.svelte";
 
 let maybeItem: Partial<ItemCreate> = $state({});
@@ -14,26 +15,24 @@ async function createItem() {
     const itemCreate = ItemCreate.safeParse(maybeItem);
 
     if (!itemCreate.success) {
-        throw itemCreate.error;
+        throw itemCreate.error.issues;
     }
 
     api.items
         .create(itemCreate.data)
         .then(() => (maybeItem = {}))
-        .catch(e => {
-            throw e;
-        });
+        .catch(e => pushToast(e, "error"));
 }
 
 function handleCreateItem(e: SubmitEvent) {
     e.preventDefault();
     createItem()
         .then(() => goto("/items"))
-        .catch(e => pushToast(e, "error"));
+        .catch(printIssues);
 }
 
 function handleCreateItemAndStay() {
-    createItem().catch(e => pushToast(e, "error"));
+    createItem().catch(printIssues);
 }
 
 HeaderState.title = "";

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::{
     models::{
@@ -110,8 +110,11 @@ pub async fn reorder_items(
     queries: &Queries,
     item_ids: Vec<i32>,
 ) -> Result<Vec<CartItem>, APIError> {
-    let items = queries.item_select_many().await?;
-    if item_ids.iter().any(|item_id| !items.contains_key(item_id)) {
+    let request_ids: HashSet<&i32> = HashSet::from_iter(item_ids.iter());
+    let items = queries.cart_select_many_item().await?;
+    let cart_ids: HashSet<&i32> =
+        HashSet::from_iter(items.iter().map(|v| &v.item_id));
+    if request_ids != cart_ids {
         return Err(APIError::NotFoundError);
     }
     queries.cart_insert_one_event(EventPayload::Reorder(item_ids)).await?;

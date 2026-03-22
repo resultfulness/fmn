@@ -6,11 +6,13 @@ use axum::{
 
 use crate::{
     methods::cart::{
-        add_item, add_recipe, read, redo, remove_item, reorder_items, undo,
-        update_item,
+        add_item, add_recipe, read, read_events, redo, remove_item,
+        reorder_items, undo, update_item,
     },
     models::{
-        errors::APIError, requests::CartItemUpdateRequest, responses::CartItem,
+        errors::APIError,
+        requests::CartItemUpdateRequest,
+        responses::{CartItem, EventResponse},
     },
     state::AppState,
 };
@@ -18,6 +20,7 @@ use crate::{
 pub fn get_cart_router() -> Router<AppState> {
     Router::new()
         .route("/", get(read_endpoint))
+        .route("/events", get(read_events_endpoint))
         .route("/undo", post(undo_endpoint))
         .route("/redo", post(redo_endpoint))
         .route("/reorder", post(reorder_items_endpoint))
@@ -81,4 +84,10 @@ async fn read_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     Ok(Json(read(&mut *queries).await?))
+}
+async fn read_events_endpoint(
+    State(state): State<AppState>,
+) -> Result<Json<Vec<EventResponse>>, APIError> {
+    let mut queries = state.queries.lock().await;
+    Ok(Json(read_events(&mut *queries).await?))
 }

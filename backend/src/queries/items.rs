@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     models::{
         requests::{ItemCreateRequest, ItemUpdateRequest},
@@ -6,21 +8,22 @@ use crate::{
     queries::{Queries, errors::DBError},
 };
 impl Queries {
-    pub async fn item_select_many(&self) -> Result<Vec<Item>, DBError> {
-        Ok(sqlx::query_file_as!(Item, "queries/items/select_many.sql")
+    pub async fn item_select_many(
+        &self,
+    ) -> Result<HashMap<i32, Item>, DBError> {
+        let items = sqlx::query_file_as!(Item, "queries/items/select_many.sql")
             .fetch_all(&self.pool)
-            .await?)
+            .await?;
+        Ok(HashMap::from_iter(items.into_iter().map(|v| (v.item_id, v))))
     }
 
     pub async fn item_select_one(
         &self,
         item_id: i32,
     ) -> Result<Option<Item>, DBError> {
-        Ok(
-            sqlx::query_file_as!(Item, "queries/items/select_one.sql", item_id)
-                .fetch_optional(&self.pool)
-                .await?,
-        )
+        Ok(sqlx::query_file_as!(Item, "queries/items/select_one.sql", item_id)
+            .fetch_optional(&self.pool)
+            .await?)
     }
     pub async fn item_insert_one(
         &self,

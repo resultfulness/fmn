@@ -36,10 +36,7 @@ pub async fn update_item(
     item_id: i32,
     request: ItemUpdateRequest,
 ) -> Result<Item, APIError> {
-    queries
-        .item_select_one(item_id)
-        .await?
-        .ok_or(APIError::NotFoundError)?;
+    queries.item_select_one(item_id).await?.ok_or(APIError::NotFoundError)?;
     queries.item_update_one(item_id, request).await?;
     let item = queries.item_select_one(item_id).await?;
     Ok(item.ok_or("could not update")?)
@@ -59,5 +56,7 @@ pub async fn delete_item(
 
 pub async fn search_items(queries: &Queries) -> Result<Vec<Item>, APIError> {
     let items = queries.item_select_many().await?;
+    let mut items: Vec<Item> = items.into_iter().map(|(_, v)| v).collect();
+    items.sort_by(|a, b| a.item_id.cmp(&b.item_id));
     Ok(items)
 }

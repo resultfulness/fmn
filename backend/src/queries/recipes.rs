@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     models::{
         requests::{RecipeCreateRequest, RecipeUpdateRequest},
@@ -7,12 +9,14 @@ use crate::{
     queries::{Queries, errors::DBError},
 };
 impl Queries {
-    pub async fn recipe_select_many(&self) -> Result<Vec<Recipe>, DBError> {
-        Ok(
+    pub async fn recipe_select_many(
+        &self,
+    ) -> Result<HashMap<i32, Recipe>, DBError> {
+        let recipes =
             sqlx::query_file_as!(Recipe, "queries/recipes/select_many.sql")
                 .fetch_all(&self.pool)
-                .await?,
-        )
+                .await?;
+        Ok(HashMap::from_iter(recipes.into_iter().map(|v| (v.recipe_id, v))))
     }
 
     pub async fn recipe_select_one(

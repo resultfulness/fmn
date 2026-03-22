@@ -1,8 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
+use uuid::Uuid;
 
-use crate::models::schema::RecipeItem;
+use crate::models::schema::{Event, RecipeItem};
 
 #[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Clone)]
 pub struct EchoResponse {
@@ -49,4 +50,21 @@ pub struct Recipe {
     pub items: Vec<RecipeItem>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+}
+#[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Clone)]
+pub struct EventResponse {
+    pub event_id: Uuid,
+    pub event_type: String,
+    pub is_future: bool,
+    pub executed_at: DateTime<Utc>,
+}
+impl From<Event> for EventResponse {
+    fn from(value: Event) -> Self {
+        Self {
+            event_id: value.event_id,
+            event_type: value.payload.into(),
+            is_future: value.is_future,
+            executed_at: value.executed_at,
+        }
+    }
 }

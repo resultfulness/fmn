@@ -2,7 +2,9 @@ use std::collections::HashMap;
 
 use crate::{
     models::{
-        errors::APIError, requests::CartItemUpdateRequest, responses::CartItem,
+        errors::APIError,
+        requests::CartItemUpdateRequest,
+        responses::{CartItem, EventResponse},
         schema::EventPayload,
     },
     queries::Queries,
@@ -109,10 +111,8 @@ pub async fn reorder_items(
     item_ids: Vec<i32>,
 ) -> Result<Vec<CartItem>, APIError> {
     let items = queries.item_select_many().await?;
-    for item_id in &item_ids {
-        if let None = items.iter().find(|v| v.item_id == *item_id) {
-            return Err(APIError::NotFoundError);
-        }
+    if item_ids.iter().any(|item_id| !items.contains_key(item_id)) {
+        return Err(APIError::NotFoundError);
     }
     queries.cart_insert_one_event(EventPayload::Reorder(item_ids)).await?;
     queries.cart_delete_future_event().await?;
@@ -137,6 +137,13 @@ pub async fn remove_item(
 
 pub async fn read(queries: &Queries) -> Result<Vec<CartItem>, APIError> {
     Ok(queries.cart_select_many_item().await?)
+}
+
+pub async fn read_events(
+    queries: &Queries,
+) -> Result<Vec<EventResponse>, APIError> {
+    let events = queries.cart_select_many_event().await?;
+    Ok(events.into_iter().map(|event| event.into()).collect())
 }
 
 pub async fn redo(queries: &Queries) -> Result<Vec<CartItem>, APIError> {

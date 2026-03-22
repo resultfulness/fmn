@@ -42,10 +42,8 @@ pub async fn update_recipe(
         .ok_or(APIError::NotFoundError)?;
     if let Some(request_items) = &request.items {
         let items = queries.item_select_many().await?;
-        for item in request_items {
-            if let None = items.iter().find(|v| v.item_id == item.item_id) {
-                return Err(APIError::NotFoundError);
-            }
+        if request_items.iter().any(|item| !items.contains_key(&item.item_id)) {
+            return Err(APIError::NotFoundError);
         }
     }
     queries.recipe_update_one(recipe_id, request).await?;
@@ -69,5 +67,8 @@ pub async fn search_recipes(
     queries: &Queries,
 ) -> Result<Vec<Recipe>, APIError> {
     let recipes = queries.recipe_select_many().await?;
+    let mut recipes: Vec<Recipe> =
+        recipes.into_iter().map(|(_, v)| v).collect();
+    recipes.sort_by(|a, b| a.recipe_id.cmp(&b.recipe_id));
     Ok(recipes)
 }

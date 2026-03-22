@@ -12,6 +12,18 @@ pub enum EventPayload {
     EditItem(i32, Option<String>, Option<i32>),
     Reorder(Vec<i32>),
 }
+impl From<EventPayload> for String {
+    fn from(value: EventPayload) -> Self {
+        match value {
+            EventPayload::AddItem(..) => "AddItem",
+            EventPayload::AddItems(..) => "AddItems",
+            EventPayload::RemoveItem(..) => "RemoveItem",
+            EventPayload::EditItem(..) => "EditItem",
+            EventPayload::Reorder(..) => "Reorder",
+        }
+        .into()
+    }
+}
 
 impl From<Value> for EventPayload {
     fn from(value: Value) -> Self {

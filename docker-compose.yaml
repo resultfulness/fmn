@@ -7,6 +7,8 @@ services:
       - /app/target
     # depends_on:
       # - fmn-db
+    environment:
+      DATABASE_URL: "postgres://postgres_user:postgres_password@fmn-db/postgres_db"
   fmn-frontend:
     build: ./frontend
     container_name: fmn-frontend
@@ -30,10 +32,12 @@ services:
     depends_on:
       - fmn-backend
       - fmn-frontend
-  # fmn-db:
-  #   image: postgres:18
-  #   container_name: fmn-db
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - ./database:/docker-entrypoint-initdb.d
+  fmn-db:
+    image: postgres:18
+    container_name: fmn-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_password"
+      POSTGRES_DB: "postgres_db"

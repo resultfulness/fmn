@@ -1,10 +1,11 @@
-use std::{sync::Arc, time::Duration};
+use std::{env, sync::Arc, time::Duration};
 
 use axum::{
     Router,
     http::{Request, Response},
-    routing::get,
 };
+use dotenv::dotenv;
+use sqlx::postgres::PgPoolOptions;
 use tokio::sync::Mutex;
 use tower_http::trace::TraceLayer;
 use tracing::Span;
@@ -14,19 +15,32 @@ use tracing_subscriber::{
 
 use crate::{
     endpoints::{
-        cart::get_cart_router, echo::get_root_endpoint,
-        items::get_items_router, recipes::get_recipes_router,
+        cart::get_cart_router, items::get_items_router,
+        recipes::get_recipes_router,
     },
-    methods::memory_queries::MemoryQueries,
+    queries::Queries,
     state::AppState,
 };
 
 pub mod endpoints;
 pub mod methods;
 pub mod models;
+pub mod queries;
 pub mod state;
 
-pub async fn run() {
+pub async fn run() -> Result<(), String> {
+    dotenv().ok();
+    let db_url = env::var("DATABASE_URL").map_err(|_| "no env")?;
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&db_url)
+        .await
+        .map_err(|_| "could not connect")?;
+    sqlx::migrate!()
+        .run(&pool)
+        .await
+        .map_err(|_| "could not migrate")?;
+
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -56,12 +70,11 @@ pub async fn run() {
             },
         );
 
-    let queries = MemoryQueries::default();
+    let queries = Queries::new(pool);
     let state = AppState {
         queries: Arc::new(Mutex::new(queries)),
     };
     let app = Router::new()
-        .route("/", get(get_root_endpoint))
         .nest("/items", get_items_router())
         .nest("/recipes", get_recipes_router())
         .nest("/cart", get_cart_router())
@@ -71,4 +84,5 @@ pub async fn run() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     tracing::debug!("server running");
     axum::serve(listener, app).await.unwrap();
+    Ok(())
 }

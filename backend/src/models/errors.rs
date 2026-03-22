@@ -1,6 +1,8 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
 use serde_json::json;
 
+use crate::queries::errors::DBError;
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum APIError {
     InternalError,
@@ -16,6 +18,12 @@ impl From<String> for APIError {
 }
 impl From<&str> for APIError {
     fn from(value: &str) -> Self {
+        println!("{}", value);
+        APIError::InternalError
+    }
+}
+impl From<DBError> for APIError {
+    fn from(value: DBError) -> Self {
         println!("{}", value);
         APIError::InternalError
     }
@@ -36,10 +44,9 @@ impl IntoResponse for APIError {
                 StatusCode::CONFLICT,
                 json!({"error": "entity already exists"}),
             ),
-            Self::NotFoundError => (
-                StatusCode::NOT_FOUND,
-                json!({"error": "entity not found"}),
-            ),
+            Self::NotFoundError => {
+                (StatusCode::NOT_FOUND, json!({"error": "entity not found"}))
+            }
         };
         (status, Json(json)).into_response()
     }

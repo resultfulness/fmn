@@ -13,7 +13,7 @@ let {
     id,
     name,
     placeholder,
-    rows = 2,
+    rows = 5,
     readonly,
 }: TextareaProps = $props();
 </script>

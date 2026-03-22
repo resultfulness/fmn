@@ -24,13 +24,18 @@ pub struct RecipeCreateRequest {
     pub name: String,
     pub icon: String,
     pub description: String,
-    pub servings: usize,
+    pub servings: i32,
 }
 #[derive(Deserialize, Debug, Clone)]
 pub struct RecipeUpdateRequest {
     pub name: Option<String>,
     pub icon: Option<String>,
     pub description: Option<String>,
-    pub servings: Option<usize>,
+    pub servings: Option<i32>,
     pub items: Option<Vec<RecipeItem>>,
+}
+#[derive(Deserialize, Debug, Clone)]
+pub struct CartItemUpdateRequest {
+    pub description: Option<String>,
+    pub quantity: Option<i32>,
 }

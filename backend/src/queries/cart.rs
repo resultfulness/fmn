@@ -85,4 +85,10 @@ impl Queries {
             .await?;
         Ok(())
     }
+    pub async fn cart_delete_many_event(&self) -> Result<(), DBError> {
+        sqlx::query_file!("queries/cart/delete_many_event.sql")
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
 }

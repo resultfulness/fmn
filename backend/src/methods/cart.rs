@@ -145,6 +145,14 @@ pub async fn read_events(
     let events = queries.cart_select_many_event().await?;
     Ok(events.into_iter().map(|event| event.into()).collect())
 }
+pub async fn delete_events(
+    queries: &Queries,
+) -> Result<Vec<EventResponse>, APIError> {
+    queries.cart_delete_many_event().await?;
+    update_state(queries).await?;
+    let events = queries.cart_select_many_event().await?;
+    Ok(events.into_iter().map(|event| event.into()).collect())
+}
 
 pub async fn redo(queries: &Queries) -> Result<Vec<CartItem>, APIError> {
     let events = queries.cart_select_many_event().await?;

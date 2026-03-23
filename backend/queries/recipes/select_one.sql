@@ -6,7 +6,7 @@ SELECT
     "servings",
     ARRAY_REMOVE(ARRAY_AGG(
         ("item_id", "quantity") ORDER BY "order"
-    ), NULL) "items!: Vec<RecipeItem>",
+    ), (NULL::INT, NULL::INT)) "items!: Vec<RecipeItem>",
     "created_at",
     "updated_at"
 FROM "recipe"

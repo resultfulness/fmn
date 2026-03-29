@@ -46,3 +46,13 @@
     line-clamp: 2;
     align-content: center;
 }
+
+.line-clamp-1 {
+    overflow: hidden;
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    align-content: center;
+}

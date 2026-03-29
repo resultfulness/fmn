@@ -18,7 +18,7 @@ async function createRecipe() {
         throw recipeCreate.error.issues;
     }
 
-    api.recipes
+    return api.recipes
         .create(recipeCreate.data)
         .then(recipe => {
             maybeRecipe = {};

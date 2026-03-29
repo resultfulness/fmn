@@ -16,14 +16,21 @@ const { iconUrl, label, subtitle, centerLabel, onclick }: IconTileProps =
 <button class="icon-tile" {onclick}>
     <div class="image" style:background-image={`url(${iconUrl})`}></div>
     {#if label}
-        <span class="text-label label" class:center-label={centerLabel}>
+        <div class="wrapper">
+        <span
+            class={[
+                "text-label",
+                "label",
+                centerLabel && "center-label",
+                subtitle ? "line-clamp-1" : "line-clamp-2",
+            ]}
+        >
             {label}
         </span>
-        {#if !centerLabel}
-            <span class="text-subtitle subtitle">
-                {#if subtitle}{subtitle}{:else}&nbsp;{/if}
-            </span>
+        {#if !centerLabel && subtitle}
+            <span class="text-subtitle subtitle">{subtitle}</span>
         {/if}
+        </div>
     {/if}
 </button>
 
@@ -41,6 +48,13 @@ const { iconUrl, label, subtitle, centerLabel, onclick }: IconTileProps =
     text-align: center;
     aspect-ratio: 1;
     border: none;
+}
+
+.wrapper {
+    display: grid;
+    place-items: center;
+    height: 2lh;
+    gap: 0.25rem;
 }
 
 .label {

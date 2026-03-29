@@ -11,10 +11,16 @@ export default {
     removeItem(item_id: number): Promise<CartItem[]> {
         return request.delete(`/cart/item/${item_id}`);
     },
+    addRecipe(recipe_id: number): Promise<CartItem[]> {
+        return request.post(`/cart/recipe/${recipe_id}`, {});
+    },
     undo(): Promise<CartItem[]> {
         return request.post("/cart/undo", {});
     },
     redo(): Promise<CartItem[]> {
         return request.post("/cart/redo", {});
     },
+    clear() {
+        return request.delete("/cart/events");
+    }
 };

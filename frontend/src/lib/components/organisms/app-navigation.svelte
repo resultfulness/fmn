@@ -62,6 +62,6 @@ nav {
 }
 
 ::view-transition-group(--highlight) {
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-timing-function: var(--easing);
 }
 </style>

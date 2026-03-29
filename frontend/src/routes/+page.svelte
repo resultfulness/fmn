@@ -1,5 +1,6 @@
 <script lang="ts">
 import api from "$lib/api";
+import Details from "$lib/components/atoms/details.svelte";
 import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
 import Search from "$lib/components/molecules/search.svelte";
@@ -60,22 +61,24 @@ delete HeaderState.backUrl;
         </div>
     {/if}
     <h2 class="text-heading">Add</h2>
-    <h3 class="text-emph">Recipes</h3>
-    {#if recipesFiltered && recipesFiltered.length > 0}
-        <RecipeGrid recipes={recipesFiltered} {addRecipe} />
-    {:else if searchterm}
-        <div class="text-subtitle text-center">
-            no recipes matching {searchterm}
-        </div>
-    {/if}
-    <h3 class="text-emph">Items</h3>
-    {#if itemsFiltered && itemsFiltered.length > 0}
-        <ItemGrid items={itemsFiltered} {addItem} />
-    {:else if searchterm}
-        <div class="text-subtitle text-center">
-            no items matching {searchterm}
-        </div>
-    {/if}
+    <Details summary="Recipes" open>
+        {#if recipesFiltered && recipesFiltered.length > 0}
+            <RecipeGrid recipes={recipesFiltered} {addRecipe} />
+        {:else if searchterm}
+            <div class="text-subtitle text-center">
+                no recipes matching {searchterm}
+            </div>
+        {/if}
+    </Details>
+    <Details summary="Items" open>
+        {#if itemsFiltered && itemsFiltered.length > 0}
+            <ItemGrid items={itemsFiltered} {addItem} />
+        {:else if searchterm}
+            <div class="text-subtitle text-center">
+                no items matching {searchterm}
+            </div>
+        {/if}
+    </Details>
 </ListPage>
 <FooterExtension>
     <IconButton variant="secondary" icon={Undo} onclick={undo} />

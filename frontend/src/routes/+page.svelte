@@ -4,17 +4,21 @@ import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
 import IconButton from "$lib/components/molecules/icon-button.svelte";
 import Search from "$lib/components/molecules/search.svelte";
 import CartGrid from "$lib/components/organisms/cart-grid.svelte";
+import EditItem, {
+    showItemEdit,
+} from "$lib/components/organisms/edit-item.svelte";
 import { HeaderState } from "$lib/components/organisms/header.svelte";
 import ItemGrid from "$lib/components/organisms/item-grid.svelte";
 import ListPage from "$lib/components/templates/list-page.svelte";
 import type { CartItem } from "$lib/schemas/cart";
 import type { Item } from "$lib/schemas/items";
-import { ListFilter, Redo, Undo } from "@lucide/svelte";
+import { PencilLine, Redo, Undo, X } from "@lucide/svelte";
 import { onMount } from "svelte";
 
 let cart = $state<CartItem[]>();
 let items = $state<Item[]>();
 let searchterm = $state("");
+let cartmode = $state<"edit" | "use">("use");
 
 let itemsFiltered = $derived(
     items?.filter(
@@ -34,6 +38,22 @@ onMount(() => {
 const removeItem = (id: number) => api.cart.removeItem(id).then(resetCart);
 const addItem = (id: number) => api.cart.addItem(id).then(resetCart);
 
+let clickItem = $derived(
+    cartmode === "use"
+        ? removeItem
+        : (itemId: number) => {
+              let cartItem = cart?.find(v => v.item_id === itemId)!;
+              showItemEdit(items?.find(v => v.item_id === itemId)!, cartItem)
+                  .then((quantity: number | null) =>
+                      api.cart.updateItem(itemId, {
+                          quantity: quantity ?? cartItem.quantity,
+                          description: cartItem.description,
+                      })
+                  )
+                  .then(resetCart);
+          }
+);
+
 const undo = () => api.cart.undo().then(resetCart);
 const redo = () => api.cart.redo().then(resetCart);
 
@@ -42,23 +62,32 @@ delete HeaderState.backUrl;
 </script>
 
 <ListPage>
+    <EditItem />
     {#if items && cart && cart.length > 0}
-        <CartGrid {cart} {items} {removeItem} />
+        <CartGrid {cart} {items} {clickItem} />
     {:else}
         <div class="text-subtitle text-center" style:margin-block="2rem">
             cart empty!
         </div>
     {/if}
     <div class="grid-separator">
-        <h2 class="text-heading">Add</h2>
-        <IconButton variant="secondary" icon={ListFilter} />
+        <h2 class="text-heading">{cartmode === "use" ? "Add" : "Edit"}</h2>
+        <IconButton
+            variant="secondary"
+            icon={cartmode === "use" ? PencilLine : X}
+            onclick={() => {
+                cartmode = cartmode === "use" ? "edit" : "use";
+            }}
+        />
     </div>
-    {#if itemsFiltered && itemsFiltered.length > 0}
-        <ItemGrid items={itemsFiltered} {addItem} />
-    {:else if searchterm}
-        <div class="text-subtitle text-center">
-            no items matching {searchterm}
-        </div>
+    {#if cartmode === "use"}
+        {#if itemsFiltered && itemsFiltered.length > 0}
+            <ItemGrid items={itemsFiltered} {addItem} />
+        {:else if searchterm}
+            <div class="text-subtitle text-center">
+                no items matching {searchterm}
+            </div>
+        {/if}
     {/if}
 </ListPage>
 <FooterExtension>

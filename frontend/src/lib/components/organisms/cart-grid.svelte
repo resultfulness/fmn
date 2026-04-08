@@ -6,10 +6,10 @@ import type { Item } from "$lib/schemas/items";
 interface CartGridProps {
     cart: CartItem[];
     items: Item[];
-    removeItem: (item_id: number) => void;
+    clickItem: (item_id: number) => void;
 }
 
-const { cart, items, removeItem }: CartGridProps = $props();
+const { cart, items, clickItem: removeItem }: CartGridProps = $props();
 
 const tiles = $derived(
     cart

@@ -49,6 +49,12 @@ const request = {
             body: JSON.stringify(data),
         });
     },
+    async put(endpoint: string, data: any) {
+        return apiFetch(endpoint, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        });
+    },
     async patch(endpoint: string, data: any) {
         return apiFetch(endpoint, {
             method: "PATCH",

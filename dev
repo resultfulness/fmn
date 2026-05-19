@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Source - https://stackoverflow.com/a/2173421
+# Posted by tokland, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-05-19, License - CC BY-SA 4.0
+
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+fend=
+bend=
+
+backend() {
+    cd backend || exit
+    watchexec -e rs -r cargo run &
+    bend=$!
+    cd ..
+}
+
+frontend() {
+    cd frontend || exit
+    pnpm i
+    pnpm dev &
+    fend=$!
+    cd ..
+}
+
+database() {
+    docker compose up fmn-db --detach
+}
+
+if [ "$1" != "-b" ]; then
+    frontend
+fi
+
+database
+backend
+
+wait $fend
+wait $bend

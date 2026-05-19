@@ -1,0 +1,27 @@
+#!/bin/sh
+
+backend() {
+    cd backend || exit
+    ~/.cargo/bin/cargo run --release
+    cd ..
+}
+
+frontend() {
+    cd frontend || exit
+    pnpm i
+    pnpm build
+    sudo rm -rf /var/www/fmn
+    sudo cp -r ./build /var/www/fmn
+    cd ..
+}
+
+database() {
+    docker compose up fmn-db --detach
+}
+
+if [ "$1" != "-b" ]; then
+    frontend
+fi
+
+database
+backend

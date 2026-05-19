@@ -36,10 +36,7 @@ pub async fn run() -> Result<(), String> {
         .connect(&db_url)
         .await
         .map_err(|_| "could not connect")?;
-    sqlx::migrate!()
-        .run(&pool)
-        .await
-        .map_err(|_| "could not migrate")?;
+    sqlx::migrate!().run(&pool).await.map_err(|_| "could not migrate")?;
 
     tracing_subscriber::registry()
         .with(
@@ -79,10 +76,12 @@ pub async fn run() -> Result<(), String> {
         .nest("/recipes", get_recipes_router())
         .nest("/cart", get_cart_router())
         .with_state(state)
-        .layer(trace_layer);
+        .layer(trace_layer)
+        .layer(cors_layer);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    tracing::debug!("server running");
+    let addr = listener.local_addr().map_err(|e| e.to_string())?;
+    tracing::info!("server running on {addr}");
     axum::serve(listener, app).await.unwrap();
     Ok(())
 }

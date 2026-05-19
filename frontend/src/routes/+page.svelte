@@ -45,8 +45,16 @@ onMount(() => {
 });
 
 const removeItem = (id: number) => api.cart.removeItem(id).then(resetCart);
-const addItem = (id: number) => api.cart.addItem(id).then(resetCart);
-const addRecipe = (id: number) => api.cart.addRecipe(id).then(resetCart);
+const addItem = (id: number) =>
+    api.cart
+        .addItem(id)
+        .then(resetCart)
+        .then(() => (searchterm = ""));
+const addRecipe = (id: number) =>
+    api.cart
+        .addRecipe(id)
+        .then(resetCart)
+        .then(() => (searchterm = ""));
 
 let clickItem = $derived(
     cartmode === "use"

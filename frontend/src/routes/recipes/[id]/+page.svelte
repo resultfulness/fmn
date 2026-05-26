@@ -1,29 +1,28 @@
 <script lang="ts">
 import api from "$lib/api";
 import { onMount } from "svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import FormPage from "$lib/components/templates/form-page.svelte";
-import type { Item } from "$lib/schemas/items";
-import { pushToast } from "$lib/components/toast.svelte";
-import Textarea from "$lib/components/atoms/textarea.svelte";
-import IconButton from "$lib/components/molecules/icon-button.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
+import { HeaderState } from "$lib/ui/header.svelte";
+import type { Item } from "$lib/domain/items/items.js";
+import FormPage from "$lib/ui/templates/form-page.svelte";
+import Textarea from "$lib/ui/elements/textarea.svelte";
+import Button from "$lib/ui/elements/button.svelte";
 import { Pencil } from "@lucide/svelte";
-import RecipeIngredientsList from "$lib/components/organisms/recipe-ingredients-list.svelte";
-import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
-import Button from "$lib/components/atoms/button.svelte";
+import RecipeIngredientsList from "$lib/domain/recipes/recipe-ingredients-list.svelte";
 
 let { data } = $props();
+
 let items: Item[] | undefined = $state();
 
 onMount(() => {
+    HeaderState.title = "";
+    HeaderState.backUrl = "/recipes";
+
     api.items
         .readAll()
         .then(_items => (items = _items))
         .catch(e => pushToast(e, "error"));
 });
-
-HeaderState.title = "";
-HeaderState.backUrl = "/recipes";
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>

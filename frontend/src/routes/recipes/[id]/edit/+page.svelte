@@ -2,40 +2,36 @@
 import { goto, invalidateAll } from "$app/navigation";
 import { proxify } from "$lib/reactivity.svelte";
 import api from "$lib/api";
-import { askForConfirmation } from "$lib/components/confirm.svelte";
-import Button from "$lib/components/atoms/button.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import FormPage from "$lib/components/templates/form-page.svelte";
-import { pushToast } from "$lib/components/toast.svelte";
-import { RecipeUpdate } from "$lib/schemas/recipes.js";
-import RecipeUpdateForm from "$lib/components/organisms/recipe-update-form.svelte";
+import { askForConfirmation } from "$lib/ui/confirm.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
+import { HeaderState } from "$lib/ui/header.svelte";
 import { onMount } from "svelte";
-import type { Item } from "$lib/schemas/items.js";
-import { printIssues } from "$lib/error.js";
+import { toastIssues } from "$lib/error.js";
+import type { Item } from "$lib/domain/items/items.js";
+import { RecipeUpdate } from "$lib/domain/recipes/recipes.js";
+import FormPage from "$lib/ui/templates/form-page.svelte";
+import Button from "$lib/ui/elements/button.svelte";
+import RecipeUpdateForm from "$lib/domain/recipes/recipe-update-form.svelte";
 
 let { data } = $props();
-let recipe = $derived(proxify(data.recipe));
+
 let items: Item[] | undefined = $state();
 
-onMount(() => {
-    api.items
-        .readAll()
-        .then(_items => (items = _items))
-        .catch(e => pushToast(e, "error"));
-});
+let recipe = $derived(proxify(data.recipe));
 
 function handleUpdateRecipe(e: SubmitEvent) {
     e.preventDefault();
     const recipeUpdate = RecipeUpdate.safeParse(recipe);
 
     if (!recipeUpdate.success) {
-        printIssues(recipeUpdate.error.issues);
+        toastIssues(recipeUpdate.error.issues);
         return;
     }
 
     api.recipes
         .update(recipe.recipe_id, recipeUpdate.data)
         .then(invalidateAll)
+        .then(() => pushToast("recipe updated", "success"))
         .catch(e => pushToast(e, "error"));
 }
 
@@ -48,13 +44,21 @@ async function handleDeleteRecipe() {
             api.recipes
                 .delete(recipe.recipe_id)
                 .then(() => goto("/recipes"))
+                .then(() => pushToast("recipe deleted", "success"))
                 .catch(e => pushToast(e, "error"));
         }
     });
 }
 
-HeaderState.title = "";
-HeaderState.backUrl = `/recipes/${data.recipe.recipe_id}`;
+onMount(() => {
+    HeaderState.title = "";
+    HeaderState.backUrl = `/recipes/${data.recipe.recipe_id}`;
+
+    api.items
+        .readAll()
+        .then(_items => (items = _items))
+        .catch(e => pushToast(e, "error"));
+});
 </script>
 
 <FormPage icon={data.recipe.icon} title={data.recipe.name}>

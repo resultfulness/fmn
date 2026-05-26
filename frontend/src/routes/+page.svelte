@@ -1,108 +1,129 @@
 <script lang="ts">
 import api from "$lib/api";
-import Details from "$lib/components/atoms/details.svelte";
-import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
-import IconButton from "$lib/components/molecules/icon-button.svelte";
-import Search from "$lib/components/molecules/search.svelte";
-import CartGrid from "$lib/components/organisms/cart-grid.svelte";
-import EditItem, {
-    showItemEdit,
-} from "$lib/components/organisms/edit-item.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import ItemGrid from "$lib/components/organisms/item-grid.svelte";
-import RecipeGrid from "$lib/components/organisms/recipe-grid.svelte";
-import ListPage from "$lib/components/templates/list-page.svelte";
-import type { CartItem } from "$lib/schemas/cart";
-import type { Item } from "$lib/schemas/items";
+import type { CartItem, CartItemUpdate } from "$lib/domain/cart/cart";
+import CartGrid from "$lib/domain/cart/cart-grid.svelte";
+import CartItemEditForm from "$lib/domain/cart/cart-item-edit-form.svelte";
+import ItemGrid from "$lib/domain/items/item-grid.svelte";
+import type { Item } from "$lib/domain/items/items";
+import RecipeGrid from "$lib/domain/recipes/recipe-grid.svelte";
+import type { Recipe } from "$lib/domain/recipes/recipes";
+import Details from "$lib/ui/elements/details.svelte";
+import Dialog from "$lib/ui/elements/dialog.svelte";
+import { HeaderState } from "$lib/ui/header.svelte";
+import FooterExtension from "$lib/ui/molecules/footer-extension.svelte";
+import IconButton from "$lib/ui/molecules/icon-button.svelte";
+import Search from "$lib/ui/molecules/search.svelte";
+import ListPage from "$lib/ui/templates/list-page.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
 import { PencilLine, Redo, Undo, X } from "@lucide/svelte";
-import type { Recipe } from "$lib/schemas/recipes";
 import { onMount } from "svelte";
 
-let cart = $state<CartItem[]>();
-let items = $state<Item[]>();
-let recipes = $state<Recipe[]>();
+let cart: CartItem[] | undefined = $state();
+let items: Item[] | undefined = $state();
+let recipes: Recipe[] | undefined = $state();
 let searchterm = $state("");
-let cartmode = $state<"edit" | "use">("use");
+let cartmode: "editing" | "shopping" = $state("shopping");
+let cartItemEditDialog: HTMLDialogElement = $state()!;
+let cartItemEditId: number | undefined = $state();
+let cartItemEditItem: Item | undefined = $state();
+let cartItemEditCartItem: CartItem | undefined = $state();
+
+const itemFound = (item: Item) =>
+    item.name.toLowerCase().includes(searchterm.toLowerCase());
+const itemInCart = (item: Item) =>
+    cart?.some(cartItem => cartItem.item_id === item.item_id);
 
 let itemsFiltered = $derived(
-    items?.filter(
-        item =>
-            item.name.includes(searchterm) &&
-            !cart?.some(cartItem => cartItem.item_id === item.item_id)
-    )
+    items?.filter(item => !itemInCart(item) && itemFound(item))
 );
 
-let recipesFiltered = $derived(
-    recipes?.filter(recipe => recipe.name.includes(searchterm))
+const recipeFound = (recipe: Recipe) =>
+    recipe.name.toLowerCase().includes(searchterm.toLowerCase());
+let recipesFiltered = $derived(recipes?.filter(recipeFound));
+
+const setCart = (new_cart: CartItem[]) => (cart = new_cart);
+// const clearCart = () => api.cart.clear().then(() => (cart = []));
+const undo = () => api.cart.undo().then(setCart);
+const redo = () => api.cart.redo().then(setCart);
+
+const cartRemoveItem = (id: number) => api.cart.removeItem(id).then(setCart);
+const cartAddItem = (id: number) =>
+    api.cart
+        .addItem(id)
+        .then(setCart)
+        .then(() => (searchterm = ""));
+const cartUpdateItem = (id: number, newItem: CartItemUpdate) =>
+    api.cart.updateItem(id, newItem).then(setCart);
+
+const cartAddRecipe = (id: number) =>
+    api.cart
+        .addRecipe(id)
+        .then(setCart)
+        .then(() => (searchterm = ""));
+
+const showCartItemEdit = (id: number) => {
+    cartItemEditId = id;
+    cartItemEditItem = items?.find(v => v.item_id === id);
+    cartItemEditCartItem = cart?.find(v => v.item_id === id);
+    cartItemEditDialog.showModal();
+};
+
+let onCartItemClick = $derived(
+    cartmode === "shopping" ? cartRemoveItem : showCartItemEdit
 );
 
-const resetCart = (_cart: CartItem[]) => (cart = _cart);
+const handleCartUpdateItem = (e: SubmitEvent) => {
+    e.preventDefault();
+    if (!cartItemEditId || ! cartItemEditCartItem) return;
+    cartUpdateItem(cartItemEditId, cartItemEditCartItem)
+        .then(() => pushToast("item saved", "success"))
+        .then(() => cartItemEditDialog.close());
+}
 
 onMount(() => {
-    api.cart.readAll().then(resetCart);
+    HeaderState.title = "shopping";
+    delete HeaderState.backUrl;
+
+    api.cart.readAll().then(setCart);
     api.items.readAll().then(_items => (items = _items));
     api.recipes.readAll().then(_recipes => (recipes = _recipes));
 });
-
-const removeItem = (id: number) => api.cart.removeItem(id).then(resetCart);
-const addItem = (id: number) =>
-    api.cart
-        .addItem(id)
-        .then(resetCart)
-        .then(() => (searchterm = ""));
-const addRecipe = (id: number) =>
-    api.cart
-        .addRecipe(id)
-        .then(resetCart)
-        .then(() => (searchterm = ""));
-
-let clickItem = $derived(
-    cartmode === "use"
-        ? removeItem
-        : (itemId: number) => {
-              let cartItem = cart?.find(v => v.item_id === itemId)!;
-              showItemEdit(items?.find(v => v.item_id === itemId)!, cartItem)
-                  .then((quantity: number | null) =>
-                      api.cart.updateItem(itemId, {
-                          quantity: quantity ?? cartItem.quantity,
-                          description: cartItem.description,
-                      })
-                  )
-                  .then(resetCart);
-          }
-);
-
-const undo = () => api.cart.undo().then(resetCart);
-const redo = () => api.cart.redo().then(resetCart);
-const clear = () => api.cart.clear().then(() => (cart = []));
-
-HeaderState.title = "shopping";
-delete HeaderState.backUrl;
 </script>
 
 <ListPage>
-    <EditItem />
+    <Dialog title="Editing cart item" bind:dialog={cartItemEditDialog}>
+        {#if cartItemEditItem && cartItemEditCartItem}
+            <CartItemEditForm
+                onsubmit={handleCartUpdateItem}
+                item={cartItemEditItem}
+                bind:cartItem={cartItemEditCartItem}
+            />
+        {/if}
+    </Dialog>
     {#if items && cart && cart.length > 0}
-        <CartGrid {cart} {items} {clickItem} />
+        <CartGrid {cart} {items} {onCartItemClick} />
     {:else}
         <div class="text-subtitle text-center" style:margin-block="3rem">
             cart empty!
         </div>
     {/if}
     <div class="grid-separator">
-        <h2 class="text-heading">{cartmode === "use" ? "Add" : "Edit"}</h2>
+        <h2 class="text-heading">{cartmode === "shopping" ? "Add" : "Edit"}</h2>
         <IconButton
             variant="secondary"
-            icon={cartmode === "use" ? PencilLine : X}
+            icon={cartmode === "shopping" ? PencilLine : X}
             onclick={() => {
-                cartmode = cartmode === "use" ? "edit" : "use";
+                cartmode = cartmode === "shopping" ? "editing" : "shopping";
             }}
         />
     </div>
-    {#if cartmode === "use"}
+    {#if cartmode === "shopping"}
         <Details summary="Recipes" open>
             {#if recipesFiltered && recipesFiltered.length > 0}
-                <RecipeGrid recipes={recipesFiltered} {addRecipe} />
+                <RecipeGrid
+                    recipes={recipesFiltered}
+                    onRecipeClick={cartAddRecipe}
+                />
             {:else if searchterm}
                 <div class="text-subtitle text-center">
                     no recipes matching {searchterm}
@@ -111,7 +132,7 @@ delete HeaderState.backUrl;
         </Details>
         <Details summary="Items" open>
             {#if itemsFiltered && itemsFiltered.length > 0}
-                <ItemGrid items={itemsFiltered} {addItem} />
+                <ItemGrid items={itemsFiltered} onItemClick={cartAddItem} />
             {:else if searchterm}
                 <div class="text-subtitle text-center">
                     no items matching {searchterm}

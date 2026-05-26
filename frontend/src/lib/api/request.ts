@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL } from "$env/static/public";
-import { pushToast } from "$lib/components/toast.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
 
 const API_URL = PUBLIC_API_URL;
 

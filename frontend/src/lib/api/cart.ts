@@ -1,4 +1,4 @@
-import type { CartItem, CartItemUpdate } from "$lib/schemas/cart";
+import type { CartItem, CartItemUpdate } from "$lib/domain/cart/cart";
 import request from "./request";
 
 export default {

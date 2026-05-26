@@ -2,14 +2,15 @@
 import { goto, invalidateAll } from "$app/navigation";
 import { proxify } from "$lib/reactivity.svelte";
 import api from "$lib/api";
-import { ItemUpdate } from "$lib/schemas/items";
-import { askForConfirmation } from "$lib/components/confirm.svelte";
-import Button from "$lib/components/atoms/button.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import ItemForm from "$lib/components/organisms/item-form.svelte";
-import FormPage from "$lib/components/templates/form-page.svelte";
-import { pushToast } from "$lib/components/toast.svelte";
-import { printIssues } from "$lib/error.js";
+import { askForConfirmation } from "$lib/ui/confirm.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
+import { toastIssues } from "$lib/error.js";
+import { onMount } from "svelte";
+import { HeaderState } from "$lib/ui/header.svelte";
+import { ItemUpdate } from "$lib/domain/items/items.js";
+import FormPage from "$lib/ui/templates/form-page.svelte";
+import ItemForm from "$lib/domain/items/item-form.svelte";
+import Button from "$lib/ui/elements/button.svelte";
 
 let { data } = $props();
 let item = $derived(proxify(data.item));
@@ -19,13 +20,14 @@ function handleUpdateItem(e: SubmitEvent) {
     const itemUpdate = ItemUpdate.safeParse(item);
 
     if (!itemUpdate.success) {
-        printIssues(itemUpdate.error.issues);
+        toastIssues(itemUpdate.error.issues);
         return;
     }
 
     api.items
         .update(item.item_id, itemUpdate.data)
         .then(invalidateAll)
+        .then(() => pushToast("item updated", "success"))
         .catch(e => pushToast(e, "error"));
 }
 
@@ -38,13 +40,16 @@ async function handleDeleteItem() {
             api.items
                 .delete(item.item_id)
                 .then(() => goto("/items"))
+                .then(() => pushToast("item deleted", "success"))
                 .catch(e => pushToast(e, "error"));
         }
     });
 }
 
-HeaderState.title = "";
-HeaderState.backUrl = "/items";
+onMount(() => {
+    HeaderState.title = "";
+    HeaderState.backUrl = "/items";
+});
 </script>
 
 <FormPage icon={data.item.icon} title={data.item.name}>

@@ -1,15 +1,21 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import Button from "$lib/components/atoms/button.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import RecipeCreateForm from "$lib/components/organisms/recipe-create-form.svelte";
-import FormPage from "$lib/components/templates/form-page.svelte";
-import { pushToast } from "$lib/components/toast.svelte";
-import { printIssues } from "$lib/error";
-import { RecipeCreate } from "$lib/schemas/recipes";
+import { pushToast } from "$lib/ui/toast.svelte";
+import { toastIssues } from "$lib/error";
+import { onMount } from "svelte";
+import { RecipeCreate } from "$lib/domain/recipes/recipes";
+import { HeaderState } from "$lib/ui/header.svelte";
+import FormPage from "$lib/ui/templates/form-page.svelte";
+import RecipeCreateForm from "$lib/domain/recipes/recipe-create-form.svelte";
+import Button from "$lib/ui/elements/button.svelte";
 
 let maybeRecipe: Partial<RecipeCreate> = $state({});
+
+onMount(() => {
+    HeaderState.title = "";
+    HeaderState.backUrl = "/recipes";
+});
 
 async function createRecipe() {
     const recipeCreate = RecipeCreate.safeParse(maybeRecipe);
@@ -20,10 +26,7 @@ async function createRecipe() {
 
     return api.recipes
         .create(recipeCreate.data)
-        .then(recipe => {
-            maybeRecipe = {};
-            return recipe.recipe_id;
-        })
+        .then(recipe => recipe.recipe_id)
         .catch(e => pushToast(e, "error"));
 }
 
@@ -31,11 +34,9 @@ function handleCreateRecipe(e: SubmitEvent) {
     e.preventDefault();
     createRecipe()
         .then(id => goto(`/recipes/${id}/edit`))
-        .catch(printIssues);
+        .then(() => pushToast("recipe added", "success"))
+        .catch(toastIssues);
 }
-
-HeaderState.title = "";
-HeaderState.backUrl = "/recipes";
 </script>
 
 <FormPage

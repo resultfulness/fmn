@@ -1,37 +1,38 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import api from "$lib/api";
-import { type Item } from "$lib/schemas/items";
+import { pushToast } from "$lib/ui/toast.svelte";
+import type { Item } from "$lib/domain/items/items";
+import { HeaderState } from "$lib/ui/header.svelte";
+import ListPage from "$lib/ui/templates/list-page.svelte";
+import FooterExtension from "$lib/ui/molecules/footer-extension.svelte";
+import Search from "$lib/ui/molecules/search.svelte";
+import IconButton from "$lib/ui/molecules/icon-button.svelte";
+import ItemAnchorList from "$lib/domain/items/item-anchor-list.svelte";
 import { Plus } from "@lucide/svelte";
-import Search from "$lib/components/molecules/search.svelte";
-import IconButton from "$lib/components/molecules/icon-button.svelte";
-import FooterExtension from "$lib/components/molecules/footer-extension.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import ItemLinkList from "$lib/components/organisms/item-link-list.svelte";
-import { pushToast } from "$lib/components/toast.svelte";
-import ListPage from "$lib/components/templates/list-page.svelte";
 
-let items = $state<Item[]>();
+let items: Item[] | undefined = $state();
 let searchterm = $state("");
 
-const itemsSearched = $derived(
-    items?.filter(({ name }) => name.includes(searchterm))
-);
+const itemFound = (item: Item) =>
+    item.name.toLowerCase().includes(searchterm.toLowerCase());
+
+let itemsFiltered = $derived(items?.filter(itemFound));
 
 onMount(() => {
+    HeaderState.title = "items";
+    delete HeaderState.backUrl;
+
     api.items
         .readAll()
         .then(_items => (items = _items))
         .catch(e => pushToast(e, "error"));
 });
-
-HeaderState.title = "items";
-delete HeaderState.backUrl;
 </script>
 
 <ListPage>
-    {#if itemsSearched && itemsSearched.length > 0}
-        <ItemLinkList items={itemsSearched} />
+    {#if itemsFiltered && itemsFiltered.length > 0}
+        <ItemAnchorList items={itemsFiltered} />
     {:else}
         <div class="text-subtitle text-center">
             {#if searchterm}

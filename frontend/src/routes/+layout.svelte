@@ -2,11 +2,10 @@
 import "../app.css";
 import "$lib/styles/typography.css";
 import { onNavigate } from "$app/navigation";
-import Confirm from "$lib/components/confirm.svelte";
-import Toast, { pushToast } from "$lib/components/toast.svelte";
-import Header from "$lib/components/organisms/header.svelte";
-import Footer from "$lib/components/organisms/footer.svelte";
-import { onMount } from "svelte";
+import Confirm from "$lib/ui/confirm.svelte";
+import Toast from "$lib/ui/toast.svelte";
+import Header from "$lib/ui/header.svelte";
+import Footer from "$lib/ui/footer.svelte";
 
 let { children } = $props();
 onNavigate(navigation => {
@@ -24,7 +23,7 @@ onNavigate(navigation => {
 <Confirm />
 <Toast />
 <div class="app">
-    <Header />
+    <Header initialTitle="forget-me-not" />
     <main>
         {@render children()}
     </main>

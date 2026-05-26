@@ -1,13 +1,14 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import { ItemCreate } from "$lib/schemas/items";
-import Button from "$lib/components/atoms/button.svelte";
-import { HeaderState } from "$lib/components/organisms/header.svelte";
-import ItemForm from "$lib/components/organisms/item-form.svelte";
-import FormPage from "$lib/components/templates/form-page.svelte";
-import { printIssues } from "$lib/error";
-import { pushToast } from "$lib/components/toast.svelte";
+import ItemForm from "$lib/domain/items/item-form.svelte";
+import { ItemCreate } from "$lib/domain/items/items";
+import { toastIssues } from "$lib/error";
+import Button from "$lib/ui/elements/button.svelte";
+import { HeaderState } from "$lib/ui/header.svelte";
+import FormPage from "$lib/ui/templates/form-page.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
+import { onMount } from "svelte";
 
 let maybeItem: Partial<ItemCreate> = $state({});
 
@@ -20,7 +21,6 @@ async function createItem() {
 
     api.items
         .create(itemCreate.data)
-        .then(() => (maybeItem = {}))
         .catch(e => pushToast(e, "error"));
 }
 
@@ -28,15 +28,18 @@ function handleCreateItem(e: SubmitEvent) {
     e.preventDefault();
     createItem()
         .then(() => goto("/items"))
-        .catch(printIssues);
+        .then(() => pushToast("item added", "success"))
+        .catch(toastIssues);
 }
 
 function handleCreateItemAndStay() {
-    createItem().catch(printIssues);
+    createItem().catch(toastIssues);
 }
 
-HeaderState.title = "";
-HeaderState.backUrl = "/items";
+onMount(() => {
+    HeaderState.title = "";
+    HeaderState.backUrl = "/items";
+});
 </script>
 
 <FormPage

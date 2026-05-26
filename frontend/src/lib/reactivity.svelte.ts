@@ -1,4 +1,4 @@
 export function proxify<T>(val: T) {
-    let _ = $state(val);
-    return _;
+    let p = $state(val);
+    return p;
 }

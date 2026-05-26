@@ -1,4 +1,4 @@
-import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/schemas/recipes";
+import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/domain/recipes/recipes";
 import request from "./request";
 
 export default {

@@ -1,4 +1,4 @@
-import { pushToast } from "$lib/components/toast.svelte";
+import { pushToast } from "$lib/ui/toast.svelte";
 import type { $ZodIssue } from "zod/v4/core";
 
 function issueToMessage(issue: $ZodIssue) {
@@ -9,7 +9,7 @@ function issueToMessage(issue: $ZodIssue) {
     return `${path.toString()}: ${issue.message}`;
 }
 
-export function printIssues(issues: $ZodIssue[]) {
+export function toastIssues(issues: $ZodIssue[]) {
     for (const issue of issues) {
         pushToast(issueToMessage(issue), "error");
     }

@@ -11,7 +11,7 @@ bend=
 
 backend() {
     cd backend || exit
-    watchexec -e rs -r cargo run &
+    watchexec -e rs -r cargo run --features enable_cors &
     bend=$!
     cd ..
 }

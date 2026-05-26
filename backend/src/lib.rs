@@ -2,12 +2,15 @@ use std::{env, sync::Arc, time::Duration};
 
 use axum::{
     Router,
-    http::{Request, Response},
+    http::{
+        HeaderValue, Method, Request, Response,
+        header::{AUTHORIZATION, CONTENT_TYPE},
+    },
 };
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use tokio::sync::Mutex;
-use tower_http::trace::TraceLayer;
+use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tracing::Span;
 use tracing_subscriber::{
     layer::SubscriberExt as _, util::SubscriberInitExt as _,
@@ -71,13 +74,29 @@ pub async fn run() -> Result<(), String> {
     let state = AppState {
         queries: Arc::new(Mutex::new(queries)),
     };
-    let app = Router::new()
+    let mut app = Router::new()
         .nest("/items", get_items_router())
         .nest("/recipes", get_recipes_router())
         .nest("/cart", get_cart_router())
         .with_state(state)
-        .layer(trace_layer)
-        .layer(cors_layer);
+        .layer(trace_layer);
+
+    if cfg!(feature = "enable_cors") {
+        app = app.layer(
+            CorsLayer::new()
+                .allow_origin(
+                    "http://localhost:5173".parse::<HeaderValue>().unwrap(),
+                )
+                .allow_methods([
+                    Method::GET,
+                    Method::POST,
+                    Method::PATCH,
+                    Method::PUT,
+                    Method::DELETE,
+                ])
+                .allow_headers([AUTHORIZATION, CONTENT_TYPE]),
+        );
+    }
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     let addr = listener.local_addr().map_err(|e| e.to_string())?;

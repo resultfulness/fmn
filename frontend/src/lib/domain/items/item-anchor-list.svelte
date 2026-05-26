@@ -1,12 +1,12 @@
 <script lang="ts">
 import AnchorItem from "$lib/ui/molecules/anchor-item.svelte";
 import ItemWide from "./item-wide.svelte";
-import type { Item } from "./items";
+import type { Item } from "./item";
 
 const { items }: { items: Item[] } = $props();
 </script>
 
-<ul>
+<ul class="item-list">
     {#each items as item}
         <AnchorItem
             href={`/items/${item.item_id}/edit`}
@@ -16,13 +16,3 @@ const { items }: { items: Item[] } = $props();
         </AnchorItem>
     {/each}
 </ul>
-
-<style>
-ul {
-    list-style-type: none;
-    display: grid;
-    gap: 0.5rem;
-    padding: 0;
-    margin: 0;
-}
-</style>

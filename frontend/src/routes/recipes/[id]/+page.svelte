@@ -3,7 +3,7 @@ import api from "$lib/api";
 import { onMount } from "svelte";
 import { pushToast } from "$lib/ui/toast.svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
-import type { Item } from "$lib/domain/items/items.js";
+import type { Item } from "$lib/domain/items/item";
 import FormPage from "$lib/ui/templates/form-page.svelte";
 import Textarea from "$lib/ui/elements/textarea.svelte";
 import Button from "$lib/ui/elements/button.svelte";
@@ -37,9 +37,15 @@ onMount(() => {
                 quantity,
             }))}
         />
+    {:else}
+        <div class="text-subtitle text-center">no ingredients yet!</div>
     {/if}
     <h3 class="text-heading">Description</h3>
-    <Textarea readonly value={data.recipe.description} />
+    {#if data.recipe.description.length > 0}
+        <Textarea readonly value={data.recipe.description} />
+    {:else}
+        <div class="text-subtitle text-center">no description yet!</div>
+    {/if}
     <div class="edit">
         <Button href={`/recipes/${data.recipe.recipe_id}/edit`}>
             <Pencil /> edit recipe
@@ -54,6 +60,7 @@ h3 {
 
 .edit {
     display: grid;
+    margin-top: 2rem;
     margin-bottom: 1rem;
 }
 </style>

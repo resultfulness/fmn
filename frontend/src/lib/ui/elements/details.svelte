@@ -73,17 +73,21 @@ function createAnimation(opening: boolean) {
 
 <style>
 details {
-    margin-block: 0.5rem;
+    background-image: linear-gradient(var(--clr-overlay));
+    background-size: auto calc(100% - var(--rounding));
+    background-position: bottom;
+    background-repeat: no-repeat;
+    border-radius: var(--rounding);
 }
 
 summary {
     padding: 0.75rem;
-    background-color: var(--clr-overlay);
+    background-color: var(--clr-surface);
     border-radius: var(--rounding);
-    box-shadow: var(--shadow);
+    position: relative;
 }
 
 .content {
-    padding-block: 0.5rem;
+    padding: 0.5rem;
 }
 </style>

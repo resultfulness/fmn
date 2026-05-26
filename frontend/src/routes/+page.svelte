@@ -1,12 +1,16 @@
 <script lang="ts">
 import api from "$lib/api";
-import type { CartItem, CartItemUpdate } from "$lib/domain/cart/cart";
+import {
+    cartItemDisplays,
+    type CartItem,
+    type CartItemUpdate,
+} from "$lib/domain/cart/cart";
 import CartGrid from "$lib/domain/cart/cart-grid.svelte";
 import CartItemEditForm from "$lib/domain/cart/cart-item-edit-form.svelte";
 import ItemGrid from "$lib/domain/items/item-grid.svelte";
-import type { Item } from "$lib/domain/items/items";
+import type { Item } from "$lib/domain/items/item";
 import RecipeGrid from "$lib/domain/recipes/recipe-grid.svelte";
-import type { Recipe } from "$lib/domain/recipes/recipes";
+import type { Recipe } from "$lib/domain/recipes/recipe";
 import Details from "$lib/ui/elements/details.svelte";
 import Dialog from "$lib/ui/elements/dialog.svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
@@ -74,11 +78,11 @@ let onCartItemClick = $derived(
 
 const handleCartUpdateItem = (e: SubmitEvent) => {
     e.preventDefault();
-    if (!cartItemEditId || ! cartItemEditCartItem) return;
+    if (!cartItemEditId || !cartItemEditCartItem) return;
     cartUpdateItem(cartItemEditId, cartItemEditCartItem)
         .then(() => pushToast("item saved", "success"))
         .then(() => cartItemEditDialog.close());
-}
+};
 
 onMount(() => {
     HeaderState.title = "shopping";
@@ -101,7 +105,7 @@ onMount(() => {
         {/if}
     </Dialog>
     {#if items && cart && cart.length > 0}
-        <CartGrid {cart} {items} {onCartItemClick} />
+        <CartGrid cartItems={cartItemDisplays(items, cart)} {onCartItemClick} />
     {:else}
         <div class="text-subtitle text-center" style:margin-block="3rem">
             cart empty!
@@ -117,29 +121,31 @@ onMount(() => {
             }}
         />
     </div>
-    {#if cartmode === "shopping"}
-        <Details summary="Recipes" open>
-            {#if recipesFiltered && recipesFiltered.length > 0}
-                <RecipeGrid
-                    recipes={recipesFiltered}
-                    onRecipeClick={cartAddRecipe}
-                />
-            {:else if searchterm}
-                <div class="text-subtitle text-center">
-                    no recipes matching {searchterm}
-                </div>
-            {/if}
-        </Details>
-        <Details summary="Items" open>
-            {#if itemsFiltered && itemsFiltered.length > 0}
-                <ItemGrid items={itemsFiltered} onItemClick={cartAddItem} />
-            {:else if searchterm}
-                <div class="text-subtitle text-center">
-                    no items matching {searchterm}
-                </div>
-            {/if}
-        </Details>
-    {/if}
+    <div class="add">
+        {#if cartmode === "shopping"}
+            <Details summary="Recipes" open>
+                {#if recipesFiltered && recipesFiltered.length > 0}
+                    <RecipeGrid
+                        recipes={recipesFiltered}
+                        onRecipeClick={cartAddRecipe}
+                    />
+                {:else if searchterm}
+                    <div class="text-subtitle text-center">
+                        no recipes matching {searchterm}
+                    </div>
+                {/if}
+            </Details>
+            <Details summary="Items" open>
+                {#if itemsFiltered && itemsFiltered.length > 0}
+                    <ItemGrid items={itemsFiltered} onItemClick={cartAddItem} />
+                {:else if searchterm}
+                    <div class="text-subtitle text-center">
+                        no items matching {searchterm}
+                    </div>
+                {/if}
+            </Details>
+        {/if}
+    </div>
 </ListPage>
 <FooterExtension>
     <IconButton variant="secondary" icon={Undo} onclick={undo} />
@@ -152,5 +158,10 @@ onMount(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.add {
+    display: grid;
+    gap: 1rem;
 }
 </style>

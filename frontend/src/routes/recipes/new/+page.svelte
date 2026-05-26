@@ -4,7 +4,7 @@ import api from "$lib/api";
 import { pushToast } from "$lib/ui/toast.svelte";
 import { toastIssues } from "$lib/error";
 import { onMount } from "svelte";
-import { RecipeCreate } from "$lib/domain/recipes/recipes";
+import { RecipeCreate } from "$lib/domain/recipes/recipe";
 import { HeaderState } from "$lib/ui/header.svelte";
 import FormPage from "$lib/ui/templates/form-page.svelte";
 import RecipeCreateForm from "$lib/domain/recipes/recipe-create-form.svelte";

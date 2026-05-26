@@ -1,4 +1,4 @@
-import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/domain/recipes/recipes";
+import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/domain/recipes/recipe";
 import request from "./request";
 
 export default {

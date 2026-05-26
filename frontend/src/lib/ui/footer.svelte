@@ -1,5 +1,5 @@
 <script lang="ts">
-import AppNavigation from "$lib/components/organisms/app-navigation.svelte";
+import AppNavigation from "$lib/ui/app-navigation.svelte";
 </script>
 
 <footer>

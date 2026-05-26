@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Item } from "./items";
+import type { Item } from "./item";
 import ButtonItem from "$lib/ui/molecules/button-item.svelte";
 import ItemWide from "./item-wide.svelte";
 
@@ -11,7 +11,7 @@ interface ItemListProps {
 const { items, onclick }: ItemListProps = $props();
 </script>
 
-<ul>
+<ul class="item-list">
     {#each items as item}
         <ButtonItem onclick={() => onclick(item.item_id)}>
             <ItemWide {item} />

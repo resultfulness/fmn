@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Item } from "./items";
+import type { Item } from "./item";
 import Image from "$lib/ui/elements/image.svelte";
 
 const { item }: { item: Item } = $props();

@@ -7,8 +7,8 @@ import { pushToast } from "$lib/ui/toast.svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
 import { onMount } from "svelte";
 import { toastIssues } from "$lib/error.js";
-import type { Item } from "$lib/domain/items/items.js";
-import { RecipeUpdate } from "$lib/domain/recipes/recipes.js";
+import type { Item } from "$lib/domain/items/item";
+import { RecipeUpdate } from "$lib/domain/recipes/recipe";
 import FormPage from "$lib/ui/templates/form-page.svelte";
 import Button from "$lib/ui/elements/button.svelte";
 import RecipeUpdateForm from "$lib/domain/recipes/recipe-update-form.svelte";
@@ -61,7 +61,7 @@ onMount(() => {
 });
 </script>
 
-<FormPage icon={data.recipe.icon} title={data.recipe.name}>
+<FormPage icon={recipe.icon} title={recipe.name}>
     {#if items}
         <RecipeUpdateForm onsubmit={handleUpdateRecipe} bind:recipe {items}>
             {#snippet actions()}

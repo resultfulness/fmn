@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
 import type { EventHandler } from "svelte/elements";
-import type { RecipeUpdate } from "./recipes";
-import type { Item } from "../items/items";
+import type { RecipeUpdate } from "./recipe";
+import type { Item } from "../items/item";
 import Form from "$lib/ui/elements/form.svelte";
 import InputField from "$lib/ui/molecules/input-field.svelte";
 import TextareaField from "$lib/ui/molecules/textarea-field.svelte";

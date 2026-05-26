@@ -1,0 +1,13 @@
+.tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(104px, 100%), 1fr));
+    gap: 0.5rem;
+}
+
+.item-list {
+    list-style-type: none;
+    display: grid;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+}

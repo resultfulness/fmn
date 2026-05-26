@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Recipe } from "./recipes";
+import type { Recipe } from "./recipe";
 import Image from "$lib/ui/elements/image.svelte";
 
 const { recipe }: { recipe: Recipe } = $props();

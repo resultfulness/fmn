@@ -1,6 +1,6 @@
 <script lang="ts">
-import IconTileGrid from "$lib/ui/molecules/icon-tile-grid.svelte";
-import type { Item } from "./items";
+import ItemTile from "./item-tile.svelte";
+import type { Item } from "./item";
 
 interface ItemGridProps {
     items: Item[];
@@ -10,11 +10,8 @@ interface ItemGridProps {
 const { items, onItemClick }: ItemGridProps = $props();
 </script>
 
-<IconTileGrid
-    centerLabels
-    tiles={items.map(({ item_id, icon, name }) => ({
-        iconUrl: icon,
-        label: name,
-        onclick: () => onItemClick(item_id),
-    }))}
-/>
+<div class="tile-grid">
+    {#each items as item}
+        <ItemTile {item} onclick={onItemClick} />
+    {/each}
+</div>

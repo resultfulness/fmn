@@ -1,4 +1,4 @@
-import type { Item, ItemUpdate, ItemCreate } from "$lib/domain/items/items";
+import type { Item, ItemUpdate, ItemCreate } from "$lib/domain/items/item";
 import request from "./request";
 
 export default {

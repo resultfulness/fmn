@@ -2,7 +2,7 @@
 import type { MouseEventHandler } from "svelte/elements";
 import { GripVertical, Trash } from "@lucide/svelte";
 import Image from "$lib/ui/elements/image.svelte";
-import type { Item } from "../items/items";
+import type { Item } from "../items/item";
 import IconButton from "$lib/ui/molecules/icon-button.svelte";
 import Input from "$lib/ui/elements/input.svelte";
 
@@ -80,7 +80,7 @@ function toggleExpanded() {
     grid-template-rows: 1fr 0fr;
     overflow: hidden;
 
-    --_show-duration: 400ms;
+    --_show-duration: 250ms;
 
     transition: grid-template-rows var(--_show-duration);
 

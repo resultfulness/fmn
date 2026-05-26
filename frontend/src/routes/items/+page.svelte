@@ -2,7 +2,7 @@
 import { onMount } from "svelte";
 import api from "$lib/api";
 import { pushToast } from "$lib/ui/toast.svelte";
-import type { Item } from "$lib/domain/items/items";
+import type { Item } from "$lib/domain/items/item";
 import { HeaderState } from "$lib/ui/header.svelte";
 import ListPage from "$lib/ui/templates/list-page.svelte";
 import FooterExtension from "$lib/ui/molecules/footer-extension.svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Item } from "../items/items";
+import type { Item } from "../items/item";
 import Ingredient from "./ingredient.svelte";
 
 interface RecipeIngredientListProps {

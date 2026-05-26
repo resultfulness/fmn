@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
 import type { EventHandler } from "svelte/elements";
-import type { ItemCreate, ItemUpdate } from "./items";
+import type { ItemCreate, ItemUpdate } from "./item";
 import Form from "$lib/ui/elements/form.svelte";
 import InputField from "$lib/ui/molecules/input-field.svelte";
 import SelectField from "$lib/ui/molecules/select-field.svelte";

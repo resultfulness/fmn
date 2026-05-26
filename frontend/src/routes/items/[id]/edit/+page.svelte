@@ -7,12 +7,13 @@ import { pushToast } from "$lib/ui/toast.svelte";
 import { toastIssues } from "$lib/error.js";
 import { onMount } from "svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
-import { ItemUpdate } from "$lib/domain/items/items.js";
+import { ItemUpdate } from "$lib/domain/items/item";
 import FormPage from "$lib/ui/templates/form-page.svelte";
 import ItemForm from "$lib/domain/items/item-form.svelte";
 import Button from "$lib/ui/elements/button.svelte";
 
 let { data } = $props();
+
 let item = $derived(proxify(data.item));
 
 function handleUpdateItem(e: SubmitEvent) {
@@ -52,7 +53,7 @@ onMount(() => {
 });
 </script>
 
-<FormPage icon={data.item.icon} title={data.item.name}>
+<FormPage icon={item.icon} title={item.name}>
     <ItemForm onsubmit={handleUpdateItem} bind:item>
         {#snippet actions()}
             <Button variant="danger" type="button" onclick={handleDeleteItem}>

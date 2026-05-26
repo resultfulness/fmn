@@ -2,7 +2,7 @@
 import { goto } from "$app/navigation";
 import api from "$lib/api";
 import ItemForm from "$lib/domain/items/item-form.svelte";
-import { ItemCreate } from "$lib/domain/items/items";
+import { ItemCreate } from "$lib/domain/items/item";
 import { toastIssues } from "$lib/error";
 import Button from "$lib/ui/elements/button.svelte";
 import { HeaderState } from "$lib/ui/header.svelte";

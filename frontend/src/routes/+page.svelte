@@ -68,7 +68,7 @@ const cartAddRecipe = (id: number) =>
 const showCartItemEdit = (id: number) => {
     cartItemEditId = id;
     cartItemEditItem = items?.find(v => v.item_id === id);
-    cartItemEditCartItem = cart?.find(v => v.item_id === id);
+    cartItemEditCartItem = $state.snapshot(cart?.find(v => v.item_id === id));
     cartItemEditDialog.showModal();
 };
 

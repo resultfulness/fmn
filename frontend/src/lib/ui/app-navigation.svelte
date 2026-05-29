@@ -2,6 +2,7 @@
 import { page } from "$app/state";
 import { ChefHat, Salad, ShoppingBasket } from "@lucide/svelte";
 import AppNavigationLink from "$lib/ui/molecules/app-navigation-link.svelte";
+import { getLastRecipe } from "$lib/last-recipe.svelte";
 
 const linkProps = [
     {
@@ -22,6 +23,14 @@ const linkProps = [
 ];
 
 const path = $derived(page.url.pathname);
+
+$effect(() => {
+    linkProps[0].href = "/recipes";
+    if (getLastRecipe() !== -1) {
+        linkProps[0].href += "/" + getLastRecipe();
+    }
+})
+
 </script>
 
 <nav>

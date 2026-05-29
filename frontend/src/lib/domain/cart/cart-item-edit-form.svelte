@@ -5,7 +5,6 @@ import { cartItemDisplay, type CartItem } from "./cart";
 import Form from "$lib/ui/elements/form.svelte";
 import InputField from "$lib/ui/molecules/input-field.svelte";
 import Button from "$lib/ui/elements/button.svelte";
-import IconTile from "$lib/ui/molecules/icon-tile.svelte";
 import CartItemTile from "./cart-item-tile.svelte";
 
 interface CartItemEditFormProps {

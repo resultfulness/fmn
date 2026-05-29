@@ -42,7 +42,7 @@ onMount(() => {
     {/if}
     <h3 class="text-heading">Description</h3>
     {#if data.recipe.description.length > 0}
-        <Textarea readonly value={data.recipe.description} />
+        <Textarea readonly growing value={data.recipe.description} />
     {:else}
         <div class="text-subtitle text-center">no description yet!</div>
     {/if}

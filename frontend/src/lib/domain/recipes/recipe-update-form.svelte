@@ -49,6 +49,7 @@ const {
         label="Description"
         bind:value={recipe.description}
         placeholder="enter description..."
+        growing
     />
     <RecipeIngredientsEditor bind:recipeItems={recipe.items} {items} />
 </Form>

@@ -19,7 +19,7 @@ async function apiFetch(endpoint: string, options: RequestInit = {}) {
         "Content-Type": "application/json",
     };
 
-    return fetch(url, {
+    return request.fetch(url, {
         ...options,
         headers: {
             ...headers,
@@ -40,6 +40,7 @@ async function apiFetch(endpoint: string, options: RequestInit = {}) {
 }
 
 const request = {
+    fetch: window.fetch,
     async get(endpoint: string) {
         return apiFetch(endpoint);
     },

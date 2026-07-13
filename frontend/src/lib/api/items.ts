@@ -2,19 +2,19 @@ import type { Item, ItemUpdate, ItemCreate } from "$lib/domain/items/item";
 import request from "./request";
 
 export default {
-    create(item: ItemCreate): Promise<Item> {
-        return request.post("/items", item);
+    async create(item: ItemCreate): Promise<Item> {
+        return await request.post("/items", item);
     },
-    read(id: number): Promise<Item> {
-        return request.get(`/items/${id}`);
+    async read(id: number): Promise<Item> {
+        return await request.get(`/items/${id}`);
     },
-    readAll(): Promise<Item[]> {
-        return request.get("/items");
+    async readAll(): Promise<Item[]> {
+        return await request.get("/items");
     },
-    update(id: number, item: ItemUpdate): Promise<Item> {
-        return request.patch(`/items/${id}`, item);
+    async update(id: number, item: ItemUpdate): Promise<Item> {
+        return await request.patch(`/items/${id}`, item);
     },
-    delete(id: number): Promise<Item> {
-        return request.delete(`/items/${id}`);
+    async delete(id: number): Promise<Item> {
+        return await request.delete(`/items/${id}`);
     },
 };

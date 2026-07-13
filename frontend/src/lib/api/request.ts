@@ -1,69 +1,58 @@
 import { PUBLIC_API_URL } from "$env/static/public";
-import { pushToast } from "$lib/ui/toast.svelte";
+import { pushToast } from "$lib/ui/toast";
 
 const API_URL = PUBLIC_API_URL;
-
-export class APIError extends Error {
-    public status: number;
-
-    constructor(message: string, status: number) {
-        super(message);
-        this.status = status;
-    }
-}
 
 async function apiFetch(endpoint: string, options: RequestInit = {}) {
     const url = `${API_URL}${endpoint}`;
 
-    const headers: HeadersInit = {
-        "Content-Type": "application/json",
-    };
+    const headers: HeadersInit = { "Content-Type": "application/json" };
 
-    return request.fetch(url, {
-        ...options,
-        headers: {
-            ...headers,
-            ...options.headers,
-        },
-    })
-        .catch(() => {
-            throw new Error("couldn't connect to api");
+    const res = await request
+        .fetch(url, {
+            ...options,
+            headers: {
+                ...headers,
+                ...options.headers,
+            },
         })
-        .then(async res => {
-            const data = await res.json();
-            if (!res.ok) {
-                throw new APIError(data.error, res.status);
-            }
-            return data;
-        })
-        .catch(e => pushToast(e, "error"));
+        .catch(e => {
+            pushToast("couldn't connect to api", "error");
+            throw e;
+        });
+
+    const data = await res.json();
+    if (!res.ok) {
+        pushToast(data.error, "error");
+    }
+    return data;
 }
 
 const request = {
     fetch: window.fetch,
     async get(endpoint: string) {
-        return apiFetch(endpoint);
+        return await apiFetch(endpoint);
     },
     async post(endpoint: string, data: any) {
-        return apiFetch(endpoint, {
+        return await apiFetch(endpoint, {
             method: "POST",
             body: JSON.stringify(data),
         });
     },
     async put(endpoint: string, data: any) {
-        return apiFetch(endpoint, {
+        return await apiFetch(endpoint, {
             method: "PUT",
             body: JSON.stringify(data),
         });
     },
     async patch(endpoint: string, data: any) {
-        return apiFetch(endpoint, {
+        return await apiFetch(endpoint, {
             method: "PATCH",
             body: JSON.stringify(data),
         });
     },
     async delete(endpoint: string) {
-        return apiFetch(endpoint, { method: "DELETE" });
+        return await apiFetch(endpoint, { method: "DELETE" });
     },
 };
 

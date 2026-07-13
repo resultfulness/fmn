@@ -1,4 +1,4 @@
-import { pushToast } from "$lib/ui/toast.svelte";
+import { pushToast } from "$lib/ui/toast";
 import type { $ZodIssue } from "zod/v4/core";
 
 function issueToMessage(issue: $ZodIssue) {

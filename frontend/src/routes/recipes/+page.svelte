@@ -1,7 +1,5 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import api from "$lib/api";
-import { pushToast } from "$lib/ui/toast.svelte";
 import type { Recipe } from "$lib/domain/recipes/recipe";
 import { HeaderState } from "$lib/ui/header.svelte";
 import ListPage from "$lib/ui/templates/list-page.svelte";
@@ -10,27 +8,24 @@ import IconButton from "$lib/ui/molecules/icon-button.svelte";
 import Search from "$lib/ui/molecules/search.svelte";
 import RecipeAnchorList from "$lib/domain/recipes/recipe-anchor-list.svelte";
 import { Plus } from "@lucide/svelte";
+import recipeStore from "$lib/domain/recipes/store.svelte";
 
-let recipes: Recipe[] | undefined = $state();
 let searchterm = $state("");
 
 const recipeFound = (recipe: Recipe) =>
     recipe.name.toLowerCase().includes(searchterm.toLowerCase());
-const recipesFiltered = $derived(recipes?.filter(recipeFound));
+const recipesFiltered = $derived(recipeStore.recipes.filter(recipeFound));
 
 onMount(() => {
     HeaderState.title = "recipes";
     delete HeaderState.backUrl;
 
-    api.recipes
-        .readAll()
-        .then(_recipes => (recipes = _recipes))
-        .catch(e => pushToast(e, "error"));
+    recipeStore.load();
 });
 </script>
 
 <ListPage>
-    {#if recipesFiltered && recipesFiltered.length > 0}
+    {#if recipesFiltered.length > 0}
         <RecipeAnchorList recipes={recipesFiltered} />
     {:else}
         <div class="text-subtitle text-center">

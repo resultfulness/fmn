@@ -17,7 +17,10 @@ export const CartItemDisplay = z.object({
     unit: Unit,
 });
 
-export function cartItemDisplay(item: Item, cartItem: CartItem): CartItemDisplay {
+export function cartItemDisplay(
+    item: Item,
+    cartItem: CartItem
+): CartItemDisplay {
     return {
         item_id: item.item_id,
         description: cartItem.description,
@@ -28,11 +31,22 @@ export function cartItemDisplay(item: Item, cartItem: CartItem): CartItemDisplay
     };
 }
 
-export function cartItemDisplays(items: Item[], cartItems: CartItem[]): CartItemDisplay[] {
-    return cartItems.map(cartItem => cartItemDisplay(
-        items.find(({ item_id }) => item_id === cartItem.item_id)!,
-        cartItem,
-    ));
+export function cartItemDisplays(
+    items: Item[],
+    cartItems: CartItem[]
+): CartItemDisplay[] {
+    let cartItemDisplays = [];
+
+    for (const cartItem of cartItems) {
+        let fullItem = items.find(
+            ({ item_id }) => item_id === cartItem.item_id
+        );
+        if (fullItem === undefined) return [];
+
+        cartItemDisplays.push(cartItemDisplay(fullItem, cartItem));
+    }
+
+    return cartItemDisplays;
 }
 
 export const CartItemUpdate = z.object({

@@ -10,13 +10,13 @@ let cancel: (() => void) | undefined = $state();
 export function askForConfirmation(
     title: string,
     message: string
-): Promise<boolean> {
+): Promise<void> {
     dialogTitle = title;
     dialogMessage = message;
     dialog.showModal();
-    return new Promise(res => {
-        confirm = () => res(true);
-        cancel = () => res(false);
+    return new Promise<void>((res, rej) => {
+        confirm = () => res();
+        cancel = () => rej();
     });
 }
 </script>

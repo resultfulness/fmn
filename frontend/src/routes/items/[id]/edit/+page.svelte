@@ -3,7 +3,7 @@ import { goto, invalidateAll } from "$app/navigation";
 import { proxify } from "$lib/reactivity.svelte";
 import api from "$lib/api";
 import { askForConfirmation } from "$lib/ui/confirm.svelte";
-import { pushToast } from "$lib/ui/toast.svelte";
+import { pushToast } from "$lib/ui/toast";
 import { toastIssues } from "$lib/error.js";
 import { onMount } from "svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
@@ -16,7 +16,7 @@ let { data } = $props();
 
 let item = $derived(proxify(data.item));
 
-function handleUpdateItem(e: SubmitEvent) {
+async function handleUpdateItem(e: SubmitEvent) {
     e.preventDefault();
     const itemUpdate = ItemUpdate.safeParse(item);
 
@@ -25,26 +25,22 @@ function handleUpdateItem(e: SubmitEvent) {
         return;
     }
 
-    api.items
-        .update(item.item_id, itemUpdate.data)
-        .then(invalidateAll)
-        .then(() => pushToast("item updated", "success"))
-        .catch(e => pushToast(e, "error"));
+    await api.items.update(item.item_id, itemUpdate.data);
+    pushToast("item updated", "success");
+    await invalidateAll();
 }
 
 async function handleDeleteItem() {
     askForConfirmation(
         `deleting ${item.name}`,
         "are you sure you want to remove this item?"
-    ).then(yes => {
-        if (yes) {
-            api.items
-                .delete(item.item_id)
-                .then(() => goto("/items"))
-                .then(() => pushToast("item deleted", "success"))
-                .catch(e => pushToast(e, "error"));
-        }
-    });
+    )
+        .then(async () => {
+            await api.items.delete(item.item_id);
+            pushToast("item deleted", "success");
+            await goto("/items");
+        })
+        .catch(() => {});
 }
 
 onMount(() => {

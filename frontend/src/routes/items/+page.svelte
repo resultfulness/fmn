@@ -1,7 +1,5 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import api from "$lib/api";
-import { pushToast } from "$lib/ui/toast.svelte";
 import type { Item } from "$lib/domain/items/item";
 import { HeaderState } from "$lib/ui/header.svelte";
 import ListPage from "$lib/ui/templates/list-page.svelte";
@@ -10,28 +8,25 @@ import Search from "$lib/ui/molecules/search.svelte";
 import IconButton from "$lib/ui/molecules/icon-button.svelte";
 import ItemAnchorList from "$lib/domain/items/item-anchor-list.svelte";
 import { Plus } from "@lucide/svelte";
+import itemStore from "$lib/domain/items/store.svelte";
 
-let items: Item[] | undefined = $state();
 let searchterm = $state("");
 
 const itemFound = (item: Item) =>
     item.name.toLowerCase().includes(searchterm.toLowerCase());
 
-let itemsFiltered = $derived(items?.filter(itemFound));
+let itemsFiltered = $derived(itemStore.items.filter(itemFound));
 
 onMount(() => {
     HeaderState.title = "items";
     delete HeaderState.backUrl;
 
-    api.items
-        .readAll()
-        .then(_items => (items = _items))
-        .catch(e => pushToast(e, "error"));
+    itemStore.load();
 });
 </script>
 
 <ListPage>
-    {#if itemsFiltered && itemsFiltered.length > 0}
+    {#if itemsFiltered.length > 0}
         <ItemAnchorList items={itemsFiltered} />
     {:else}
         <div class="text-subtitle text-center">

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import api from "$lib/api";
-import { pushToast } from "$lib/ui/toast.svelte";
+import { pushToast } from "$lib/ui/toast";
 import { toastIssues } from "$lib/error";
 import { onMount } from "svelte";
 import { RecipeCreate } from "$lib/domain/recipes/recipe";
@@ -21,21 +21,19 @@ async function createRecipe() {
     const recipeCreate = RecipeCreate.safeParse(maybeRecipe);
 
     if (!recipeCreate.success) {
-        throw recipeCreate.error.issues;
+        toastIssues(recipeCreate.error.issues);
+        return;
     }
 
-    return api.recipes
-        .create(recipeCreate.data)
-        .then(recipe => recipe.recipe_id)
-        .catch(e => pushToast(e, "error"));
+    const recipe = await api.recipes.create(recipeCreate.data)
+    return recipe.recipe_id;
 }
 
-function handleCreateRecipe(e: SubmitEvent) {
+async function handleCreateRecipe(e: SubmitEvent) {
     e.preventDefault();
-    createRecipe()
-        .then(id => goto(`/recipes/${id}/edit`))
-        .then(() => pushToast("recipe added", "success"))
-        .catch(toastIssues);
+    const id = await createRecipe()
+    pushToast("recipe added", "success");
+    await goto(`/recipes/${id}/edit`);
 }
 </script>
 

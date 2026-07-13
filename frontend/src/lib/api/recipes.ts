@@ -2,19 +2,19 @@ import { Recipe, RecipeCreate, RecipeUpdate } from "$lib/domain/recipes/recipe";
 import request from "./request";
 
 export default {
-    create(recipe: RecipeCreate): Promise<Recipe> {
-        return request.post("/recipes", recipe);
+    async create(recipe: RecipeCreate): Promise<Recipe> {
+        return await request.post("/recipes", recipe);
     },
-    read(id: number): Promise<Recipe> {
-        return request.get(`/recipes/${id}`);
+    async read(id: number): Promise<Recipe> {
+        return await request.get(`/recipes/${id}`);
     },
-    readAll(): Promise<Recipe[]> {
-        return request.get("/recipes");
+    async readAll(): Promise<Recipe[]> {
+        return await request.get("/recipes");
     },
-    update(id: number, recipe: RecipeUpdate): Promise<Recipe> {
-        return request.patch(`/recipes/${id}`, recipe);
+    async update(id: number, recipe: RecipeUpdate): Promise<Recipe> {
+        return await request.patch(`/recipes/${id}`, recipe);
     },
-    delete(id: number): Promise<Recipe> {
-        return request.delete(`/recipes/${id}`);
+    async delete(id: number): Promise<Recipe> {
+        return await request.delete(`/recipes/${id}`);
     },
 };

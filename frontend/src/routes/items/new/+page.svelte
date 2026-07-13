@@ -7,7 +7,7 @@ import { toastIssues } from "$lib/error";
 import Button from "$lib/ui/elements/button.svelte";
 import { HeaderState } from "$lib/ui/header.svelte";
 import FormPage from "$lib/ui/templates/form-page.svelte";
-import { pushToast } from "$lib/ui/toast.svelte";
+import { pushToast } from "$lib/ui/toast";
 import { onMount } from "svelte";
 
 let maybeItem: Partial<ItemCreate> = $state({});
@@ -16,24 +16,22 @@ async function createItem() {
     const itemCreate = ItemCreate.safeParse(maybeItem);
 
     if (!itemCreate.success) {
-        throw itemCreate.error.issues;
+        toastIssues(itemCreate.error.issues);
+        return;
     }
 
-    api.items
-        .create(itemCreate.data)
-        .catch(e => pushToast(e, "error"));
+    await api.items.create(itemCreate.data);
 }
 
-function handleCreateItem(e: SubmitEvent) {
+async function handleCreateItem(e: SubmitEvent) {
     e.preventDefault();
-    createItem()
-        .then(() => goto("/items"))
-        .then(() => pushToast("item added", "success"))
-        .catch(toastIssues);
+    await createItem();
+    pushToast("item added", "success");
+    await goto("/items");
 }
 
-function handleCreateItemAndStay() {
-    createItem().catch(toastIssues);
+async function handleCreateItemAndStay() {
+    await createItem();
 }
 
 onMount(() => {

@@ -1,32 +1,11 @@
-<script module lang="ts">
-import { SvelteMap } from "svelte/reactivity";
-
-type ToastSeverity = "success" | "error";
-type Toast = {
-    message: string;
-    severity: ToastSeverity;
-};
-
-let toasts: SvelteMap<string, Toast> = $state(new SvelteMap());
-
-export function pushToast(
-    message: string,
-    severity: ToastSeverity,
-    delay: number = 5000
-) {
-    const timestamp = crypto.randomUUID().toString();
-    toasts.set(timestamp, { message, severity });
-    setTimeout(() => toasts.delete(timestamp), delay);
-}
-</script>
-
 <script>
 import { Check, CircleAlert } from "@lucide/svelte";
+import { deleteToast, toasts } from "./toast";
 </script>
 
 <div class="toasts">
-    {#each toasts as [t, { message, severity }]}
-        <button class={`toast ${severity}`} onclick={() => toasts.delete(t)}>
+    {#each $toasts as [t, { message, severity }]}
+        <button class={`toast ${severity}`} onclick={() => deleteToast(t)}>
             {#if severity === "success"}
                 <Check />
             {:else}

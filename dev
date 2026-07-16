@@ -19,7 +19,7 @@ backend() {
 frontend() {
     cd frontend || exit
     pnpm i
-    pnpm dev &
+    pnpm dev --clearScreen false &
     fend=$!
     cd ..
 }

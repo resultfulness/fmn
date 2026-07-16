@@ -34,6 +34,10 @@ const cartStore = {
     async addRecipe(id: number) {
         await execute(api.cart.addRecipe, id);
     },
+    async stream() {
+        const eventSource = await api.cart.getStream();
+        eventSource.onmessage = e => cartItems.set(JSON.parse(e.data));
+    },
 };
 
 export default cartStore;

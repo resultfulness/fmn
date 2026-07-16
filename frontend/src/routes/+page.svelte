@@ -70,6 +70,8 @@ onMount(() => {
     cartStore.load();
     itemStore.load();
     recipeStore.load();
+
+    cartStore.stream();
 });
 </script>
 

@@ -64,7 +64,8 @@ pub async fn add_item(
     if let Some(_) = items.iter().find(|v| v.item_id == item_id) {
         return Ok(items);
     }
-    queries.cart_insert_one_event(EventPayload::AddItem(item_id)).await?;
+    let event_payload = EventPayload::AddItem(item_id);
+    queries.cart_insert_one_event(event_payload.clone()).await?;
     queries.cart_delete_future_event().await?;
     update_state(queries).await?;
     Ok(queries.cart_select_many_item().await?)
@@ -78,11 +79,10 @@ pub async fn add_recipe(
         .recipe_select_one(recipe_id)
         .await?
         .ok_or(APIError::NotFoundError)?;
-    queries
-        .cart_insert_one_event(EventPayload::AddItems(
-            recipe.items.into_iter().map(|v| (v.item_id, v.quantity)).collect(),
-        ))
-        .await?;
+    let event_payload = EventPayload::AddItems(
+        recipe.items.into_iter().map(|v| (v.item_id, v.quantity)).collect(),
+    );
+    queries.cart_insert_one_event(event_payload.clone()).await?;
     queries.cart_delete_future_event().await?;
     update_state(queries).await?;
     Ok(queries.cart_select_many_item().await?)
@@ -94,13 +94,9 @@ pub async fn update_item(
     request: CartItemUpdateRequest,
 ) -> Result<Vec<CartItem>, APIError> {
     queries.item_select_one(item_id).await?.ok_or(APIError::NotFoundError)?;
-    queries
-        .cart_insert_one_event(EventPayload::EditItem(
-            item_id,
-            request.description,
-            request.quantity,
-        ))
-        .await?;
+    let event_payload =
+        EventPayload::EditItem(item_id, request.description, request.quantity);
+    queries.cart_insert_one_event(event_payload.clone()).await?;
     queries.cart_delete_future_event().await?;
     update_state(queries).await?;
     Ok(queries.cart_select_many_item().await?)
@@ -117,7 +113,8 @@ pub async fn reorder_items(
     if request_ids != cart_ids {
         return Err(APIError::NotFoundError);
     }
-    queries.cart_insert_one_event(EventPayload::Reorder(item_ids)).await?;
+    let event_payload = EventPayload::Reorder(item_ids);
+    queries.cart_insert_one_event(event_payload.clone()).await?;
     queries.cart_delete_future_event().await?;
     update_state(queries).await?;
     Ok(queries.cart_select_many_item().await?)
@@ -132,7 +129,8 @@ pub async fn remove_item(
     if let None = items.iter().find(|v| v.item_id == item_id) {
         return Ok(items);
     }
-    queries.cart_insert_one_event(EventPayload::RemoveItem(item_id)).await?;
+    let event_payload = EventPayload::RemoveItem(item_id);
+    queries.cart_insert_one_event(event_payload.clone()).await?;
     queries.cart_delete_future_event().await?;
     update_state(queries).await?;
     Ok(queries.cart_select_many_item().await?)
@@ -148,6 +146,7 @@ pub async fn read_events(
     let events = queries.cart_select_many_event().await?;
     Ok(events.into_iter().map(|event| event.into()).collect())
 }
+
 pub async fn delete_events(
     queries: &Queries,
 ) -> Result<Vec<EventResponse>, APIError> {

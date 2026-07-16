@@ -12,6 +12,7 @@ pub enum EventPayload {
     EditItem(i32, Option<String>, Option<i32>),
     Reorder(Vec<i32>),
 }
+
 impl From<EventPayload> for String {
     fn from(value: EventPayload) -> Self {
         match value {

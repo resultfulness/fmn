@@ -1,5 +1,6 @@
-use axum::{Json, http::StatusCode, response::IntoResponse};
+use axum::{Json, http::StatusCode, response::{IntoResponse, sse}};
 use serde_json::json;
+use tokio::sync::broadcast::error::SendError;
 
 use crate::queries::errors::DBError;
 
@@ -24,6 +25,13 @@ impl From<&str> for APIError {
 }
 impl From<DBError> for APIError {
     fn from(value: DBError) -> Self {
+        println!("{}", value);
+        APIError::InternalError
+    }
+}
+
+impl From<SendError<sse::Event>> for APIError {
+    fn from(value: SendError<sse::Event>) -> Self {
         println!("{}", value);
         APIError::InternalError
     }

@@ -71,8 +71,10 @@ pub async fn run() -> Result<(), String> {
         );
 
     let queries = Queries::new(pool);
+    let (tx, _) = tokio::sync::broadcast::channel(16);
     let state = AppState {
         queries: Arc::new(Mutex::new(queries)),
+        tx,
     };
     let mut app = Router::new()
         .nest("/items", get_items_router())

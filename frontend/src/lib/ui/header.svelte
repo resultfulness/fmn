@@ -11,27 +11,31 @@ export const HeaderState = $state<HeaderState>({ title: "" });
 import { ArrowLeft } from "@lucide/svelte";
 import IconButton from "$lib/ui/molecules/icon-button.svelte";
 import { onMount } from "svelte";
+import { inSearchMode } from "$lib/search-mode.svelte";
+import { slide } from "svelte/transition";
 
 const { title, backUrl } = $derived(HeaderState);
 
 const { initialTitle }: { initialTitle: string } = $props();
-onMount(() => HeaderState.title = initialTitle);
+onMount(() => (HeaderState.title = initialTitle));
 </script>
 
-<header>
-    <div>
-        {#if backUrl}
-            <IconButton
-                variant="secondary"
-                href={backUrl}
-                icon={ArrowLeft}
-                size={32}
-            />
-        {/if}
-    </div>
-    <h1 class="text-header text-center">{title}</h1>
-    <div></div>
-</header>
+{#if !inSearchMode()}
+    <header transition:slide>
+        <div>
+            {#if backUrl}
+                <IconButton
+                    variant="secondary"
+                    href={backUrl}
+                    icon={ArrowLeft}
+                    size={32}
+                />
+            {/if}
+        </div>
+        <h1 class="text-header text-center">{title}</h1>
+        <div></div>
+    </header>
+{/if}
 
 <style>
 header {

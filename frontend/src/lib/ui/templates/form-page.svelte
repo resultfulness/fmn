@@ -29,4 +29,10 @@ let { children, icon, title } = $props();
 h2 {
     margin: 0;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+    .page {
+        scroll-behavior: smooth;
+    }
+}
 </style>

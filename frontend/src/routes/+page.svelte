@@ -19,6 +19,8 @@ import { onMount } from "svelte";
 import itemStore from "$lib/domain/items/store.svelte";
 import recipeStore from "$lib/domain/recipes/store.svelte";
 import cartStore from "$lib/domain/cart/store";
+import { inSearchMode, setSearchMode } from "$lib/search-mode.svelte";
+import { slide } from "svelte/transition";
 
 let searchterm = $state("");
 let cartmode: "editing" | "shopping" = $state("shopping");
@@ -26,6 +28,7 @@ let cartItemEditDialog: HTMLDialogElement = $state()!;
 let cartItemEditId: number | undefined = $state();
 let cartItemEditItem: Item | undefined = $state();
 let cartItemEditCartItem: CartItem | undefined = $state();
+let page: ReturnType<typeof ListPage> = $state()!;
 
 const itemFound = (item: Item) =>
     item.name.toLowerCase().includes(searchterm.toLowerCase());
@@ -39,6 +42,11 @@ let itemsFiltered = $derived(
 const recipeFound = (recipe: Recipe) =>
     recipe.name.toLowerCase().includes(searchterm.toLowerCase());
 let recipesFiltered = $derived(recipeStore.recipes.filter(recipeFound));
+
+function clearSearch() {
+    searchterm = "";
+    setSearchMode(false);
+}
 
 function showCartItemEdit(id: number) {
     cartItemEditId = id;
@@ -61,7 +69,17 @@ async function handleCartUpdateItem(e: SubmitEvent) {
     cartItemEditDialog.close();
 }
 
-const clearSearch = () => (searchterm = "");
+async function onItemClick(item_id: number) {
+    await cartStore.addItem(item_id);
+    clearSearch();
+    page.scrollToTop();
+}
+
+async function onRecipeClick(recipe_id: number) {
+    await cartStore.addRecipe(recipe_id);
+    clearSearch();
+    page.scrollToTop();
+}
 
 onMount(() => {
     HeaderState.title = "shopping";
@@ -75,46 +93,51 @@ onMount(() => {
 });
 </script>
 
-<ListPage>
-    <Dialog title="Editing cart item" bind:dialog={cartItemEditDialog}>
-        {#if cartItemEditItem && cartItemEditCartItem}
-            <CartItemEditForm
-                onsubmit={handleCartUpdateItem}
-                item={cartItemEditItem}
-                bind:cartItem={cartItemEditCartItem}
-            />
-        {/if}
-    </Dialog>
-    {#if $cartStore.length > 0}
-        <CartGrid
-            cartItems={cartItemDisplays(itemStore.items, $cartStore)}
-            {onCartItemClick}
-        />
-    {:else}
-        <div class="text-subtitle text-center" style:margin-block="3rem">
-            cart empty!
+<ListPage bind:this={page}>
+    {#if !inSearchMode()}
+        <Dialog title="Editing cart item" bind:dialog={cartItemEditDialog}>
+            {#if cartItemEditItem && cartItemEditCartItem}
+                <CartItemEditForm
+                    onsubmit={handleCartUpdateItem}
+                    item={cartItemEditItem}
+                    bind:cartItem={cartItemEditCartItem}
+                />
+            {/if}
+        </Dialog>
+        <div transition:slide>
+            {#if $cartStore.length > 0}
+                <CartGrid
+                    cartItems={cartItemDisplays(itemStore.items, $cartStore)}
+                    {onCartItemClick}
+                />
+            {:else}
+                <div
+                    class="text-subtitle text-center"
+                    style:padding-block="3rem"
+                >
+                    cart empty!
+                </div>
+            {/if}
+            <div class="grid-separator">
+                <h2 class="text-heading">
+                    {cartmode === "shopping" ? "Add" : "Edit"}
+                </h2>
+                <IconButton
+                    variant="secondary"
+                    icon={cartmode === "shopping" ? PencilLine : X}
+                    onclick={() => {
+                        cartmode =
+                            cartmode === "shopping" ? "editing" : "shopping";
+                    }}
+                />
+            </div>
         </div>
     {/if}
-    <div class="grid-separator">
-        <h2 class="text-heading">{cartmode === "shopping" ? "Add" : "Edit"}</h2>
-        <IconButton
-            variant="secondary"
-            icon={cartmode === "shopping" ? PencilLine : X}
-            onclick={() => {
-                cartmode = cartmode === "shopping" ? "editing" : "shopping";
-            }}
-        />
-    </div>
     <div class="add">
         {#if cartmode === "shopping"}
             <Details summary="Recipes" open>
                 {#if recipesFiltered.length > 0}
-                    <RecipeGrid
-                        recipes={recipesFiltered}
-                        onRecipeClick={(recipe_id: number) => {
-                            cartStore.addRecipe(recipe_id).then(clearSearch);
-                        }}
-                    />
+                    <RecipeGrid recipes={recipesFiltered} {onRecipeClick} />
                 {:else if searchterm}
                     <div class="text-subtitle text-center">
                         no recipes matching {searchterm}
@@ -123,12 +146,7 @@ onMount(() => {
             </Details>
             <Details summary="Items" open>
                 {#if itemsFiltered.length > 0}
-                    <ItemGrid
-                        items={itemsFiltered}
-                        onItemClick={(item_id: number) => {
-                            cartStore.addItem(item_id).then(clearSearch);
-                        }}
-                    />
+                    <ItemGrid items={itemsFiltered} {onItemClick} />
                 {:else if searchterm}
                     <div class="text-subtitle text-center">
                         no items matching {searchterm}
@@ -139,9 +157,17 @@ onMount(() => {
     </div>
 </ListPage>
 <FooterExtension>
-    <IconButton variant="secondary" icon={Undo} onclick={cartStore.undo} />
-    <IconButton variant="secondary" icon={Redo} onclick={cartStore.redo} />
-    <Search bind:searchterm placeholder="search for stuff..." />
+    {#if !inSearchMode()}
+        <IconButton variant="secondary" icon={Undo} onclick={cartStore.undo} />
+        <IconButton variant="secondary" icon={Redo} onclick={cartStore.redo} />
+    {/if}
+    <Search
+        bind:searchterm
+        placeholder="search for stuff..."
+        onfocus={() => setSearchMode(true)}
+        onclear={clearSearch}
+        disabled={cartmode === "editing"}
+    />
 </FooterExtension>
 
 <style>

@@ -7,6 +7,8 @@ import Confirm from "$lib/ui/confirm.svelte";
 import Toast from "$lib/ui/toast.svelte";
 import Header from "$lib/ui/header.svelte";
 import Footer from "$lib/ui/footer.svelte";
+import { onMount } from "svelte";
+import { setSearchMode } from "$lib/search-mode.svelte";
 
 let { children } = $props();
 onNavigate(navigation => {
@@ -19,6 +21,8 @@ onNavigate(navigation => {
         });
     });
 });
+
+onMount(() => document.addEventListener("blur", () => setSearchMode(false)));
 </script>
 
 <Confirm />

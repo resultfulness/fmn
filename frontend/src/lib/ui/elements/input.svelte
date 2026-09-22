@@ -11,8 +11,12 @@ export interface InputProps {
     required?: boolean;
     ariaLabel?: string;
     clearable?: boolean;
+    onclear?: () => void;
     icon?: typeof IconType;
     endText?: string;
+    onfocus?: () => void;
+    onblur?: () => void;
+    disabled?: boolean;
 }
 
 let {
@@ -24,8 +28,12 @@ let {
     required,
     ariaLabel,
     clearable,
+    onclear,
     icon,
     endText,
+    onfocus,
+    onblur,
+    disabled,
 }: InputProps = $props();
 </script>
 
@@ -39,6 +47,7 @@ let {
         </div>
     {/if}
     <input
+        {disabled}
         {type}
         {name}
         {placeholder}
@@ -47,9 +56,19 @@ let {
         aria-label={ariaLabel}
         bind:value
         class="input text-content"
+        {onfocus}
+        {onblur}
     />
-    {#if clearable && typeof value === "string" && value.length > 0}
-        <button class="clear" onclick={() => (value = "")} type="button">
+    {#if clearable && typeof value === "string"}
+        <button
+            class="clear"
+            onclick={e => {
+                value = "";
+                onclear?.();
+                e.currentTarget.blur();
+            }}
+            type="button"
+        >
             <X color="var(--clr-text)" strokeWidth={1.5} />
         </button>
     {/if}
@@ -73,6 +92,11 @@ let {
     background-color: var(--clr-surface);
     color: var(--clr-text);
     border: none;
+}
+
+.input-wrapper:has(.input:disabled) {
+    filter: grayscale(0.25);
+    opacity: 0.5;
 }
 
 .input:focus-visible {

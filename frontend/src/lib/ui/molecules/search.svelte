@@ -1,18 +1,12 @@
 <script lang="ts">
-import Input from "$lib/ui/elements/input.svelte";
+import Input, { type InputProps } from "$lib/ui/elements/input.svelte";
 import { Search } from "@lucide/svelte";
 
-interface SearchProps {
+interface SearchProps extends InputProps {
     searchterm: string;
-    placeholder: string;
 }
 
-let { searchterm = $bindable(), placeholder }: SearchProps = $props();
+let { searchterm = $bindable(), ...props }: SearchProps = $props();
 </script>
 
-<Input
-    icon={Search}
-    clearable
-    {placeholder}
-    bind:value={searchterm}
-/>
+<Input icon={Search} clearable bind:value={searchterm} {...props} />

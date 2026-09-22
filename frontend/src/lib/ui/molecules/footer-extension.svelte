@@ -16,5 +16,6 @@ let { children }: { children: Snippet } = $props();
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: var(--overlay-shadow);
 }
 </style>

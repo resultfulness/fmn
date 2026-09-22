@@ -80,11 +80,16 @@ details {
     border-radius: var(--rounding);
 }
 
+details[open] {
+    box-shadow: var(--shadow);
+}
+
 summary {
     padding: 0.75rem;
     background-color: var(--clr-surface);
     border-radius: var(--rounding);
     position: relative;
+    box-shadow: var(--shadow);
 }
 
 .content {

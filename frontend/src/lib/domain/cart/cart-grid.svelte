@@ -3,7 +3,7 @@ import type { CartItemDisplay } from "./cart";
 import CartItemTile from "./cart-item-tile.svelte";
 
 interface CartGridProps {
-    cartItems: CartItemDisplay[],
+    cartItems: CartItemDisplay[];
     onCartItemClick: (item_id: number) => void;
 }
 

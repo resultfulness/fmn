@@ -1,6 +1,9 @@
 <script lang="ts">
 import { X, type Icon as IconType } from "@lucide/svelte";
-import type { HTMLInputTypeAttribute } from "svelte/elements";
+import type {
+    FocusEventHandler,
+    HTMLInputTypeAttribute,
+} from "svelte/elements";
 
 export interface InputProps {
     value?: string | number;
@@ -14,8 +17,8 @@ export interface InputProps {
     onclear?: () => void;
     icon?: typeof IconType;
     endText?: string;
-    onfocus?: () => void;
-    onblur?: () => void;
+    onfocus?: FocusEventHandler<HTMLInputElement>;
+    onblur?: FocusEventHandler<HTMLInputElement>;
     disabled?: boolean;
 }
 

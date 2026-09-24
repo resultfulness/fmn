@@ -1,6 +1,5 @@
 import { PUBLIC_API_URL } from "$env/static/public";
 import type { CartItem, CartItemUpdate } from "$lib/domain/cart/cart";
-import { pushToast } from "$lib/ui/toast";
 import request from "./request";
 
 export default {

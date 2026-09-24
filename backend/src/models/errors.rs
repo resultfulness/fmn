@@ -25,14 +25,14 @@ impl From<&str> for APIError {
 }
 impl From<DBError> for APIError {
     fn from(value: DBError) -> Self {
-        println!("{}", value);
+        println!("db error: {}", value);
         APIError::InternalError
     }
 }
 
 impl From<SendError<sse::Event>> for APIError {
     fn from(value: SendError<sse::Event>) -> Self {
-        println!("{}", value);
+        println!("sse error: {}", value);
         APIError::InternalError
     }
 }

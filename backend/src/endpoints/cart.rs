@@ -42,7 +42,7 @@ async fn undo_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = undo(&mut *queries).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -51,7 +51,7 @@ async fn redo_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = redo(&mut *queries).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -61,7 +61,7 @@ async fn add_item_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = add_item(&mut *queries, item_id).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -71,7 +71,7 @@ async fn remove_item_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = remove_item(&mut *queries, item_id).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -82,7 +82,7 @@ async fn update_item_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = update_item(&mut *queries, item_id, request).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -92,7 +92,7 @@ async fn add_recipe_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = add_recipe(&mut *queries, recipe_id).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -102,7 +102,7 @@ async fn reorder_items_endpoint(
 ) -> Result<Json<Vec<CartItem>>, APIError> {
     let mut queries = state.queries.lock().await;
     let cart_items = reorder_items(&mut *queries, item_ids).await?;
-    state.tx.send(StreamResponse::new(cart_items.clone()).into())?;
+    let _ = state.tx.send(StreamResponse::new(cart_items.clone()).into());
     Ok(Json(cart_items))
 }
 
@@ -124,7 +124,7 @@ async fn delete_events_endpoint(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<EventResponse>>, APIError> {
     let mut queries = state.queries.lock().await;
-    state.tx.send(StreamResponse::new(vec![]).into())?;
+    let _ = state.tx.send(StreamResponse::new(vec![]).into());
     Ok(Json(delete_events(&mut *queries).await?))
 }
 

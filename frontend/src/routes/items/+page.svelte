@@ -9,8 +9,10 @@ import IconButton from "$lib/ui/molecules/icon-button.svelte";
 import ItemAnchorList from "$lib/domain/items/item-anchor-list.svelte";
 import { Plus } from "@lucide/svelte";
 import itemStore from "$lib/domain/items/store.svelte";
+import { afterNavigate, beforeNavigate } from "$app/navigation";
 
 let searchterm = $state("");
+let page: ReturnType<typeof ListPage> = $state()!;
 
 const itemFound = (item: Item) =>
     item.name.toLowerCase().includes(searchterm.toLowerCase());
@@ -23,9 +25,23 @@ onMount(() => {
 
     itemStore.load();
 });
+
+beforeNavigate(navigation => {
+    if (navigation.to?.route.id === "/items/[id]/edit") {
+        page.saveScrollState();
+    }
+});
+
+afterNavigate(navigation => {
+    if (navigation.from?.route.id === "/items/[id]/edit") {
+        page.restoreScrollState();
+    } else {
+        page.saveScrollState();
+    }
+});
 </script>
 
-<ListPage>
+<ListPage bind:this={page}>
     {#if itemsFiltered.length > 0}
         <ItemAnchorList items={itemsFiltered} />
     {:else}
